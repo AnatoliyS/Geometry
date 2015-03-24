@@ -13,6 +13,28 @@ public class VoronoiDiagram{
   private int n;
   private Point[] convexHull;
 
+  public Point[] getConvexHull(){
+    Point[] copy = new Point[convexHull.length];
+    System.arraycopy(convexHull, 0, copy, 0, convexHull.length);
+    return copy;
+  }
+  public void setConvexHull(Point[] c){
+    convexHull = new Point[c.length];
+    for(int i = 0; i < c.length; i++){
+      convexHull[i] = c[i];
+    }
+  }
+
+  public VoronoiDiagram(Point[] pts, int l, int r){
+    n = r - l + 1;
+    System.out.println("Create voronoi for l="+l+" r = " + r);
+    point = new Point[n];
+    
+    for(int i = l; i <= r; i++){
+      point[i-l] = pts[i];
+    }
+  }
+
   // Trivial case: diagram for 1 point
   public VoronoiDiagram(Point a){
     n = 1;

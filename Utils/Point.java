@@ -21,4 +21,11 @@ public class Point{
     y = _y;
   }
 
+  @Override
+  public String toString(){
+    String s = new String();
+    s = "[" + x + ", " + y + "]";
+    return s; 
+  }
+
 }

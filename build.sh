@@ -4,7 +4,7 @@ make GraphGenerator
 
 if [ $? -eq 0 ]; then
   echo -e "Run generator...\n"
-  #java GraphGenerator graph.txt 10 
+  java GraphGenerator graph.txt 10 
 else
   echo -e "Error in compilation\n"
 fi
