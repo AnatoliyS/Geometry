@@ -58,7 +58,7 @@ public class VoronoiDemo extends JPanel{
         
       String text = points[i].toString();
       g2.drawString(text,(float)( xpoints[i] - fm.stringWidth(text)/2.0), (float)(ypoints[i] - fm.getHeight()) );
-      g2.fill(new Ellipse2D.Double(xpoints[i], ypoints[i], 5, 5));
+      g2.fill(new Ellipse2D.Double(xpoints[i]-2.5, ypoints[i]-2.5, 5, 5));
     }
     // g.fillPolygon(xpoints, ypoints, n);
     g2.dispose();
