@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.util.Locale;
 
 import DCEL.*;
 import Utils.*;
@@ -144,7 +145,8 @@ public class VoronoiDemo extends JPanel {
     File points_file = new File(file_name);
     try {   
       Scanner sc = new Scanner(points_file);
-      
+      sc.useLocale(Locale.ENGLISH);
+
       // Read points
       int n = sc.nextInt();
       points = new Point[n];
@@ -153,7 +155,7 @@ public class VoronoiDemo extends JPanel {
         double y = sc.nextDouble();
         points[i] = new Point(x,y);
       }
-
+ 
       // Sort points with custom comparator
       Arrays.sort(points, new PointComparator());
 
