@@ -1,13 +1,13 @@
 package DCEL;
 
-public class Face{
+public class Face {
   private HalfEdge incidentEdge;
 
-  public Face(){
+  public Face() {
     incidentEdge = null;
   }
 
-  public void setIncidentEdge(HalfEdge _e){
+  public void setIncidentEdge(HalfEdge _e) {
     incidentEdge = _e;
   }
 }
