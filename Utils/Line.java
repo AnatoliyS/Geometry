@@ -1,5 +1,7 @@
 package Utils;
 
+import Utils.Exceptions.*;
+
 public class Line {
   protected Point first;
   protected Point second;
@@ -33,6 +35,14 @@ public class Line {
         return (projection_y < p.getY()) ? POINT_ABOVE_LINE : POINT_BELOW_LINE;
       }
     }
+  }
+
+  public Point intersect(Line other) throws NoIntersectionException {
+    return null;
+  }
+  
+  public Point intersect(Segment other) throws NoIntersectionException {
+    return null;
   }
 
 }
