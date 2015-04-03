@@ -1,5 +1,7 @@
 package Utils;
 
+import Utils.Exceptions.*;
+
 public class Geometry {
   public static boolean equal_zero(double value) {
     return Math.abs(value) <= Constants.EPS;
@@ -15,10 +17,10 @@ public class Geometry {
 
   /*public static Point intersect(Segment a, Segment b) {
     return new Point();
-  }
-
-  public static Point intersect(Line a, Line b) {
-    return new Point();
   }*/
+
+  public static Point intersect(Line a, Line b) throws NoIntersectionException {
+    return null;
+  }
 
 }
