@@ -1,15 +1,19 @@
 package Utils;
 
 public class Geometry {
-  /*public static double cross_product(Vector a, Vector b) {
-    return 0;
+  public static boolean equal_zero(double value) {
+    return Math.abs(value) <= Constants.EPS;
+  }
+
+  public static double cross_product(Vector a, Vector b) {
+    return a.getX()*b.getY() - a.getY()*b.getX();
   }
   
   public static double scalar_product(Vector a, Vector b) {
-    return 0;
+    return a.getX()*b.getX() + a.getY()*b.getY();
   }
 
-  public static Point intersect(Segment a, Segment b) {
+  /*public static Point intersect(Segment a, Segment b) {
     return new Point();
   }
 

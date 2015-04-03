@@ -17,7 +17,9 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 					 	$(UTILS_DIR)Line.java \
 						$(UTILS_DIR)Constants.java \
 						$(UTILS_DIR)Pair.java \
-						$(UTILS_DIR)Debug.java
+						$(UTILS_DIR)Debug.java \
+						$(UTILS_DIR)Vector.java \
+						$(UTILS_DIR)Geometry.java
 
 UTILS_CLASSES = $(UTILS_SRC:.java=.class)
 $(UTILS_CLASSES): $(UTILS_SRC)

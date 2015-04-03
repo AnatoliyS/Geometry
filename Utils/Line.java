@@ -1,32 +1,38 @@
 package Utils;
 
 public class Line {
-  private double A;
-  private double B;
-  private double C;
+  protected Point first;
+  protected Point second;
+  protected Vector direction;
 
+  public static final int POINT_ON_LINE = 0;
+  public static final int POINT_ABOVE_LINE = 1;
+  public static final int POINT_BELOW_LINE = 2;
+  public static final int POINT_HAS_NO_X_PROJECTION = 3;
+  
   public Line(Point a, Point b) {
-    double xa = a.getX();
-    double ya = a.getY();
-    double xb = b.getX();
-    double yb = b.getY();
-    A = yb - ya;
-    B = xa - xb;
-    C = ya*(xb - xa) - xa*(yb - ya);
-  }
-  
-  public boolean onLine(Point p) {
-    return (Math.abs(A*p.getX() + B*p.getY() + C) <= Constants.EPS);
+    first = a;
+    second = b;
+    direction = new Vector(a, b);
   }
 
-  public boolean pointIsBelowLine(Point p) {
-    Debug.log("Cheking point" + p.toString());
-    Debug.log("Is below = " + (p.getY() < (-A*p.getX() - C) / B) + "y = " + (-A*p.getX() - C) / B);
-    return (p.getY() < (-A*p.getX() - C) / B);
-  }
-  
-  public boolean pointIsAboveLine(Point p) {
-    return (p.getY() > (-A*p.getX() - C) / B);
+  /**
+   * Checks point vertical alignment relative to line.
+   * Find x-projection of point p on line and check Y of it.
+   */
+  public int checkPointVerticalAlignment(Point p) {
+    Vector to_point = new Vector(first, p);
+    if (Geometry.equal_zero(Geometry.cross_product(direction, to_point))) {
+      return POINT_ON_LINE;
+    } else {
+      if (Geometry.equal_zero(direction.getX())) {
+        return POINT_HAS_NO_X_PROJECTION;
+      } else {
+        double projection_y = first.getY() +
+          (p.getX() - first.getX()) * direction.getY() / direction.getX();
+        return (projection_y < p.getY()) ? POINT_ABOVE_LINE : POINT_BELOW_LINE;
+      }
+    }
   }
 
 }
