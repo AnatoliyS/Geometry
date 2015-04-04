@@ -24,8 +24,18 @@ $(UTILS_CLASSES): $(UTILS_SRC)
 	javac -g $(UTILS_SRC) 
 UTILS: $(UTILS_CLASSES)
 
+# Compiling ConvexHull logic
+CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
+
+# Compiling algorithms
+ALGS_SRC = Algorithm.java $(CONHULL_SRC)
+
+# Compiling Divide and Conquer tree
+DAC: $(ALGS_SRC) 
+	javac -g $(ALGS_SRC)
+
 # Compiling Voronoi Demonstarion
-VoronoiDemo.class: DCEL UTILS VoronoiDemo.java VoronoiDiagram.java VoronoiBuilder.java
+VoronoiDemo.class: DCEL UTILS DAC VoronoiDemo.java VoronoiDiagram.java VoronoiBuilder.java 
 	javac -g VoronoiDemo.java VoronoiDiagram.java VoronoiBuilder.java
 VoronoiDemo: VoronoiDemo.class
 

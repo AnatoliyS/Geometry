@@ -165,11 +165,54 @@ public class VoronoiDemo extends JPanel {
     }
   }
   
+  public static void doSomething() {
+    Debug.log("Something strange started.");
+    // Dependecies for ConvexHullAlgo
+    ArrayList<String> chDeps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
+    ConvexHullAlgo cha = new ConvexHullAlgo("ConvexHull", chDeps);
+
+    ArrayList<Point> lpoints = new ArrayList<Point>();
+    lpoints.add(new Point(1, 1));
+    lpoints.add(new Point(2, 2));
+    lpoints.add(new Point(3, 3));
+
+    ArrayList<Point> rpoints = new ArrayList<Point>();
+    rpoints.add(new Point(4, 1));
+    rpoints.add(new Point(5, 2));
+    rpoints.add(new Point(6, 3));
+
+
+    ConvexHull chLeft = new ConvexHull(lpoints);
+    ConvexHull chRight = new ConvexHull(rpoints);
+
+    Debug.log("Points in left convex hull\t= " + chLeft);
+    Debug.log("Points in right convex hull\t= " + chRight);
+  
+    ConvexHull ch = (ConvexHull)cha.merge(chLeft, chRight);
+    Debug.log("Points in merged convex hull\t= " + ch);
+/**/
+    //Algorithm vdAlgo = new Algorithm<VoronoiDiagram>();
+
+    /*ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
+    boolean f_add_ch = listAlgo.add(chAlgo);
+    boolean f_add_vd = listAlgo.add(vdAlgo);
+
+    AlgorithmsContainerBuilder builder = new AlgorithmsContainerBuilder();
+    AlgorithmsContainer ac = builder.getAlgorithmsContainer(listAlgo);
+    
+    ac.getContainerDescription();
+    */
+    Debug.log("Something strange finished.");
+  }
+
   public static void main(String []args) {
     load_and_preprocess_data(args[0]);
     
     voronoi = (new VoronoiBuilder(points)).getVoronoi();
     Debug.log("Done.");    
+
+    // Some function for adding DAC tree
+    doSomething();
 
     // Display graphics
     JFrame frame = new JFrame();
@@ -177,6 +220,7 @@ public class VoronoiDemo extends JPanel {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(window_width, window_height);
     frame.setVisible(true);
+
   }
 
 }
