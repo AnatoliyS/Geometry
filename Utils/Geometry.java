@@ -15,12 +15,28 @@ public class Geometry {
     return a.getX()*b.getX() + a.getY()*b.getY();
   }
 
-  /*public static Point intersect(Segment a, Segment b) {
-    return new Point();
-  }*/
-
   public static Point intersect(Line a, Line b) throws NoIntersectionException {
-    return null;
+    double dir_product = Geometry.cross_product(b.direction, a.direction);
+    if (Geometry.equal_zero(dir_product)) {
+      throw new NoIntersectionException();
+    } else {
+      double t = Geometry.cross_product(a.direction, new Vector(a.first, b.first)) / dir_product;
+      return new Point(b.first.getX() + t*b.direction.getX(), b.first.getY() + t*b.direction.getY());
+    }
+  }
+  
+  public static Point intersect(Line a, Segment b) throws NoIntersectionException {
+    double dir_product = Geometry.cross_product(b.direction, a.direction);
+    if (Geometry.equal_zero(dir_product)) {
+      throw new NoIntersectionException();
+    } else {
+      double t = Geometry.cross_product(a.direction, new Vector(a.first, b.first)) / dir_product;
+      if (t < 0 || t > 1) {
+        throw new NoIntersectionException();
+      } else {
+        return new Point(b.first.getX() + t*b.direction.getX(), b.first.getY() + t*b.direction.getY());
+      }
+    }
   }
 
 }
