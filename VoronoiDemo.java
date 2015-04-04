@@ -190,6 +190,24 @@ public class VoronoiDemo extends JPanel {
   
     ConvexHull ch = (ConvexHull)cha.merge(chLeft, chRight);
     Debug.log("Points in merged convex hull\t= " + ch);
+
+    // Creation DACTree
+    
+    // DACNode Left entry
+    DACNode nodeLeft = new DACNode();
+    nodeLeft.setDataResult("ConvexHull", chLeft);
+    nodeLeft.outputDescription();
+    
+    // DACNode Right entry
+    DACNode nodeRight = new DACNode();
+    nodeRight.setDataResult("ConvexHull", chRight);
+    nodeRight.outputDescription();
+
+    // DACNode entry
+    DACNode node = new DACNode();
+    node.setDataResult("ConvexHull", ch);
+    node.outputDescription();
+
 /**/
     //Algorithm vdAlgo = new Algorithm<VoronoiDiagram>();
 

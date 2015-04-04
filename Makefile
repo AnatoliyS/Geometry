@@ -31,7 +31,7 @@ CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 ALGS_SRC = Algorithm.java $(CONHULL_SRC)
 
 # Compiling Divide and Conquer tree
-DAC: $(ALGS_SRC) 
+DAC: $(ALGS_SRC) DACNode.java
 	javac -g $(ALGS_SRC)
 
 # Compiling Voronoi Demonstarion
