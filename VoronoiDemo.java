@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import DCEL.*;
 import Utils.*;
+import Utils.Exceptions.*;
 
 public class VoronoiDemo extends JPanel {
   private static VoronoiDiagram voronoi;
@@ -165,13 +166,34 @@ public class VoronoiDemo extends JPanel {
     }
   }
   
-  public static void doSomething() {
+  public static void doSomething() throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
     Debug.log("Something strange started.");
     // Dependecies for ConvexHullAlgo
-    ArrayList<String> chDeps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha = new ConvexHullAlgo("ConvexHull", chDeps);
+    ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
 
+    ArrayList<String> chDeps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
+    ConvexHullAlgo cha = new ConvexHullAlgo("111", chDeps);
+    Debug.log("CHA=" + cha.getName());
+    listAlgo.add(cha);
+
+    ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
+    ConvexHullAlgo cha2 = new ConvexHullAlgo("222", cha2Deps);
+    Debug.log("CHA2=" + cha2.getName());
+    listAlgo.add(cha2);
+
+    ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
+    ConvexHullAlgo cha3 = new ConvexHullAlgo("333", cha3Deps);
+    Debug.log("CHA3=" + cha3.getName());
+    listAlgo.add(cha3);
+
+    // Out list
+    for (Algorithm algo : listAlgo) {
+      Debug.log("Algo in list =" + algo.getName());
+    }
+
+    /*
     ArrayList<Point> lpoints = new ArrayList<Point>();
+
     lpoints.add(new Point(1, 1));
     lpoints.add(new Point(2, 2));
     lpoints.add(new Point(3, 3));
@@ -195,49 +217,50 @@ public class VoronoiDemo extends JPanel {
     
     // DACNode Left entry
     DACNode nodeLeft = new DACNode();
-    nodeLeft.setDataResult("ConvexHull", chLeft);
+    nodeLeft.setDataResult(AlgorithmName.CONVEX_HULL, chLeft);
     nodeLeft.outputDescription();
     
     // DACNode Right entry
     DACNode nodeRight = new DACNode();
-    nodeRight.setDataResult("ConvexHull", chRight);
+    nodeRight.setDataResult(AlgorithmName.CONVEX_HULL, chRight);
     nodeRight.outputDescription();
 
     // DACNode entry
     DACNode node = new DACNode();
-    node.setDataResult("ConvexHull", ch);
+    node.setDataResult(AlgorithmName.CONVEX_HULL, ch);
     node.outputDescription();
-
-/**/
-    //Algorithm vdAlgo = new Algorithm<VoronoiDiagram>();
-
-    /*ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
-    boolean f_add_ch = listAlgo.add(chAlgo);
-    boolean f_add_vd = listAlgo.add(vdAlgo);
+    */
 
     AlgorithmsContainerBuilder builder = new AlgorithmsContainerBuilder();
-    AlgorithmsContainer ac = builder.getAlgorithmsContainer(listAlgo);
-    
-    ac.getContainerDescription();
-    */
+    AlgorithmsContainer ac = builder.getInstance(listAlgo);
+    Debug.log("AlgorithmsContainer=" + ac);
+
+    Algorithm chAlgo = ac.getAlgorithm("111");
+    Debug.log("Algorithm=" + chAlgo);
+
     Debug.log("Something strange finished.");
   }
 
   public static void main(String []args) {
-    load_and_preprocess_data(args[0]);
+    try {
+      load_and_preprocess_data(args[0]);
     
-    voronoi = (new VoronoiBuilder(points)).getVoronoi();
-    Debug.log("Done.");    
+      voronoi = (new VoronoiBuilder(points)).getVoronoi();
+      Debug.log("Done.");
 
-    // Some function for adding DAC tree
-    doSomething();
+      // Some function for adding DAC tree
+      doSomething();
 
-    // Display graphics
-    JFrame frame = new JFrame();
-    frame.getContentPane().add(new VoronoiDemo());
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(window_width, window_height);
-    frame.setVisible(true);
+      // Display graphics
+      JFrame frame = new JFrame();
+      frame.getContentPane().add(new VoronoiDemo());
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      frame.setSize(window_width, window_height);
+      frame.setVisible(true);
+    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
+      //Debug.log(ex.getMessage() + ": " + ex.getMessage());
+      ex.printStackTrace();
+    }
 
   }
 

@@ -1,20 +1,17 @@
 import java.io.*;
+import java.lang.Override;
+import java.lang.String;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import Utils.*;
 
-/*
-* T - Type of Algorithm result. 
-* For ConvexHullAlgo is type ConvexHull.
-*/
-public class ConvexHullAlgo extends Algorithm<ConvexHull> {
+public class ConvexHullAlgo extends Algorithm {
 
-  public ConvexHullAlgo(String name, ArrayList<String> deps) {
-    super(name, deps);
+  public ConvexHullAlgo(String _name, ArrayList<String> _deps) {
+    super(_name, _deps);
   }
-
 
   //TODO: Add merging  
   public Object merge(Object l, Object r) {

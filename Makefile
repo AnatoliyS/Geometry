@@ -22,7 +22,11 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_DIR)Vector.java \
 						$(UTILS_DIR)Geometry.java \
 						$(UTILS_DIR)Segment.java \
-						$(UTILS_EXCEPTIONS_DIR)NoIntersectionException.java
+						$(UTILS_EXCEPTIONS_DIR)NoIntersectionException.java \
+						$(UTILS_EXCEPTIONS_DIR)NoDataException.java \
+						$(UTILS_EXCEPTIONS_DIR)AlgorithmDependenciesException.java \
+						$(UTILS_EXCEPTIONS_DIR)UnknownAlgorithmException.java
+
 
 UTILS_CLASSES = $(UTILS_SRC:.java=.class)
 $(UTILS_CLASSES): $(UTILS_SRC)
@@ -33,7 +37,7 @@ UTILS: $(UTILS_CLASSES)
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
 # Compiling algorithms
-ALGS_SRC = Algorithm.java $(CONHULL_SRC)
+ALGS_SRC = AlgorithmName.java Algorithm.java $(CONHULL_SRC)
 
 # Compiling Divide and Conquer tree
 DAC: $(ALGS_SRC) DACNode.java
