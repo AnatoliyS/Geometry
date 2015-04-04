@@ -12,12 +12,17 @@ $(DCEL_CLASSES): $(DCEL_SRC)
 DCEL: $(DCEL_CLASSES)
 
 UTILS_DIR = Utils/
+UTILS_EXCEPTIONS_DIR= Utils/Exceptions/
 UTILS_SRC = $(UTILS_DIR)Point.java \
 					 	$(UTILS_DIR)PointComparator.java \
 					 	$(UTILS_DIR)Line.java \
 						$(UTILS_DIR)Constants.java \
 						$(UTILS_DIR)Pair.java \
-						$(UTILS_DIR)Debug.java
+						$(UTILS_DIR)Debug.java \
+						$(UTILS_DIR)Vector.java \
+						$(UTILS_DIR)Geometry.java \
+						$(UTILS_DIR)Segment.java \
+						$(UTILS_EXCEPTIONS_DIR)NoIntersectionException.java
 
 UTILS_CLASSES = $(UTILS_SRC:.java=.class)
 $(UTILS_CLASSES): $(UTILS_SRC)

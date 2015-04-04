@@ -110,17 +110,19 @@ public class VoronoiBuilder {
     Debug.log("Start with lcs = " + left + ", "+right);
     Line lcs_line = new Line(A[left], B[right]);
     while (true) {
-      if (lcs_line.pointIsBelowLine( A[(left + 1) % A_size] ) ) {
+      if (lcs_line.checkPointVerticalAlignment(A[(left + 1) % A_size])
+        == Line.POINT_BELOW_LINE) {
         left = (left + 1) % A_size; 
         lcs_line = new Line(A[left], B[right]);
         continue;
       }
-      if (lcs_line.pointIsBelowLine( B[(right - 1 + B_size) % B_size] ) ) {
+      if (lcs_line.checkPointVerticalAlignment(B[(right - 1 + B_size) % B_size])
+        == Line.POINT_BELOW_LINE) {
         right = (right - 1 + B_size) % B_size;
         lcs_line = new Line(A[left], B[right]);
         continue;
-      } 
-      break; 
+      }
+      break;
     }
     
     return new Pair<Integer,Integer>(left, right);
@@ -143,12 +145,14 @@ public class VoronoiBuilder {
     }
     Line ucs_line = new Line(A[left], B[right]);
     while (true) {
-      if (ucs_line.pointIsAboveLine( A[(left - 1 + A_size) % A_size] ) ) {
+      if (ucs_line.checkPointVerticalAlignment(A[(left - 1 + A_size) % A_size])
+        == Line.POINT_ABOVE_LINE) {
         left = (left-1 + A_size) % A_size;
         ucs_line = new Line(A[left], B[right]);
         continue;
       } 
-      if (ucs_line.pointIsAboveLine( B[(right + 1 + B_size) % B_size] ) ) {
+      if (ucs_line.checkPointVerticalAlignment(B[(right + 1 + B_size) % B_size])
+        == Line.POINT_ABOVE_LINE) {
         right = (right + 1 + B_size) % B_size;
         ucs_line = new Line(A[left], B[right]);
         continue;
