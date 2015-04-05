@@ -18,7 +18,8 @@ public class AlgorithmsContainerBuilder {
   }
 
   // TODO: Checks functions don't throw exceptions
-  private boolean checkAlgoDependencies(ArrayList<Algorithm> list) throws AlgorithmDependenciesException, UnknownAlgorithmException {
+  private boolean checkAlgoDependencies(ArrayList<Algorithm> list)
+          throws AlgorithmDependenciesException, UnknownAlgorithmException {
     if (hasCycle(list)) {
       throw new AlgorithmDependenciesException(ExceptionMessage.CYCLE_DEPENDENCIES);
     }
@@ -28,7 +29,8 @@ public class AlgorithmsContainerBuilder {
     return true;
   }
 
-  public AlgorithmsContainer getInstance(ArrayList<Algorithm> list) throws AlgorithmDependenciesException, UnknownAlgorithmException {
+  public AlgorithmsContainer getInstance(ArrayList<Algorithm> list)
+          throws AlgorithmDependenciesException, UnknownAlgorithmException {
     // TODO: Check algorithms and algorithms' tree for cycle
     if (checkAlgoDependencies(list)) {
       Map<String, Algorithm> algorithmsMap = new HashMap<String, Algorithm>();
