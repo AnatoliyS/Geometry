@@ -39,4 +39,14 @@ public class Geometry {
     }
   }
 
+  public static Vector getNormalizedPerpendicular(Vector d) {
+    if (Geometry.equal_zero(d.getY())) {
+      return new Vector(0.0, 1.0);
+    } else {
+      double x = Math.sqrt(1.0 / (1.0 + d.getX()*d.getX() / (d.getY() * d.getY())));
+      double y = - x * d.getX() / d.getY();
+      return new Vector(x, y);
+    }
+  }
+
 }

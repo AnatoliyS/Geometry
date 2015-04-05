@@ -9,6 +9,14 @@ public class Line {
   public static final int POINT_ABOVE_LINE = 1;
   public static final int POINT_BELOW_LINE = 2;
   public static final int POINT_HAS_NO_X_PROJECTION = 3;
+
+  public Point getFirst() {
+    return first;
+  }
+
+  public Point getSecond() {
+    return second;
+  }
   
   public Line(Point a, Point b) {
     first = a;
