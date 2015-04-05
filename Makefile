@@ -37,10 +37,11 @@ UTILS: $(UTILS_CLASSES)
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
 # Compiling algorithms
-ALGS_SRC = AlgorithmName.java Algorithm.java $(CONHULL_SRC)
+ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java \
+	AlgorithmsContainerBuilder.java $(CONHULL_SRC)
 
 # Compiling Divide and Conquer tree
-DAC: $(ALGS_SRC) DACNode.java
+DAC: $(ALGS_SRC) DACNode.java DACTree.java
 	javac -g $(ALGS_SRC)
 
 # Compiling Voronoi Demonstarion

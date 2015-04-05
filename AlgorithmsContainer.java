@@ -23,7 +23,7 @@ public class AlgorithmsContainer {
 
   @Override
   public String toString() {
-    String s = "[";
+    String s = "Contain [";
     for (String nameAlgo : algorithmsMap.keySet())
       s += nameAlgo + ", ";
     s += "]";
