@@ -9,6 +9,11 @@ public class Vector {
     y = end.getY() - start.getY();
   }
 
+  public Vector(double _x, double _y) {
+    x = _x;
+    y = _y;
+  }
+
   public double getX() {
     return x;
   }
