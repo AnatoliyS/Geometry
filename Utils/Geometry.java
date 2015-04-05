@@ -39,6 +39,9 @@ public class Geometry {
     }
   }
 
+  /**
+   * Get perpendicular vector of length 1
+   */
   public static Vector getNormalizedPerpendicular(Vector d) {
     if (Geometry.equal_zero(d.getY())) {
       return new Vector(0.0, 1.0);

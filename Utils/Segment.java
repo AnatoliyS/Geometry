@@ -12,11 +12,13 @@ public class Segment {
   }
 
   public Line getPerpendicularBisector() {
-    Point start = new Point((first.getX() + second.getX())/2.0, (first.getY() + second.getY())/2.0);
+    double start_x = (first.getX() + second.getX()) / 2.0;
+    double start_y = (first.getY() + second.getY()) / 2.0;
+    Point start = new Point(start_x, start_y);
+
     Vector n = Geometry.getNormalizedPerpendicular(direction);
     Point end = new Point(start.getX() + n.getX(), start.getY() + n.getY());
-    Line perpendicular_bisector = new Line(start, end);
-    return perpendicular_bisector;
+    return new Line(start, end);
   }
 
 }
