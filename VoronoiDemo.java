@@ -165,25 +165,34 @@ public class VoronoiDemo extends JPanel {
       System.out.println("IO error:" + e.toString());    
     }
   }
-  
+
   public static void doSomething() throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
     Debug.log("Something strange started.");
     // Dependecies for ConvexHullAlgo
     ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
 
-    ArrayList<String> chDeps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha = new ConvexHullAlgo("111", chDeps);
-    Debug.log("CHA=" + cha.getName());
-    listAlgo.add(cha);
+    ArrayList<String> algoDeps1 = new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo algo1 = new ConvexHullAlgo("Algo1", algoDeps1);
+    listAlgo.add(algo1);
+
+    ArrayList<String> algoDeps2 = new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo algo2 = new ConvexHullAlgo("Algo2", algoDeps2);
+    listAlgo.add(algo2);
+
+    ArrayList<String> algoDeps3 = new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo algo3 = new ConvexHullAlgo("Algo3", algoDeps3);
+    listAlgo.add(algo3);
+
+    ArrayList<String> chDeps1 = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
+    ConvexHullAlgo cha1 = new ConvexHullAlgo("111", chDeps1);
+    listAlgo.add(cha1);
 
     ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
     ConvexHullAlgo cha2 = new ConvexHullAlgo("222", cha2Deps);
-    Debug.log("CHA2=" + cha2.getName());
     listAlgo.add(cha2);
 
     ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
     ConvexHullAlgo cha3 = new ConvexHullAlgo("333", cha3Deps);
-    Debug.log("CHA3=" + cha3.getName());
     listAlgo.add(cha3);
 
     // Out list
@@ -232,9 +241,11 @@ public class VoronoiDemo extends JPanel {
     */
 
     AlgorithmsContainerBuilder builder = new AlgorithmsContainerBuilder();
-    AlgorithmsContainer ac = builder.getInstance(listAlgo);
+    builder.createAlgorithmsContainer(listAlgo);
+    AlgorithmsContainer ac = builder.getAlgorithmsContainer();
     Debug.log("AlgorithmsContainer=" + ac);
 
+    //Algorithm chAlgo = ac.getAlgorithm(AlgorithmName.CONVEX_HULL);
     Algorithm chAlgo = ac.getAlgorithm("111");
     Debug.log("Algorithm=" + chAlgo);
 

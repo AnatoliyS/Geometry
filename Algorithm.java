@@ -20,6 +20,10 @@ public abstract class Algorithm {
     return name;
   }
 
+  public ArrayList<String> getDependencies() {
+    return dependencies;
+  }
+
   public abstract Object merge(Object left, Object right); 
   public abstract void render(Object result, Graphics g);
   // TODO:
