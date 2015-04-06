@@ -187,6 +187,7 @@ public class VoronoiDemo extends JPanel {
     ConvexHullAlgo cha1 = new ConvexHullAlgo("111", chDeps1);
     listAlgo.add(cha1);
 
+
     ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
     ConvexHullAlgo cha2 = new ConvexHullAlgo("222", cha2Deps);
     listAlgo.add(cha2);
@@ -248,6 +249,20 @@ public class VoronoiDemo extends JPanel {
     //Algorithm chAlgo = ac.getAlgorithm(AlgorithmName.CONVEX_HULL);
     Algorithm chAlgo = ac.getAlgorithm("111");
     Debug.log("Algorithm=" + chAlgo);
+
+    ArrayList<Point> points = new ArrayList<Point>();
+    points.add(new Point(1, 1));
+    points.add(new Point(2, 2));
+    points.add(new Point(3, 3));
+    points.add(new Point(4, 1));
+    points.add(new Point(5, 2));
+    points.add(new Point(6, 3));
+
+    DACTree tree = new DACTree(points, listAlgo);
+    Debug.log(tree.toString());
+
+    tree.processAlgorithm("111");
+    Debug.log(tree.toString());
 
     Debug.log("Something strange finished.");
   }

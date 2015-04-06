@@ -24,11 +24,11 @@ public abstract class Algorithm {
     return dependencies;
   }
 
-  public abstract Object merge(Object left, Object right); 
+  // We need exactly DACNode nodes for getting result using nodes' data
+  public abstract Object merge(DACNode left, DACNode right);
   public abstract void render(Object result, Graphics g);
-  // TODO:
-  //public abstract boolean isTrivialCase(int count);
-  //public abstract void doTrivialCase(DACNode node);
+  public abstract boolean isTrivialCase(int count);
+  public abstract Object doTrivialCase(ArrayList<Point> points);
 
   @Override
   public String toString() {

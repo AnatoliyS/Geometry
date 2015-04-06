@@ -65,7 +65,7 @@ public class AlgorithmsContainerBuilder {
           throws UnknownAlgorithmException {
     // All algorithms' name which present in list of algorithms
     HashSet<String> presentAlgorithms = new HashSet<String>();
-    // All depent algorithms for each algorthm in list of algorithms
+    // All depent algorithms for each algorithm in list of algorithms
     HashSet<String> depentAlgorithms = new HashSet<String>();
     for (Algorithm algo : list) {
       presentAlgorithms.add(algo.getName());
