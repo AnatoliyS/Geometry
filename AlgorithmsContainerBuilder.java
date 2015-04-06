@@ -19,7 +19,6 @@ public class AlgorithmsContainerBuilder {
    */
   public void createAlgorithmsContainer(ArrayList<Algorithm> list)
           throws AlgorithmDependenciesException, UnknownAlgorithmException {
-    // TODO: Check algorithms and algorithms' tree for cycle
     if (checkAlgoDependencies(list)) {
       Map<String, Algorithm> algorithmsMap = new HashMap<String, Algorithm>();
       for (Algorithm alg : list) {
@@ -57,7 +56,7 @@ public class AlgorithmsContainerBuilder {
 
   /**
    * Check algorithm graph dependencies for unknowm algorithms
-   * @param list
+   * @param list - List of Algorithm elements
    * @return true - All algorithms are known
    * @throws UnknownAlgorithmException
    */
@@ -87,11 +86,56 @@ public class AlgorithmsContainerBuilder {
 
   /**
    * Check algorithm graph dependencies for a cycle
-   * @param list
-   * @return Cycle present in algorithm dependencies graph
+   * @param list - List of Algorithm elements
+   * @return true - Cycle presents in algorithm dependencies graph
    */
   private boolean hasCycle(ArrayList<Algorithm> list) {
-    //TODO: Add realisation
+    // All algorithms' names which have already been checked
+    HashSet<String> checkedAlgorithms = new HashSet<String>();
+    // All algorithms' names which present in current algorithm's recursion stack
+    HashSet<String> recStack = new HashSet<String>();
+
+    Map<String, ArrayList<String>> algorithmsMap = new HashMap<String, ArrayList<String>>();
+    for (Algorithm algo : list) {
+      algorithmsMap.put(algo.getName(), algo.getDependencies());
+    }
+
+    for (Algorithm algo : list) {
+      if(hasCycleUtil(algo.getName(), checkedAlgorithms, recStack, algorithmsMap)) return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Check if current algorithm is a part of algorithm graph dependencies' cycle (depth first search)
+   * @param algorithm - Current algorithm to check being a part of algorithm graph dependencies' cycle
+   * @param checkedAlgorithms - All algorithms' names which have already been checked
+   * @param recStack - All algorithms' names which present in current algorithm's recursion stack
+   * @param algorithmsMap - Map for each algorithm its dependencies
+   * @return true - Current algoritm is a part of a cycle in algorithm dependencies graph
+   */
+  private boolean hasCycleUtil(
+          String algorithm,
+          HashSet<String> checkedAlgorithms,
+          HashSet<String> recStack,
+          Map<String, ArrayList<String>> algorithmsMap) {
+    if (!checkedAlgorithms.contains(algorithm)) {
+      checkedAlgorithms.add(algorithm);
+      recStack.add(algorithm);
+
+      for (String algo : algorithmsMap.get(algorithm)) {
+        if (!checkedAlgorithms.contains(algo) && hasCycleUtil(algo, checkedAlgorithms, recStack, algorithmsMap)) {
+          return true;
+        }
+
+        if (recStack.contains(algo)) {
+          return true;
+        }
+      }
+    }
+
+    recStack.remove(algorithm);
     return false;
   }
 
