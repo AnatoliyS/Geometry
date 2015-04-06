@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Stack;
 import Utils.*;
 import Utils.Exceptions.*;
 
@@ -93,8 +92,8 @@ public class AlgorithmsContainerBuilder {
   private boolean hasCycle(ArrayList<Algorithm> list) {
     // All algorithms' names which have already been checked
     HashSet<String> checkedAlgorithms = new HashSet<String>();
-    // Stack of algorithms for depth first search
-    Stack<String> algoStack = new Stack<String>();
+    // All algorithms' names which present in current algorithm's recursion stack
+    HashSet<String> recStack = new HashSet<String>();
 
     Map<String, ArrayList<String>> algorithmsMap = new HashMap<String, ArrayList<String>>();
     for (Algorithm algo : list) {
@@ -102,7 +101,7 @@ public class AlgorithmsContainerBuilder {
     }
 
     for (Algorithm algo : list) {
-      if(hasCycleUtil(algo.getName(), checkedAlgorithms, algoStack, algorithmsMap)) return true;
+      if(hasCycleUtil(algo.getName(), checkedAlgorithms, recStack, algorithmsMap)) return true;
     }
 
     return false;
@@ -112,26 +111,31 @@ public class AlgorithmsContainerBuilder {
    * Check if current algorithm is a part of algorithm graph dependencies' cycle (depth first search)
    * @param algorithm - Current algorithm to check being a part of algorithm graph dependencies' cycle
    * @param checkedAlgorithms - All algorithms' names which have already been checked
-   * @param algoStack - Stack of algorithms for depth first search
+   * @param recStack - All algorithms' names which present in current algorithm's recursion stack
    * @param algorithmsMap - Map for each algorithm its dependencies
    * @return true - Current algoritm is a part of a cycle in algorithm dependencies graph
    */
   private boolean hasCycleUtil(
           String algorithm,
           HashSet<String> checkedAlgorithms,
-          Stack<String> algoStack,
-          Map<String, ArrayList<String>> algorithmsMap){
-    if(checkedAlgorithms.contains(algorithm)) return false;
+          HashSet<String> recStack,
+          Map<String, ArrayList<String>> algorithmsMap) {
+    if (!checkedAlgorithms.contains(algorithm)) {
+      checkedAlgorithms.add(algorithm);
+      recStack.add(algorithm);
 
-    checkedAlgorithms.add(algorithm);
-    algoStack.push(algorithm);
+      for (String algo : algorithmsMap.get(algorithm)) {
+        if (!checkedAlgorithms.contains(algo) && hasCycleUtil(algo, checkedAlgorithms, recStack, algorithmsMap)) {
+          return true;
+        }
 
-    for(String algo : algorithmsMap.get(algorithm)){
-      if(!checkedAlgorithms.contains(algo) && hasCycleUtil(algo, checkedAlgorithms, algoStack, algorithmsMap)) return true;
-      if(algo.equals(algoStack.peek())) return true;
+        if (recStack.contains(algo)) {
+          return true;
+        }
+      }
     }
 
-    algoStack.pop();
+    recStack.remove(algorithm);
     return false;
   }
 
