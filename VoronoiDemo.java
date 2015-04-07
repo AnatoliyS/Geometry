@@ -241,13 +241,18 @@ public class VoronoiDemo extends JPanel {
     node.outputDescription();
     */
 
-    AlgorithmsContainerBuilder builder = new AlgorithmsContainerBuilder();
-    builder.createAlgorithmsContainer(listAlgo);
-    AlgorithmsContainer ac = builder.getAlgorithmsContainer();
-    Debug.log("AlgorithmsContainer=" + ac);
+    AlgorithmsContainer algoContainer = new AlgorithmsContainer.AlgorithmsContainerBuilder()
+            .addAlgorithm(algo1)
+            .addAlgorithm(algo2)
+            .addAlgorithm(algo3)
+            .addAlgorithm(cha1)
+            .addAlgorithm(cha2)
+            .addAlgorithm(cha3)
+            .buildContainer();
+    Debug.log("AlgorithmsContainer=" + algoContainer);
 
     //Algorithm chAlgo = ac.getAlgorithm(AlgorithmName.CONVEX_HULL);
-    Algorithm chAlgo = ac.getAlgorithm("111");
+    Algorithm chAlgo = algoContainer.getAlgorithm("111");
     Debug.log("Algorithm=" + chAlgo);
 
     ArrayList<Point> points = new ArrayList<Point>();
@@ -263,7 +268,6 @@ public class VoronoiDemo extends JPanel {
 
     tree.processAlgorithm("111");
     Debug.log(tree.toString());
-
     Debug.log("Something strange finished.");
   }
 

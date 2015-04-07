@@ -30,9 +30,12 @@ public class DACTree {
         this.points = new ArrayList<Point>(_points);
 
         // AlgorithmsContainer
-        AlgorithmsContainerBuilder builder = new AlgorithmsContainerBuilder();
-        builder.createAlgorithmsContainer(_algorithms);
-        this.algoContainer = builder.getAlgorithmsContainer();
+        AlgorithmsContainer.AlgorithmsContainerBuilder builder =
+                new AlgorithmsContainer.AlgorithmsContainerBuilder();
+        for (Algorithm algo : _algorithms) {
+            builder = builder.addAlgorithm(algo);
+        }
+        this.algoContainer = builder.buildContainer();
 
         // Algorithm status
         this.statusMap = new HashMap<String, Boolean>();
