@@ -99,7 +99,7 @@ public class AlgorithmsContainer {
      */
 
     /**
-     * Getting all unkwons algorithms from graph dependencies
+     * Getting all unknown algorithms from graph dependencies
      * @param algorithms - List of Algorithm elements
      * @return Data structure of all unknown algorithms
      */
@@ -181,5 +181,4 @@ public class AlgorithmsContainer {
       return false;
     }
   }
-
 }
