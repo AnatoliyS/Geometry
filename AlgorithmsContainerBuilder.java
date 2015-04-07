@@ -38,35 +38,41 @@ public class AlgorithmsContainerBuilder {
 
   /**
    * Checking algorithm dependencies
-   * @param list List of Algorithm elements
-   * @return true - algorithms dependencies is valid
+   * @param algorithms - List of Algorithm elements
+   * @return true - Algorithms dependencies' graph is valid
    * @throws AlgorithmDependenciesException
    * @throws UnknownAlgorithmException
    */
-  private boolean checkAlgoDependencies(ArrayList<Algorithm> list)
+  private boolean checkAlgoDependencies(ArrayList<Algorithm> algorithms)
           throws AlgorithmDependenciesException, UnknownAlgorithmException {
-    if (hasCycle(list)) {
+    // Handling for unknown algorithm
+    HashSet<String> unknownAlgorithms =
+            new HashSet<String>(getUnknownAlgorithms(algorithms));
+    if (!unknownAlgorithms.isEmpty()) {
+      throw new UnknownAlgorithmException(
+              ExceptionMessage.UNKNOWN_ALGORITHM + unknownAlgorithms.toString());
+    }
+
+    // Checking for a cycle in algorithms dependencies graph
+    if (hasCycle(algorithms)) {
       throw new AlgorithmDependenciesException(ExceptionMessage.CYCLE_DEPENDENCIES);
     }
-    if (!checkAlgoSet(list)) {
-      throw new AlgorithmDependenciesException(ExceptionMessage.UNKNOWN_ALGORITHM);
-    }
+
     return true;
   }
 
   /**
    * Check algorithm graph dependencies for unknowm algorithms
-   * @param list - List of Algorithm elements
+   * @param algorithms - List of Algorithm elements
    * @return true - All algorithms are known
    * @throws UnknownAlgorithmException
    */
-  private boolean checkAlgoSet(ArrayList<Algorithm> list)
-          throws UnknownAlgorithmException {
+  private HashSet<String> getUnknownAlgorithms(ArrayList<Algorithm> algorithms) {
     // All algorithms' name which present in list of algorithms
     HashSet<String> presentAlgorithms = new HashSet<String>();
     // All depent algorithms for each algorithm in list of algorithms
     HashSet<String> depentAlgorithms = new HashSet<String>();
-    for (Algorithm algo : list) {
+    for (Algorithm algo : algorithms) {
       presentAlgorithms.add(algo.getName());
       depentAlgorithms.addAll(algo.getDependencies());
     }
@@ -74,14 +80,12 @@ public class AlgorithmsContainerBuilder {
     Debug.log("presentAlgorithms=" + presentAlgorithms.toString());
     Debug.log("depentAlgorithms=" + depentAlgorithms.toString());
 
+    /**
+     * After removing all present algorithms in depentAlgorithms will be only
+     * unknown algorithms
+     */
     depentAlgorithms.removeAll(presentAlgorithms);
-    Debug.log("unknownAlgorithms=" + depentAlgorithms.toString());
-
-    if (!depentAlgorithms.isEmpty()) {
-      throw new UnknownAlgorithmException(
-              ExceptionMessage.UNKNOWN_ALGORITHM + depentAlgorithms.toString());
-    }
-    return true;
+    return depentAlgorithms;
   }
 
   /**
