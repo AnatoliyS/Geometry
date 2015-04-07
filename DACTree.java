@@ -16,13 +16,15 @@ import Utils.Exceptions.*;
 public class DACTree {
 
     // Algorithm process status
-    private final static boolean NOT_PROCESSED = false;
-    private final static boolean PROCESSED = true;
+    private enum AlgorithmProcessStatus {
+        NOT_PROCESSED,
+        PROCESSED
+    }
 
     private ArrayList<DACNode> nodes;
     private ArrayList<Point> points;
     private AlgorithmsContainer algoContainer;
-    private Map<String, Boolean> statusMap;
+    private Map<String, AlgorithmProcessStatus> statusMap;
 
     public DACTree(ArrayList<Point> _points, ArrayList<Algorithm> _algorithms)
             throws AlgorithmDependenciesException, UnknownAlgorithmException {
@@ -38,9 +40,9 @@ public class DACTree {
         this.algoContainer = builder.buildContainer();
 
         // Algorithm status
-        this.statusMap = new HashMap<String, Boolean>();
+        this.statusMap = new HashMap<String, AlgorithmProcessStatus>();
         for (Algorithm algo : _algorithms) {
-            this.statusMap.put(algo.getName(), NOT_PROCESSED);
+            this.statusMap.put(algo.getName(), AlgorithmProcessStatus.NOT_PROCESSED);
         }
 
         // Tree's nodes
@@ -53,8 +55,8 @@ public class DACTree {
 
     public void processAlgorithm(String name) throws UnknownAlgorithmException {
         // Checking status
-        Boolean currentStatus = statusMap.get(name);
-        if (currentStatus == PROCESSED) {
+        AlgorithmProcessStatus currentStatus = statusMap.get(name);
+        if (currentStatus == AlgorithmProcessStatus.PROCESSED) {
             Debug.log("Algorithm " + name + " have been processed.");
             return;
         }
@@ -77,7 +79,7 @@ public class DACTree {
             // Do nothing
         }
         // Set status PROCESSED
-        statusMap.put(name, PROCESSED);
+        statusMap.put(name, AlgorithmProcessStatus.PROCESSED);
         Debug.log("Processing finished for algorithm " + algo + ".");
     }
 
