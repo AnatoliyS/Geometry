@@ -6,22 +6,20 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.*;
+import java.awt.Color;
 import Utils.*;
 import Utils.Exceptions.*;
 
 public class ConvexHullAlgo extends Algorithm {
 
-  private final int TRIVIAL_COUNT = 3;
+  private final int TRIVIAL_COUNT = 1;
 
   public ConvexHullAlgo(String _name, ArrayList<String> _deps) {
     super(_name, _deps);
   }
 
-  // TODO: Add merging
-  public Object merge(DACNode l, DACNode r) {
-    //Debug.log("Merging ConvexHull for type=" + left.getClass());
-    /*
-    // Dummy realisation
+  public Object merge(DACNode l, DACNode r) throws NoDataException {
     String name = getName();
     ConvexHull left  = (ConvexHull)l.getDataResult(name);
     ConvexHull right = (ConvexHull)r.getDataResult(name);
@@ -29,31 +27,134 @@ public class ConvexHullAlgo extends Algorithm {
     ArrayList<Point> lpoints = left.getPoints();
     ArrayList<Point> rpoints = right.getPoints();
 
-    ArrayList<Point> points = new ArrayList<Point>();
-    for(Point p: lpoints)
-      points.add(p);
-    for(Point p: rpoints)
-      points.add(p);
+    // Step 1. Get support lines from convex hulls
+    Pair<Integer, Integer> lcs = lowest_common_support(
+      lpoints,
+      rpoints
+    );
+    Pair<Integer, Integer> ucs = uppest_common_support(
+      lpoints,
+      rpoints
+    );
+
+    // Step 2. Merge
+    ArrayList<Point> points = merge_convex_hulls(
+      lpoints,
+      rpoints,
+      lcs,
+      ucs
+    );
     
     ConvexHull result = new ConvexHull(points);
     return result;
-    */
-    return null;
   }
 
-  // TODO: Add rendering
-  public void render(Object result, Graphics g) {
-    Debug.log("Rendering ConvexHull result...");
-  }
-  // TODO: Add realisation
   public boolean isTrivialCase(int count) {
     return (count <= TRIVIAL_COUNT);
   }
 
-  // TODO: Add realisation
   public Object doTrivialCase(ArrayList<Point> points) {
     return new ConvexHull(points);
   }
 
+  public ArrayList<Point> merge_convex_hulls(
+    ArrayList<Point> A, 
+    ArrayList<Point> B, 
+    Pair<Integer, Integer> lcs, 
+    Pair<Integer, Integer> ucs) {
+
+    Debug.log("Merging CH....");
+    ArrayList<Point> list = new ArrayList<Point>();
+    int start = lcs.first; Debug.log("start = " + start);
+    int end = ucs.first; Debug.log("end = " + end);
+    while (start != end) {
+      list.add(A.get(start));
+      start = (start + 1) % A.size();
+    }
+    list.add(A.get(end));
+
+    start = ucs.second;
+    end = lcs.second;
+    while (start != end) {
+      list.add(B.get(start));
+      start = (start + 1) % B.size();
+    }
+    list.add(B.get(end));
+    Point[] res = new Point[list.size()];
+    res = list.toArray(res);
+    Debug.log_points("Merging result", res);
+    return list;
+  }
+
+
+  public Pair<Integer,Integer> lowest_common_support(ArrayList<Point> A, ArrayList<Point> B) {
+    int left = 0;
+    int right = 0;
+    int A_size = A.size();
+    int B_size = B.size();
+    for (int i = 0; i < A_size; i++) {
+      if (A.get(i).getX() > A.get(left).getX()) {
+        left = i;
+      }
+    }
+    for (int i = 0; i < B_size; i++) {
+      if (B.get(i).getX() < B.get(right).getX()) {
+        right = i;
+      }
+    }
+    Debug.log("Start with lcs = " + left + ", "+right);
+    Line lcs_line = new Line(A.get(left), B.get(right));
+    while (true) {
+      if (lcs_line.checkPointVerticalAlignment(A.get((left + 1) % A_size))
+        == Line.POINT_BELOW_LINE) {
+        left = (left + 1) % A_size;
+        lcs_line = new Line(A.get(left), B.get(right));
+        continue;
+      }
+      if (lcs_line.checkPointVerticalAlignment(B.get((right - 1 + B_size) % B_size))
+        == Line.POINT_BELOW_LINE) {
+        right = (right - 1 + B_size) % B_size;
+        lcs_line = new Line(A.get(left), B.get(right));
+        continue;
+      }
+      break;
+    }
+
+    return new Pair<Integer,Integer>(left, right);
+  }
+
+  public Pair<Integer,Integer> uppest_common_support(ArrayList<Point> A, ArrayList<Point> B) {
+    int left = 0;
+    int right = 0;
+    int A_size = A.size();
+    int B_size = B.size();
+    for (int i = 0; i < A_size; i++) {
+      if (A.get(i).getX() > A.get(left).getX()) {
+        left = i;
+      }
+    }
+    for (int i = 0; i < B_size; i++) {
+      if (B.get(i).getX() < B.get(right).getX()){
+        right = i;
+      }
+    }
+    Line ucs_line = new Line(A.get(left), B.get(right));
+    while (true) {
+      if (ucs_line.checkPointVerticalAlignment(A.get((left - 1 + A_size) % A_size))
+        == Line.POINT_ABOVE_LINE) {
+        left = (left-1 + A_size) % A_size;
+        ucs_line = new Line(A.get(left), B.get(right));
+        continue;
+      }
+      if (ucs_line.checkPointVerticalAlignment(B.get((right + 1 + B_size) % B_size))
+        == Line.POINT_ABOVE_LINE) {
+        right = (right + 1 + B_size) % B_size;
+        ucs_line = new Line(A.get(left), B.get(right));
+        continue;
+      }
+      break;
+    }
+    return new Pair<Integer,Integer>(left, right);
+  }
 
 }
