@@ -28,17 +28,17 @@ public class ConvexHullAlgo extends Algorithm {
     ArrayList<Point> rpoints = right.getPoints();
 
     // Step 1. Get support lines from convex hulls
-    Pair<Integer, Integer> lcs = lowest_common_support(
+    Pair<Integer, Integer> lcs = lowestCommonSupport(
       lpoints,
       rpoints
     );
-    Pair<Integer, Integer> ucs = uppest_common_support(
+    Pair<Integer, Integer> ucs = uppestCommonSupport(
       lpoints,
       rpoints
     );
 
     // Step 2. Merge
-    ArrayList<Point> points = merge_convex_hulls(
+    ArrayList<Point> points = mergeConvexHulls(
       lpoints,
       rpoints,
       lcs,
@@ -57,7 +57,7 @@ public class ConvexHullAlgo extends Algorithm {
     return new ConvexHull(points);
   }
 
-  public ArrayList<Point> merge_convex_hulls(
+  private ArrayList<Point> mergeConvexHulls(
     ArrayList<Point> A, 
     ArrayList<Point> B, 
     Pair<Integer, Integer> lcs, 
@@ -87,7 +87,7 @@ public class ConvexHullAlgo extends Algorithm {
   }
 
 
-  public Pair<Integer,Integer> lowest_common_support(ArrayList<Point> A, ArrayList<Point> B) {
+  public Pair<Integer,Integer> lowestCommonSupport(ArrayList<Point> A, ArrayList<Point> B) {
     int left = 0;
     int right = 0;
     int A_size = A.size();
@@ -123,7 +123,7 @@ public class ConvexHullAlgo extends Algorithm {
     return new Pair<Integer,Integer>(left, right);
   }
 
-  public Pair<Integer,Integer> uppest_common_support(ArrayList<Point> A, ArrayList<Point> B) {
+  public Pair<Integer,Integer> uppestCommonSupport(ArrayList<Point> A, ArrayList<Point> B) {
     int left = 0;
     int right = 0;
     int A_size = A.size();
