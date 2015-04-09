@@ -12,7 +12,7 @@ public class DACNode {
   /**
    * Don't need use pointers for left and right nodes,
    * because all instance of this DACNode will be saved
-   * in array. So we can determinate sun nodes by index
+   * in array. So we can determinate son nodes by index
    * of current node.
    */
   private Map<String, Object> data;

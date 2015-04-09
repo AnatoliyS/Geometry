@@ -32,10 +32,10 @@ public class Line {
    */
   public int checkPointVerticalAlignment(Point p) {
     Vector to_point = new Vector(first, p);
-    if (Geometry.equal_zero(Geometry.cross_product(direction, to_point))) {
+    if (Geometry.equalZero(Geometry.crossProduct(direction, to_point))) {
       return POINT_ON_LINE;
     } else {
-      if (Geometry.equal_zero(direction.getX())) {
+      if (Geometry.equalZero(direction.getX())) {
         return POINT_HAS_NO_X_PROJECTION;
       } else {
         double projection_y = first.getY() +
