@@ -94,7 +94,7 @@ public class Demo extends JPanel {
     ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
 
     ArrayList<String> algoDeps1 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo1 = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, algoDeps1);
+    ConvexHullAlgo algo1 = new ConvexHullAlgo("Algo1", algoDeps1);
     listAlgo.add(algo1);
 
     ArrayList<String> algoDeps2 = new ArrayList<String>(Arrays.asList(new String[] {}));
@@ -105,16 +105,16 @@ public class Demo extends JPanel {
     ConvexHullAlgo algo3 = new ConvexHullAlgo("Algo3", algoDeps3);
     listAlgo.add(algo3);
 
-    ArrayList<String> chDeps1 = new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL, "Algo2", "Algo3"}));
-    ConvexHullAlgo cha1 = new ConvexHullAlgo("111", chDeps1);
+    ArrayList<String> chDeps1 = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
+    ConvexHullAlgo cha1 = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, chDeps1);
     listAlgo.add(cha1);
 
 
-    ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL, "Algo2", "Algo3"}));
+    ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
     ConvexHullAlgo cha2 = new ConvexHullAlgo("222", cha2Deps);
     listAlgo.add(cha2);
 
-    ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL, "Algo2", "Algo3"}));
+    ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
     ConvexHullAlgo cha3 = new ConvexHullAlgo("333", cha3Deps);
     listAlgo.add(cha3);
 
