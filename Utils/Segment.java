@@ -16,7 +16,7 @@ public class Segment {
     double start_y = (first.getY() + second.getY()) / 2.0;
     Point start = new Point(start_x, start_y);
 
-    Vector n = Geometry.getNormalizedPerpendicular(direction);
+    Vector n = Geometry.getLeftNormalizedPerpendicular(direction);
     Point end = new Point(start.getX() + n.getX(), start.getY() + n.getY());
     return new Line(start, end);
   }
