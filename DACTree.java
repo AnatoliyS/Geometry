@@ -53,7 +53,8 @@ public class DACTree {
         }
     }
 
-    public void processAlgorithm(String name) throws UnknownAlgorithmException {
+    public void processAlgorithm(String name)
+            throws UnknownAlgorithmException, NoDataException {
         // Checking status
         AlgorithmProcessStatus currentStatus = statusMap.get(name);
         if (currentStatus == AlgorithmProcessStatus.PROCESSED) {
@@ -83,11 +84,12 @@ public class DACTree {
         Debug.log("Processing finished for algorithm " + algo + ".");
     }
 
-    private void processAlgorithmHelper(Algorithm algo, int nodeIndex, int l, int r) {
-        Debug.log("l=" + l + " r=" + r);
+    private void processAlgorithmHelper(Algorithm algo, int nodeIndex, int l, int r)
+            throws NoDataException {
         if (l > r) {
             return;
         }
+        Debug.log("Merging started  l=" + l + " r=" + r);
 
         Object result;
         int countPoints = r - l + 1;
@@ -116,6 +118,7 @@ public class DACTree {
         // Adding result in node
         DACNode node = nodes.get(nodeIndex);
         node.setDataResult(algo.getName(), result);
+        Debug.log("Merging finished l=" + l + " r=" + r);
     }
 
     @Override
@@ -128,5 +131,4 @@ public class DACTree {
         s += "\nalgoContainer=" + algoContainer.toString();
         return s;
     }
-
 }

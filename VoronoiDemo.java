@@ -101,7 +101,7 @@ public class VoronoiDemo extends JPanel {
         new Point2D.Double(points[i].getX(), points[i].getY());
       // Apply flip Y transform to point (not to text label)
       invertYAxisAffineTransform().transform(point, point);
-      
+
       g.fill(
         new Ellipse2D.Double(
           point.getX() - point_radius, 
@@ -166,7 +166,8 @@ public class VoronoiDemo extends JPanel {
     }
   }
 
-  public static void doSomething() throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
+  public static void doSomething()
+          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
     Debug.log("Something strange started.");
     // Dependecies for ConvexHullAlgo
     ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
@@ -271,6 +272,47 @@ public class VoronoiDemo extends JPanel {
     Debug.log("Something strange finished.");
   }
 
+  private static void doGeometry()
+          throws NoIntersectionException {
+    Point A = new Point(0, 0);
+    Point B = new Point(1, 1);
+    Point C = new Point(0, 1);
+    Point D = new Point(1, 0);
+
+    Line AB = new Line(A, B);
+    Line CD = new Line(C, D);
+
+    Point P = Geometry.intersect(AB, CD);
+    Debug.log("Result of intersection " + AB + " " + CD + " is " + P);
+  }
+
+  private static void doMinimumAreaPolygonAlgorithm()
+          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
+    Debug.log("doMinimumAreaPolygonAlgorithm started.");
+    // Dependecies for ConvexHullAlgo
+    ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
+
+    ArrayList<String> mapAlgoDeps = new ArrayList<String>(Arrays.asList(new String[] {}));
+    MinimumAreaPolygonAlgo mapAlgo = new MinimumAreaPolygonAlgo(AlgorithmName.MINIMUM_AREA_POLYGON, mapAlgoDeps);
+    listAlgo.add(mapAlgo);
+
+    ArrayList<Point> points = new ArrayList<Point>();
+    points.add(new Point(1, 1));
+    points.add(new Point(2, 2));
+    points.add(new Point(3, 3));
+    points.add(new Point(4, 1));
+    points.add(new Point(5, 2));
+    points.add(new Point(6, 3));
+
+    DACTree tree = new DACTree(points, listAlgo);
+    //Debug.log(tree.toString());
+
+    tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
+    Debug.log(tree.toString());
+
+    Debug.log("doMinimumAreaPolygonAlgorithm finished.");
+  }
+
   public static void main(String []args) {
     try {
       load_and_preprocess_data(args[0]);
@@ -281,13 +323,21 @@ public class VoronoiDemo extends JPanel {
       // Some function for adding DAC tree
       doSomething();
 
+      // Check some geometry function
+      doGeometry();
+
+      // Test function for checking MinimumAreaPolygonAlgo
+      //ArrayList<Point> pts = new ArrayList<Point>(Arrays.asList(points));
+      //doMinimumAreaPolygonAlgorithm();
+
       // Display graphics
       JFrame frame = new JFrame();
       frame.getContentPane().add(new VoronoiDemo());
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
-    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
+    } catch (NoDataException | AlgorithmDependenciesException |
+            UnknownAlgorithmException | NoIntersectionException ex) {
       //Debug.log(ex.getMessage() + ": " + ex.getMessage());
       ex.printStackTrace();
     }

@@ -36,9 +36,12 @@ UTILS: $(UTILS_CLASSES)
 # Compiling ConvexHull logic
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
+# Compiling MinimumAreaPolygon logic
+MIN_AREA_POL_SCR = MinimumAreaPolygon.java MinimumAreaPolygonAlgo.java
+
 # Compiling algorithms
 ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java \
-	$(CONHULL_SRC)
+	$(CONHULL_SRC) $(MIN_AREA_POL_SCR)
 
 # Compiling Divide and Conquer tree
 DAC: $(ALGS_SRC) DACNode.java DACTree.java

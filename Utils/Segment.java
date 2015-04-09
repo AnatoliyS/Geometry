@@ -1,5 +1,8 @@
 package Utils;
 
+import java.lang.Override;
+import java.lang.String;
+
 public class Segment {
   protected Point first;
   protected Point second;
@@ -11,6 +14,14 @@ public class Segment {
     direction = new Vector(a, b);
   }
 
+  public Point getFirst() {
+    return first;
+  }
+
+  public Point getSecond() {
+    return second;
+  }
+
   public Line getPerpendicularBisector() {
     double start_x = (first.getX() + second.getX()) / 2.0;
     double start_y = (first.getY() + second.getY()) / 2.0;
@@ -19,6 +30,12 @@ public class Segment {
     Vector n = Geometry.getNormalizedPerpendicular(direction);
     Point end = new Point(start.getX() + n.getX(), start.getY() + n.getY());
     return new Line(start, end);
+  }
+
+  @Override
+  public String toString() {
+    String s = "[" + first.toString() + second.toString() + "]";
+    return s;
   }
 
 }
