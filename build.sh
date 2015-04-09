@@ -10,11 +10,11 @@ else
 fi
 
 echo "Compile program..."
-make VoronoiDemo
+make Demo 
 
 if [ $? -eq 0 ]; then
   echo -e "Run...\n"
-  java VoronoiDemo graph.txt
+  java Demo graph.txt
 else
   echo -e "Error in compilation\n"
 fi

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import Utils.*;
+import Utils.Exceptions.*;
 
 public abstract class Algorithm {
 
@@ -25,8 +26,7 @@ public abstract class Algorithm {
   }
 
   // We need exactly DACNode nodes for getting result using nodes' data
-  public abstract Object merge(DACNode left, DACNode right);
-  public abstract void render(Object result, Graphics g);
+  public abstract Object merge(DACNode left, DACNode right) throws NoDataException;
   public abstract boolean isTrivialCase(int count);
   public abstract Object doTrivialCase(ArrayList<Point> points);
 

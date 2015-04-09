@@ -22,6 +22,7 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_DIR)Vector.java \
 						$(UTILS_DIR)Geometry.java \
 						$(UTILS_DIR)Segment.java \
+						$(UTILS_DIR)DrawHelper.java \
 						$(UTILS_EXCEPTIONS_DIR)NoIntersectionException.java \
 						$(UTILS_EXCEPTIONS_DIR)NoDataException.java \
 						$(UTILS_EXCEPTIONS_DIR)AlgorithmDependenciesException.java \
@@ -36,18 +37,25 @@ UTILS: $(UTILS_CLASSES)
 # Compiling ConvexHull logic
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
+# Compiling Voronoi logic
+VORONOI_SRC = VoronoiDiagram.java
+
 # Compiling algorithms
-ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java \
-	$(CONHULL_SRC)
+ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java VisualData.java \
+	$(CONHULL_SRC) $(VORONOI_SRC)
 
 # Compiling Divide and Conquer tree
-DAC: $(ALGS_SRC) DACNode.java DACTree.java
-	javac -g $(ALGS_SRC)
+DAC_SRC = $(ALGS_SRC) DACNode.java DACTree.java
 
-# Compiling Voronoi Demonstarion
-VoronoiDemo.class: DCEL UTILS DAC VoronoiDemo.java VoronoiDiagram.java VoronoiBuilder.java 
-	javac -g VoronoiDemo.java VoronoiDiagram.java VoronoiBuilder.java
-VoronoiDemo: VoronoiDemo.class
+DAC_CLASSES = $(DAC_SRC:.java=.class)
+$(DAC_CLASSES): $(DAC_SRC)
+	javac -g $(DAC_SRC) 
+DAC: $(DAC_CLASSES)
+
+# Compiling Demonstarion
+Demo.class: DCEL UTILS DAC Demo.java   
+	javac -g Demo.java
+Demo: Demo.class
 
 clean:
 	$(RM) *.class
