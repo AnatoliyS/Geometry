@@ -163,6 +163,9 @@ public class Demo extends JPanel {
     node.outputDescription();
     */
 
+    VoronoiDiagram v = new VoronoiDiagram(new Point(-100,-100), new Point(100,100));
+
+
     AlgorithmsContainer algoContainer = new AlgorithmsContainer.AlgorithmsContainerBuilder()
             .addAlgorithm(algo1)
             .addAlgorithm(algo2)
@@ -177,10 +180,10 @@ public class Demo extends JPanel {
     Debug.log("Algorithm=" + chAlgo);
 
     tree = new DACTree(points, listAlgo);
-    Debug.log(tree.toString());
+    //Debug.log(tree.toString());
 
     tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
-    Debug.log(tree.toString());
+    //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }
 
