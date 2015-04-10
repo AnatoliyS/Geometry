@@ -27,6 +27,14 @@ public class Vertex {
     return infinite;
   }
 
+  public double getX() {
+    return x;
+  }
+
+  public double getY() {
+    return y;
+  }
+  
   public void setIncidentEdge(HalfEdge _e) {
     incidentEdge = _e;
   }

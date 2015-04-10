@@ -83,6 +83,42 @@ public class Geometry {
   }
 
   /**
+   * Get Point of intersection of Ray and Segment.
+   * @param Ray
+   * @param Segment
+   * @throws NoIntersectionException if they do not cross
+   * @return Point Point of intersection
+   */
+  public static Point intersect(Ray a, Segment b) throws NoIntersectionException {
+    double dir_product = crossProduct(b.direction, a.direction);
+    // If line and segment are parallel
+    if (equalZero(dir_product)) {
+      throw new NoIntersectionException();
+    } else {
+      double product = crossProduct(a.direction, new Vector(a.start, b.first));
+      double t = product / dir_product;
+
+      // Check that point lies on segment
+      if (t < 0 || t > 1) {
+        throw new NoIntersectionException();
+      } else {
+        double x = b.first.getX() + t * b.direction.getX();
+        double y = b.first.getY() + t * b.direction.getY();
+        Point p = new Point(x, y);
+        
+        // Check that point lies on ray
+        // This is same check that parameter t for ray > 0
+        if ((p.getX() - a.start.getX()) * a.direction.getX() < 0 ||
+            (p.getY() - a.start.getY()) * a.direction.getY() < 0) {
+          throw new NoIntersectionException();
+        }
+        
+        return p;
+      }
+    }
+  }
+  
+  /**
    * Get left perpendicular vector of length 1 to given vector.
    * By left we mean that shortest rotataion from Vector d to
    * given vector will be to the left (crossProduct of them is greater 0)
@@ -133,5 +169,10 @@ public class Geometry {
     return unique_points;
   }
 
+  public static Point getMiddlePoint(Segment s) {
+    double x = (s.first.getX() + s.second.getX()) / 2.0;
+    double y = (s.first.getY() + s.second.getY()) / 2.0;
+    return new Point(x, y);
+  }
 
 }

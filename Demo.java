@@ -23,7 +23,8 @@ public class Demo extends JPanel {
   private static ArrayList<Point> points;
   private static final int window_width = 700;
   private static final int window_height = 500;
-  
+  private static VoronoiDiagram v;
+
   @Override  
   public void paintComponent(Graphics g){
     super.paintComponent(g);
@@ -43,6 +44,7 @@ public class Demo extends JPanel {
     // Draw coordinate axes
     DrawHelper.drawCoordinateAxes(g2);
     
+    v.render(g2);
     try {
       // Draw convex hull
       ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
@@ -163,7 +165,8 @@ public class Demo extends JPanel {
     node.outputDescription();
     */
 
-    VoronoiDiagram v = new VoronoiDiagram(new Point(-100,-100), new Point(100,100));
+    //v = new VoronoiDiagram(new Point(50,50), new Point(100,100));
+    v = new VoronoiDiagram(new Point(50,50), new Point(100,100), new Point(150, 0));
 
 
     AlgorithmsContainer algoContainer = new AlgorithmsContainer.AlgorithmsContainerBuilder()

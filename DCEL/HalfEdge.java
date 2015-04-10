@@ -62,4 +62,7 @@ public class HalfEdge {
     return leftIncidentFace;
   }
 
+  public boolean isInfinite() {
+    return leftIncidentFace.isInfinite() || twinEdge.getLeftIncidentFace().isInfinite();
+  }
 }
