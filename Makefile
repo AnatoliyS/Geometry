@@ -5,7 +5,7 @@ GraphGenerator: GraphGenerator.class
 
 # Compiling DCEL classes
 DCEL_DIR = DCEL/
-DCEL_SRC = $(DCEL_DIR)HalfEdge.java $(DCEL_DIR)Vertex.java $(DCEL_DIR)Face.java
+DCEL_SRC = $(DCEL_DIR)HalfEdge.java $(DCEL_DIR)Vertex.java $(DCEL_DIR)Face.java $(DCEL_DIR)HalfEdgeBuilder.java
 DCEL_CLASSES = $(DCEL_SRC:.java=.class)
 $(DCEL_CLASSES): $(DCEL_SRC)
 	javac -g $(DCEL_SRC) 
@@ -26,7 +26,8 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_EXCEPTIONS_DIR)NoIntersectionException.java \
 						$(UTILS_EXCEPTIONS_DIR)NoDataException.java \
 						$(UTILS_EXCEPTIONS_DIR)AlgorithmDependenciesException.java \
-						$(UTILS_EXCEPTIONS_DIR)UnknownAlgorithmException.java
+						$(UTILS_EXCEPTIONS_DIR)UnknownAlgorithmException.java \
+						$(UTILS_EXCEPTIONS_DIR)VoronoiHalfEdgeIsNotValidException.java \
 
 
 UTILS_CLASSES = $(UTILS_SRC:.java=.class)

@@ -182,7 +182,7 @@ public class Demo extends JPanel {
     tree = new DACTree(points, listAlgo);
     //Debug.log(tree.toString());
 
-    tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+    //tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }
