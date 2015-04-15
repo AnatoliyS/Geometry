@@ -53,7 +53,7 @@ public class Demo extends JPanel {
     // Create DAC tree instance
     tree = new DACTree(points, algorithms);
 
-    // Out tree
+    // Out DAC tree
     Debug.log(tree.toString());
 
     Debug.log("hardcodeForConstructionTree finished.");
@@ -122,7 +122,7 @@ public class Demo extends JPanel {
       for(int i = 0; i < n; i++) {
         double x = sc.nextDouble();
         double y = sc.nextDouble();
-        points.add(new Point(x,y));
+        points.add(new Point(x, y));
       }
  
       // Sort points with custom comparator
@@ -149,152 +149,15 @@ public class Demo extends JPanel {
     Debug.log("Something strange finished.");
   }
 
-  private static void doGeometry()
-          throws NoIntersectionException {
-    // Check intersect
-    Point A = new Point(0, 0);
-    Point B = new Point(0.1, 0.1);
-    Point C = new Point(0, 1);
-    Point D = new Point(1, 0);
-
-    // Lines' intersection
-    Line AB = new Line(A, B);
-    Line CD = new Line(C, D);
-
-    Point P = Geometry.intersect(AB, CD);
-    Debug.log("Result of lines' intersection " + AB + " " + CD + " is " + P);
-
-    /*
-    // Segments' intersection
-    Segment segmAB = new Segment(A, B);
-    Segment segmCD = new Segment(C, D);
-
-    Point segmP = Geometry.intersect(segmAB, segmCD);
-    Debug.log("Result of segments' intersection " + segmAB + " " + segmCD + " is " + segmP);
-
-    // Check onSegment
-    Segment segm = new Segment(A, B);
-    Point X = new Point(0.5, 0.5);
-    Point Y = new Point(5, 5);
-    Point Z = new Point(0.5, 0.25);
-
-    boolean fOnSegmentX = segm.onSegment(X);
-    boolean fOnSegmentY = segm.onSegment(Y);
-    boolean fOnSegmentZ = segm.onSegment(Z);
-
-    Debug.log("Result of onSegment for segment=" + segm + " and point=" + X + " is " + fOnSegmentX);
-    Debug.log("Result of onSegment for segment=" + segm + " and point=" + Y + " is " + fOnSegmentY);
-    Debug.log("Result of onSegment for segment=" + segm + " and point=" + Z + " is " + fOnSegmentZ);
-    */
-  }
-
-  private static void doGetIntersection() {
-    // Check intersect
-    Point A = new Point(0, 0);
-    Point B = new Point(0.1, 0.1);
-    Point C = new Point(0, 1);
-    Point D = new Point(1, 0);
-    Point E = new Point(1, 1);
-    Point F = new Point(1, 2);
-
-    // Lines' intersection
-    Line AB = new Line(A, B);
-    Line CD = new Line(C, D);
-
-    Line AE = new Line(A, E);
-    Line CF = new Line(C, F);
-
-    // NO_INTERSECTION
-    IntersectionResult interResult_No = Geometry.getIntersection(AB, CF);
-    Debug.log("Result of lines' intersection " + AB + " " + CF + " is " + interResult_No.toString());
-
-    // POINT_INTERSECTION
-    IntersectionResult interResult_Point = Geometry.getIntersection(AB, CD);
-    Debug.log("Result of lines' intersection " + AB + " " + CD + " is " + interResult_Point.toString());
-
-    // INFINITY_INTERSECTION
-    IntersectionResult interResult_Infinity = Geometry.getIntersection(AB, AE);
-    Debug.log("Result of lines' intersection " + AB + " " + AE + " is " + interResult_Infinity.toString());
-
-    // Check onSegment
-    Segment segm = new Segment(A, E);
-    Point X = new Point(0.5, 0.5);
-    Point Y = new Point(5, 5);
-    Point Z = new Point(0.5, 0.25);
-
-    boolean fOnSegmentX = segm.onSegment(X);
-    boolean fOnSegmentY = segm.onSegment(Y);
-    boolean fOnSegmentZ = segm.onSegment(Z);
-
-    Debug.log("Result of onSegment for segment=" + segm + " and point=" + X + " is " + fOnSegmentX);
-    Debug.log("Result of onSegment for segment=" + segm + " and point=" + Y + " is " + fOnSegmentY);
-    Debug.log("Result of onSegment for segment=" + segm + " and point=" + Z + " is " + fOnSegmentZ);
-
-    // Segments' intersection
-
-    // NO_INTERSECTION
-    Segment segmA = new Segment(new Point(4, 4), new Point(3, 3));
-    Segment segmB = new Segment(new Point(2, 2), new Point(1, 1));
-    IntersectionResult inter_AB = Geometry.getIntersection(segmA, segmB);
-    Debug.log("Result of segments' intersection " + segmA + " " + segmB + " is " + inter_AB);
-
-    // POINT_INTERSECTION
-    segmA = new Segment(new Point(4, 4), new Point(2, 2));
-    segmB = new Segment(new Point(2, 2), new Point(1, 1));
-    inter_AB = Geometry.getIntersection(segmA, segmB);
-    Debug.log("Result of segments' intersection " + segmA + " " + segmB + " is " + inter_AB);
-
-    // INFINITY_INTERSECTION
-    segmA = new Segment(new Point(4, 4), new Point(2, 2));
-    segmB = new Segment(new Point(3, 3), new Point(1, 1));
-    inter_AB = Geometry.getIntersection(segmA, segmB);
-    Debug.log("Result of segments' intersection " + segmA + " " + segmB + " is " + inter_AB);
-  }
-
-  private static void doMinimumAreaPolygonAlgorithm()
-          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
-    Debug.log("doMinimumAreaPolygonAlgorithm started.");
-    ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
-
-    // Dependecies for ConvexHullAlgo
-    ArrayList<String> mapAlgoDeps = new ArrayList<String>(Arrays.asList(new String[] {}));
-    MinimumAreaPolygonAlgo mapAlgo = new MinimumAreaPolygonAlgo(AlgorithmName.MINIMUM_AREA_POLYGON, mapAlgoDeps);
-    listAlgo.add(mapAlgo);
-
-    ArrayList<Point> points = new ArrayList<Point>();
-    points.add(new Point(1, 1));
-    points.add(new Point(2, 2));
-    points.add(new Point(3, 3));
-    points.add(new Point(4, 1));
-    points.add(new Point(5, 2));
-    points.add(new Point(6, 3));
-
-    DACTree tree = new DACTree(points, listAlgo);
-    //Debug.log(tree.toString());
-
-    tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
-    Debug.log(tree.toString());
-
-    Debug.log("doMinimumAreaPolygonAlgorithm finished.");
-  }
-
   public static void main(String []args) {
     try {
       load_and_preprocess_data(args[0]);
 
+      // Construct DAC tree
       hardcodeForConstructionTree();
-      // Some function for adding DAC tree
+
+      // Some function for checking algorithms
       doSomething();
-
-      // Check some geometry function
-      //doGeometry();
-
-      // Check get instersection function
-      doGetIntersection();
-
-      // Test function for checking MinimumAreaPolygonAlgo
-      //ArrayList<Point> pts = new ArrayList<Point>(Arrays.asList(points));
-      //doMinimumAreaPolygonAlgorithm();
 
       // Display graphics
       JFrame frame = new JFrame();
@@ -302,9 +165,7 @@ public class Demo extends JPanel {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
-    } catch (Exception ex) {
-    //catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException | NoIntersectionException ex) {
-      //Debug.log(ex.getMessage() + ": " + ex.getMessage());
+    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
       ex.printStackTrace();
     }
 
