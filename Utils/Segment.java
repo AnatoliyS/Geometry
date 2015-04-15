@@ -32,9 +32,25 @@ public class Segment {
     return new Line(start, end);
   }
 
+  /**
+   * Check is point on segment
+   */
+  public boolean onSegment(Point p) {
+    Line l = new Line(first, second);
+    double minX = Math.min(first.getX(), second.getX());
+    double maxX = Math.max(first.getX(), second.getX());
+    double minY = Math.min(first.getY(), second.getY());
+    double maxY = Math.max(first.getY(), second.getY());
+    double x = p.getX();
+    double y = p.getY();
+
+    boolean fPointOnLine = (l.checkPointVerticalAlignment(p) == l.POINT_ON_LINE);
+    return (fPointOnLine) && (minX <= x && x <= maxX) && (minY <= y && y <= maxY);
+  }
+
   @Override
   public String toString() {
-    String s = "[" + first.toString() + second.toString() + "]";
+    String s = "{" + first.toString() + ", " + second.toString() + "}";
     return s;
   }
 

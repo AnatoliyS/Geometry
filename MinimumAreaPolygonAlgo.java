@@ -41,7 +41,8 @@ public class MinimumAreaPolygonAlgo extends Algorithm {
     ArrayList<Point> lPoints = lPolygon.getPoints();
     ArrayList<Point> rPoints = rPolygon.getPoints();
 
-    ArrayList<Point> points = new ArrayList<Point>(lPoints);
+    ArrayList<Point> points = new ArrayList<Point>();
+    points.addAll(lPoints);
     points.addAll(rPoints);
 
     MinimumAreaPolygon polygon = new MinimumAreaPolygon(points);
@@ -67,8 +68,6 @@ public class MinimumAreaPolygonAlgo extends Algorithm {
     for (int i = 0; i < countPoints; i++) {
       currPoint = points.get(i);
       Segment segm = new Segment(prevPoint, currPoint);
-      edges.add(segm);
-
       // Checking for intersect edges with each previous edges
       for (int j = 0; j < edges.size(); j++) {
         Segment edge = edges.get(j);
@@ -78,6 +77,8 @@ public class MinimumAreaPolygonAlgo extends Algorithm {
 
         }
       }
+
+      edges.add(segm);
 
       prevPoint = currPoint;
     }

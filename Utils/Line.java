@@ -47,7 +47,7 @@ public class Line {
 
   @Override
   public String toString() {
-    String s = "Line : " + first + ", " + second;
+    String s = "{" + first + ", " + second + "}";
     return s;
   }
 }

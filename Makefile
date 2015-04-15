@@ -20,6 +20,7 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_DIR)Pair.java \
 						$(UTILS_DIR)Debug.java \
 						$(UTILS_DIR)Vector.java \
+						$(UTILS_DIR)IntersectionResult.java \
 						$(UTILS_DIR)Geometry.java \
 						$(UTILS_DIR)Segment.java \
 						$(UTILS_DIR)DrawHelper.java \
