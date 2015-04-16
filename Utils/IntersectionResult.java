@@ -5,10 +5,6 @@ import java.lang.String;
 
 public class IntersectionResult {
 
-  public enum IntersectionType {
-    NO_INTERSECTION, POINT_INTERSECTION, INFINITY_INTERSECTION
-  }
-
   private IntersectionType type;
   private Pair<Point, Point> result;
 
@@ -33,4 +29,5 @@ public class IntersectionResult {
     s = "{" + s + "}";
     return s;
   }
+
 }

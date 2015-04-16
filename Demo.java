@@ -110,7 +110,7 @@ public class Demo extends JPanel {
    * Loads points from file into points[]
    * And do some preprocessing
    */
-  private static void load_and_preprocess_data(String file_name) {
+  private static void loadAndPreprocessData(String file_name) {
     File points_file = new File(file_name);
     try {   
       Scanner sc = new Scanner(points_file);
@@ -151,7 +151,7 @@ public class Demo extends JPanel {
 
   public static void main(String []args) {
     try {
-      load_and_preprocess_data(args[0]);
+      loadAndPreprocessData(args[0]);
 
       // Construct DAC tree
       hardcodeForConstructionTree();

@@ -92,7 +92,8 @@ public class Geometry {
     double dir_product = crossProduct(b.direction, a.direction);
     double product = crossProduct(a.direction, new Vector(a.first, b.first));
 
-    IntersectionResult.IntersectionType type;
+    // Variables for return result
+    IntersectionType type;
     Pair<Point, Point> result;
 
     // If lines are parallel
@@ -100,7 +101,7 @@ public class Geometry {
       // If lines are equal
       if (equalZero(product)) {
         // INFINITY_INTERSECTION
-        type = IntersectionResult.IntersectionType.INFINITY_INTERSECTION;
+        type = IntersectionType.INFINITY_INTERSECTION;
         double diffX = a.first.getX() - b.first.getX();
         if (equalZero(diffX)) {
           result = new Pair<Point, Point>(a.first, b.second);
@@ -109,7 +110,7 @@ public class Geometry {
         }
       } else {
         // NO_INTERSECTION
-        type = IntersectionResult.IntersectionType.NO_INTERSECTION;
+        type = IntersectionType.NO_INTERSECTION;
         result = new Pair<Point, Point>(null, null);
       }
     } else {
@@ -118,7 +119,7 @@ public class Geometry {
       double x = b.first.getX() + t * b.direction.getX();
       double y = b.first.getY() + t * b.direction.getY();
 
-      type = IntersectionResult.IntersectionType.POINT_INTERSECTION;
+      type = IntersectionType.POINT_INTERSECTION;
       Point p = new Point(x, y);
       result = new Pair<Point, Point>(p, null);
     }
@@ -139,28 +140,28 @@ public class Geometry {
 
     // Intersection for according lines
     IntersectionResult lineIntersectionResult = getIntersection(lineA, lineB);
-    IntersectionResult.IntersectionType lineIntersectionType = lineIntersectionResult.getType();
+    IntersectionType lineIntersectionType = lineIntersectionResult.getType();
 
     // Variables for answer for segments' intersection
-    IntersectionResult.IntersectionType type;
+    IntersectionType type;
     Pair<Point, Point> result;
 
     // NO_INTERSECTION for lines
-    if (lineIntersectionType == IntersectionResult.IntersectionType.NO_INTERSECTION) {
-      type = IntersectionResult.IntersectionType.NO_INTERSECTION;
+    if (lineIntersectionType == IntersectionType.NO_INTERSECTION) {
+      type = IntersectionType.NO_INTERSECTION;
       result = new Pair<Point, Point>(null, null);
     } else {
       Pair<Point, Point> lineResult = lineIntersectionResult.getResult();
 
       // POINT_INTERSECTION for lines
-      if (lineIntersectionType == IntersectionResult.IntersectionType.POINT_INTERSECTION) {
+      if (lineIntersectionType == IntersectionType.POINT_INTERSECTION) {
         Point p = lineResult.first;
         // Each segment contain point p
         if (a.onSegment(p) && b.onSegment(p)) {
-          type = IntersectionResult.IntersectionType.POINT_INTERSECTION;
+          type = IntersectionType.POINT_INTERSECTION;
           result = new Pair<Point, Point>(p, null);
         } else {
-          type = IntersectionResult.IntersectionType.NO_INTERSECTION;
+          type = IntersectionType.NO_INTERSECTION;
           result = new Pair<Point, Point>(null, null);
         }
       } else {
@@ -190,6 +191,8 @@ public class Geometry {
     Point A1 = a.second;
     Point B0 = b.first;
     Point B1 = b.second;
+
+    // TODO: Rewrite this code using swap function for wraping objects
 
     // Left point of segment a must have less x coordinate than right point
     if (A0.getX() > A1.getX()) {
@@ -222,13 +225,13 @@ public class Geometry {
     a = new Segment(A0, A1);
     b = new Segment(B0, B1);
 
-    IntersectionResult.IntersectionType type;
+    IntersectionType type;
     Pair<Point, Point> result;
 
     // Segments haven't intersection on line
     if (!a.onSegment(B0)) {
       // NO_INTERSECTION
-      type = IntersectionResult.IntersectionType.NO_INTERSECTION;
+      type = IntersectionType.NO_INTERSECTION;
       result = new Pair<Point, Point>(null, null);
     } else {
       // Left point of result will be left point of segment b
@@ -244,11 +247,11 @@ public class Geometry {
       double diffX = A.getX() - B.getX();
       if (equalZero(diffX)) {
         // POINT_INTERSECTION
-        type = IntersectionResult.IntersectionType.POINT_INTERSECTION;
+        type = IntersectionType.POINT_INTERSECTION;
         result = new Pair<Point, Point>(A, null);
       } else {
         // INFINITY_INTERSECTION
-        type = IntersectionResult.IntersectionType.INFINITY_INTERSECTION;
+        type = IntersectionType.INFINITY_INTERSECTION;
         result = new Pair<Point, Point>(A, B);
       }
     }
@@ -256,8 +259,6 @@ public class Geometry {
     IntersectionResult interResult = new IntersectionResult(type, result);
     return interResult;
   }
-
-
 
   /**
    * Get left perpendicular vector of length 1 to given vector.
