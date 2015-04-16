@@ -33,7 +33,7 @@ public class Segment {
   }
 
   /**
-   * Check is point on segment
+   * Check if point lies on a segment
    */
   public boolean onSegment(Point p) {
     Line l = new Line(first, second);
