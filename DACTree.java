@@ -17,8 +17,8 @@ public class DACTree {
 
   // Algorithm process status
   private enum AlgorithmProcessStatus {
-      NOT_PROCESSED,
-      PROCESSED
+    NOT_PROCESSED,
+    PROCESSED
   }
 
   private ArrayList<DACNode> nodes;
@@ -115,7 +115,6 @@ public class DACTree {
       // Merging received data from subNodes
       result = algo.merge(lNode, rNode);
     }
-
     // Adding result in node
     DACNode node = nodes.get(nodeIndex);
     node.setDataResult(algo.getName(), result);

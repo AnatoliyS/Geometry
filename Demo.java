@@ -23,7 +23,42 @@ public class Demo extends JPanel {
   private static ArrayList<Point> points;
   private static final int window_width = 700;
   private static final int window_height = 500;
-  
+
+  /**
+   * Hardcode for building DACTree instance.
+   * In future tree will be construct according to checkbox values.
+   * ArrayList of points must be not null!
+   */
+  private static void hardcodeForConstructionTree()
+          throws AlgorithmDependenciesException, UnknownAlgorithmException{
+    Debug.log("hardcodeForConstructionTree started.");
+    // DACTree
+    ArrayList<Algorithm> algorithms = new ArrayList<Algorithm>();
+
+    // Add ConvexHullAlgo
+    ArrayList<String> chDependencies =
+            new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo chAlgo = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, chDependencies);
+    algorithms.add(chAlgo);
+
+    // Add MinimumAreaPolygonAlgo
+    ArrayList<String> mapDependencies =
+            new ArrayList<String>(Arrays.asList(new String[] {}));
+    MinimumAreaPolygonAlgo mapAlgo =
+            new MinimumAreaPolygonAlgo(AlgorithmName.MINIMUM_AREA_POLYGON, mapDependencies);
+    algorithms.add(mapAlgo);
+
+    // TODO: Add another algorithms here
+
+    // Create DAC tree instance
+    tree = new DACTree(points, algorithms);
+
+    // Out DAC tree
+    Debug.log(tree.toString());
+
+    Debug.log("hardcodeForConstructionTree finished.");
+  }
+
   @Override  
   public void paintComponent(Graphics g){
     super.paintComponent(g);
@@ -42,11 +77,22 @@ public class Demo extends JPanel {
 
     // Draw coordinate axes
     DrawHelper.drawCoordinateAxes(g2);
-    
+
+    /**
+     * Draw algorithms results according to checkbox values
+     */
     try {
+      // TODO: Draw VisualData according to checkbox values
+
       // Draw convex hull
-      ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
-      c.render(g2);
+      ConvexHull convHull =
+              (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
+      convHull.render(g2);
+
+      // Draw MinimumAreaPolygon
+      MinimumAreaPolygon polygon =
+              (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
+      polygon.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
     }
@@ -64,7 +110,7 @@ public class Demo extends JPanel {
    * Loads points from file into points[]
    * And do some preprocessing
    */
-  private static void load_and_preprocess_data(String file_name) {
+  private static void loadAndPreprocessData(String file_name) {
     File points_file = new File(file_name);
     try {   
       Scanner sc = new Scanner(points_file);
@@ -76,7 +122,7 @@ public class Demo extends JPanel {
       for(int i = 0; i < n; i++) {
         double x = sc.nextDouble();
         double y = sc.nextDouble();
-        points.add(new Point(x,y));
+        points.add(new Point(x, y));
       }
  
       // Sort points with custom comparator
@@ -88,107 +134,29 @@ public class Demo extends JPanel {
     }
   }
 
-  public static void doSomething() throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
+  public static void doSomething()
+          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
     Debug.log("Something strange started.");
-    // Dependecies for ConvexHullAlgo
-    ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
+    hardcodeForConstructionTree();
 
-    ArrayList<String> algoDeps1 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo1 = new ConvexHullAlgo("Algo1", algoDeps1);
-    listAlgo.add(algo1);
-
-    ArrayList<String> algoDeps2 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo2 = new ConvexHullAlgo("Algo2", algoDeps2);
-    listAlgo.add(algo2);
-
-    ArrayList<String> algoDeps3 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo3 = new ConvexHullAlgo("Algo3", algoDeps3);
-    listAlgo.add(algo3);
-
-    ArrayList<String> chDeps1 = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha1 = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, chDeps1);
-    listAlgo.add(cha1);
-
-
-    ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha2 = new ConvexHullAlgo("222", cha2Deps);
-    listAlgo.add(cha2);
-
-    ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha3 = new ConvexHullAlgo("333", cha3Deps);
-    listAlgo.add(cha3);
-
-    // Out list
-    for (Algorithm algo : listAlgo) {
-      Debug.log("Algo in list =" + algo.getName());
-    }
-
-    /*
-    ArrayList<Point> lpoints = new ArrayList<Point>();
-
-    lpoints.add(new Point(1, 1));
-    lpoints.add(new Point(2, 2));
-    lpoints.add(new Point(3, 3));
-
-    ArrayList<Point> rpoints = new ArrayList<Point>();
-    rpoints.add(new Point(4, 1));
-    rpoints.add(new Point(5, 2));
-    rpoints.add(new Point(6, 3));
-
-
-    ConvexHull chLeft = new ConvexHull(lpoints);
-    ConvexHull chRight = new ConvexHull(rpoints);
-
-    Debug.log("Points in left convex hull\t= " + chLeft);
-    Debug.log("Points in right convex hull\t= " + chRight);
-  
-    ConvexHull ch = (ConvexHull)cha.merge(chLeft, chRight);
-    Debug.log("Points in merged convex hull\t= " + ch);
-
-    // Creation DACTree
-    
-    // DACNode Left entry
-    DACNode nodeLeft = new DACNode();
-    nodeLeft.setDataResult(AlgorithmName.CONVEX_HULL, chLeft);
-    nodeLeft.outputDescription();
-    
-    // DACNode Right entry
-    DACNode nodeRight = new DACNode();
-    nodeRight.setDataResult(AlgorithmName.CONVEX_HULL, chRight);
-    nodeRight.outputDescription();
-
-    // DACNode entry
-    DACNode node = new DACNode();
-    node.setDataResult(AlgorithmName.CONVEX_HULL, ch);
-    node.outputDescription();
-    */
-
-    AlgorithmsContainer algoContainer = new AlgorithmsContainer.AlgorithmsContainerBuilder()
-            .addAlgorithm(algo1)
-            .addAlgorithm(algo2)
-            .addAlgorithm(algo3)
-            .addAlgorithm(cha1)
-            .addAlgorithm(cha2)
-            .addAlgorithm(cha3)
-            .buildContainer();
-    Debug.log("AlgorithmsContainer=" + algoContainer);
-
-    Algorithm chAlgo = algoContainer.getAlgorithm(AlgorithmName.CONVEX_HULL);
-    Debug.log("Algorithm=" + chAlgo);
-
-    tree = new DACTree(points, listAlgo);
-    Debug.log(tree.toString());
-
+    // Process ConvexHullAlgo
     tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+
+    // Process MinimumAreaPolygon
+    tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
+
     Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }
 
   public static void main(String []args) {
     try {
-      load_and_preprocess_data(args[0]);
+      loadAndPreprocessData(args[0]);
 
-      // Some function for adding DAC tree
+      // Construct DAC tree
+      hardcodeForConstructionTree();
+
+      // Some function for checking algorithms
       doSomething();
 
       // Display graphics
@@ -198,7 +166,6 @@ public class Demo extends JPanel {
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
     } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
-      //Debug.log(ex.getMessage() + ": " + ex.getMessage());
       ex.printStackTrace();
     }
 
