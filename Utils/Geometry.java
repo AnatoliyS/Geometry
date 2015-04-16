@@ -100,8 +100,8 @@ public class Geometry {
     if (equalZero(dir_product)) {
       // If lines are equal
       if (equalZero(product)) {
-        // INFINITY_INTERSECTION
-        type = IntersectionType.INFINITY_INTERSECTION;
+        // INFINITY
+        type = IntersectionType.INFINITY;
         double diffX = a.first.getX() - b.first.getX();
         if (equalZero(diffX)) {
           result = new Pair<Point, Point>(a.first, b.second);
@@ -114,12 +114,12 @@ public class Geometry {
         result = new Pair<Point, Point>(null, null);
       }
     } else {
-      // POINT_INTERSECTION
+      // POINT
       double t = product / dir_product;
       double x = b.first.getX() + t * b.direction.getX();
       double y = b.first.getY() + t * b.direction.getY();
 
-      type = IntersectionType.POINT_INTERSECTION;
+      type = IntersectionType.POINT;
       Point p = new Point(x, y);
       result = new Pair<Point, Point>(p, null);
     }
@@ -153,19 +153,19 @@ public class Geometry {
     } else {
       Pair<Point, Point> lineResult = lineIntersectionResult.getResult();
 
-      // POINT_INTERSECTION for lines
-      if (lineIntersectionType == IntersectionType.POINT_INTERSECTION) {
+      // POINT for lines
+      if (lineIntersectionType == IntersectionType.POINT) {
         Point p = lineResult.first;
         // Each segment contain point p
         if (a.onSegment(p) && b.onSegment(p)) {
-          type = IntersectionType.POINT_INTERSECTION;
+          type = IntersectionType.POINT;
           result = new Pair<Point, Point>(p, null);
         } else {
           type = IntersectionType.NO_INTERSECTION;
           result = new Pair<Point, Point>(null, null);
         }
       } else {
-        // INFINITY_INTERSECTION for lines
+        // INFINITY for lines
 
         // Get intersection of segments on line
         IntersectionResult interSegmentOnLine = getSegmentIntersectionOnLine(a, b);
@@ -246,12 +246,12 @@ public class Geometry {
 
       double diffX = A.getX() - B.getX();
       if (equalZero(diffX)) {
-        // POINT_INTERSECTION
-        type = IntersectionType.POINT_INTERSECTION;
+        // POINT
+        type = IntersectionType.POINT;
         result = new Pair<Point, Point>(A, null);
       } else {
-        // INFINITY_INTERSECTION
-        type = IntersectionType.INFINITY_INTERSECTION;
+        // INFINITY
+        type = IntersectionType.INFINITY;
         result = new Pair<Point, Point>(A, B);
       }
     }
