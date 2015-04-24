@@ -87,7 +87,7 @@ public class ConvexHullAlgo extends Algorithm {
   }
 
 
-  public Pair<Integer,Integer> lowestCommonSupport(ArrayList<Point> A, ArrayList<Point> B) {
+  public static Pair<Integer,Integer> lowestCommonSupport(ArrayList<Point> A, ArrayList<Point> B) {
     int left = 0;
     int right = 0;
     int A_size = A.size();
@@ -123,7 +123,7 @@ public class ConvexHullAlgo extends Algorithm {
     return new Pair<Integer,Integer>(left, right);
   }
 
-  public Pair<Integer,Integer> uppestCommonSupport(ArrayList<Point> A, ArrayList<Point> B) {
+  public static Pair<Integer,Integer> uppestCommonSupport(ArrayList<Point> A, ArrayList<Point> B) {
     int left = 0;
     int right = 0;
     int A_size = A.size();

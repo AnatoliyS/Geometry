@@ -47,6 +47,7 @@ public class HalfEdgeBuilder {
     return this;
   }
   public HalfEdgeBuilder setTwinEdge(HalfEdge _e) {
+    if (_e == null) Utils.Debug.log("wowowowo");
     edge.setTwinEdge(_e);
     _e.setTwinEdge(edge);
     return this;

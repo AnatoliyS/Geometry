@@ -23,7 +23,12 @@ public class Demo extends JPanel {
   private static ArrayList<Point> points;
   private static final int window_width = 700;
   private static final int window_height = 500;
+  private static VoronoiDiagram v1;
+  private static VoronoiDiagram v2;
   private static VoronoiDiagram v;
+  private static ConvexHull c1;
+  private static ConvexHull c2;
+  private static ConvexHull c;
 
   @Override  
   public void paintComponent(Graphics g){
@@ -44,14 +49,19 @@ public class Demo extends JPanel {
     // Draw coordinate axes
     DrawHelper.drawCoordinateAxes(g2);
     
+    c1.render(g2);
+    c2.render(g2);
     v.render(g2);
-    try {
+    //v1.render(g2);
+    //v2.render(g2);
+    
+    /*try {
       // Draw convex hull
-      ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
-      c.render(g2);
+    //  ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
+      //c.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
-    }
+    }*/
     
     // 2. Flip back to screen cords system to draw text 
     // Now we draw in Screen-coordinate system
@@ -119,54 +129,60 @@ public class Demo extends JPanel {
     ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
     ConvexHullAlgo cha3 = new ConvexHullAlgo("333", cha3Deps);
     listAlgo.add(cha3);
+    
+    ArrayList<String> voronoi_deps = new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL}));
+    VoronoiDiagramAlgo voronoi_algo = new VoronoiDiagramAlgo(AlgorithmName.VORONOI_DIAGRAM, voronoi_deps);
+    listAlgo.add(voronoi_algo);
 
     // Out list
     for (Algorithm algo : listAlgo) {
       Debug.log("Algo in list =" + algo.getName());
     }
 
-    /*
     ArrayList<Point> lpoints = new ArrayList<Point>();
 
-    lpoints.add(new Point(1, 1));
-    lpoints.add(new Point(2, 2));
-    lpoints.add(new Point(3, 3));
+    lpoints.add(new Point(0, 50));
+    lpoints.add(new Point(100, 300));
+    lpoints.add(new Point(190, 100));
 
     ArrayList<Point> rpoints = new ArrayList<Point>();
-    rpoints.add(new Point(4, 1));
-    rpoints.add(new Point(5, 2));
-    rpoints.add(new Point(6, 3));
+    rpoints.add(new Point(250, 0));
+    rpoints.add(new Point(300, 300));
+    rpoints.add(new Point(400, 30));
 
+    points.clear();
+    points.addAll(lpoints);
+    points.addAll(rpoints);
 
     ConvexHull chLeft = new ConvexHull(lpoints);
     ConvexHull chRight = new ConvexHull(rpoints);
+    c1 = chLeft;
+    c2 = chRight;
 
-    Debug.log("Points in left convex hull\t= " + chLeft);
-    Debug.log("Points in right convex hull\t= " + chRight);
-  
-    ConvexHull ch = (ConvexHull)cha.merge(chLeft, chRight);
-    Debug.log("Points in merged convex hull\t= " + ch);
+    VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1), lpoints.get(2));
+    VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1), rpoints.get(2));
+    v1 = vLeft;
+    v2 = vRight;
 
     // Creation DACTree
     
     // DACNode Left entry
     DACNode nodeLeft = new DACNode();
     nodeLeft.setDataResult(AlgorithmName.CONVEX_HULL, chLeft);
-    nodeLeft.outputDescription();
+    nodeLeft.setDataResult(AlgorithmName.VORONOI_DIAGRAM, vLeft);
+    //nodeLeft.outputDescription();
     
     // DACNode Right entry
     DACNode nodeRight = new DACNode();
     nodeRight.setDataResult(AlgorithmName.CONVEX_HULL, chRight);
-    nodeRight.outputDescription();
+    nodeRight.setDataResult(AlgorithmName.VORONOI_DIAGRAM, vRight);
+    //nodeRight.outputDescription();
 
-    // DACNode entry
-    DACNode node = new DACNode();
-    node.setDataResult(AlgorithmName.CONVEX_HULL, ch);
-    node.outputDescription();
-    */
+    v = (VoronoiDiagram)voronoi_algo.merge(nodeLeft, nodeRight);
+    //Debug.log(v.toString());
 
     //v = new VoronoiDiagram(new Point(50,50), new Point(100,100));
-    v = new VoronoiDiagram(new Point(50,50), new Point(100,100), new Point(150, 0));
+    //v = new VoronoiDiagram(new Point(50,50), new Point(100,100), new Point(150, 0));
 
 
     AlgorithmsContainer algoContainer = new AlgorithmsContainer.AlgorithmsContainerBuilder()

@@ -65,4 +65,15 @@ public class HalfEdge {
   public boolean isInfinite() {
     return leftIncidentFace.isInfinite() || twinEdge.getLeftIncidentFace().isInfinite();
   }
+
+  @Override
+  public String toString() {
+    String s = "{ HalfEdge name = [" + id + "], ";
+    s += "Origin = (" + origin.getX() + ", " + origin.getY() +")";
+    s += "Next_edge_origin = (" + nextEdge.getOrigin().getX() + ", " + nextEdge.getOrigin().getY() +")";
+    s += "Next_edge_name = (" + nextEdge.getName() +")";
+    s += "prev_edge_name = (" + previousEdge.getName() +")";
+    s += "}";
+    return s;
+  }
 }

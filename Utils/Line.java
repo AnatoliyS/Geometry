@@ -18,6 +18,10 @@ public class Line {
     return second;
   }
   
+  public Vector getDirection() {
+    return direction;
+  }
+  
   public Line(Point a, Point b) {
     first = a;
     second = b;

@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.awt.Color;
@@ -20,11 +21,210 @@ public class VoronoiDiagram implements VisualData{
   private static final double maxY = 100000.0;
   private static final double minY = -100000.0;*/
   
-  private static final double maxX = 600.0;
-  private static final double minX = 0.0;
-  private static final double maxY = 400.0;
-  private static final double minY = 0.0;
+  public static final double maxX = 600.0;
+  public static final double minX = 0.0;
+  public static final double maxY = 400.0;
+  public static final double minY = 0.0;
 
+  public VoronoiDiagram(
+    VoronoiDiagram other
+  ) {
+    edge = new ArrayList<HalfEdge>();
+    vertex = new ArrayList<Vertex>();
+    face = new ArrayList<Face>();
+    face_searcher = new HashMap<Point, Face>();
+    
+    // Deep copy:
+    HashMap<HalfEdge, HalfEdge> edges_map = new HashMap<HalfEdge, HalfEdge>();
+    HashMap<Vertex, Vertex> vertex_map = new HashMap<Vertex, Vertex>();
+    HashMap<Face, Face> faces_map = new HashMap<Face, Face>();
+   
+    for (HalfEdge e : other.getEdges()) {
+      edge.add(
+        deep_edge_copy(
+          e,
+          edges_map,
+          vertex_map,
+          faces_map
+        )
+      );
+    }
+    
+    for (Vertex v : other.getVertexes()) {
+      vertex.add(
+        deep_vertex_copy(
+          v,
+          edges_map,
+          vertex_map,
+          faces_map
+        )
+      );
+    }
+    
+    for (Face f : other.getFaces()) {
+      face.add(
+        deep_face_copy(
+          f,
+          edges_map,
+          vertex_map,
+          faces_map
+        )
+      );
+    }
+    
+    for (Map.Entry<Point, Face> entry : other.getFS().entrySet()) {
+      Point key = entry.getKey();
+      Face value = entry.getValue();
+      face_searcher.put(
+        key, 
+        deep_face_copy(
+          value,
+          edges_map,
+          vertex_map,
+          faces_map
+        )
+      );
+    }
+
+  }
+
+  private Vertex deep_vertex_copy(
+    Vertex v, 
+    HashMap<HalfEdge, HalfEdge> edges_map,
+    HashMap<Vertex, Vertex> vertex_map,
+    HashMap<Face, Face> faces_map
+  ) {
+    if (vertex_map.containsKey(v)) {
+      return vertex_map.get(v);
+    } else {
+      Vertex new_v = new Vertex(v.getX(), v.getY(), v.isInfinite());
+      vertex_map.put(v, new_v);
+      
+      new_v.setIncidentEdge(
+          deep_edge_copy(
+            v.getIncidentEdge(),
+            edges_map,
+            vertex_map,
+            faces_map
+          )
+      );
+      return new_v;
+    }
+  }
+  
+  private Face deep_face_copy(
+    Face f, 
+    HashMap<HalfEdge, HalfEdge> edges_map,
+    HashMap<Vertex, Vertex> vertex_map,
+    HashMap<Face, Face> faces_map
+  ) {
+    if (faces_map.containsKey(f)) {
+      return faces_map.get(f);
+    } else {
+      Face new_f = new Face(f);
+      faces_map.put(f, new_f);
+      
+      new_f.setIncidentEdge(
+          deep_edge_copy(
+            f.getIncidentEdge(),
+            edges_map,
+            vertex_map,
+            faces_map
+          )
+      );
+      return new_f;
+    }
+  }
+  
+  private HalfEdge deep_edge_copy(
+    HalfEdge e, 
+    HashMap<HalfEdge, HalfEdge> edges_map,
+    HashMap<Vertex, Vertex> vertex_map,
+    HashMap<Face, Face> faces_map
+  ) {
+    if (edges_map.containsKey(e)) {
+      return edges_map.get(e);
+    } else {
+      HalfEdgeBuilder new_e_builder = new HalfEdgeBuilder(e.getName());
+      edges_map.put(e, new_e_builder.getHalfEdgeReference());
+      new_e_builder
+        .setOrigin(
+            deep_vertex_copy(
+              e.getOrigin(),
+              edges_map,
+              vertex_map,
+              faces_map
+            )
+        )
+        .setNextEdge(
+          deep_edge_copy(
+            e.getNextEdge(),
+            edges_map,
+            vertex_map,
+            faces_map
+          )
+        )
+        .setPreviousEdge(
+          deep_edge_copy(
+            e.getPreviousEdge(),
+            edges_map,
+            vertex_map,
+            faces_map
+          )
+        )
+        .setTwinEdge(
+          deep_edge_copy(
+            e.getTwinEdge(),
+            edges_map,
+            vertex_map,
+            faces_map
+          )
+        )
+        .setLeftIncidentFace(
+          deep_face_copy(
+            e.getLeftIncidentFace(),
+            edges_map,
+            vertex_map,
+            faces_map
+          )
+        );
+      try {
+        return new_e_builder.getHalfEdge();
+      } catch (Exception exc) {
+        Debug.log(exc.getMessage());
+        return null;
+      }
+    }
+  }
+  
+  public VoronoiDiagram(
+    ArrayList<HalfEdge> e, 
+    ArrayList<Vertex> v, 
+    ArrayList<Face> f,
+    HashMap<Point, Face> fs
+  ) {
+    edge = e;
+    vertex = v; 
+    face = f; 
+    face_searcher = fs; 
+  }
+
+  public ArrayList<HalfEdge> getEdges() {
+    return edge;
+  }
+  
+  public ArrayList<Vertex> getVertexes() {
+    return vertex;
+  }
+
+  public ArrayList<Face> getFaces() {
+    return face;
+  }
+  
+  public HashMap<Point, Face> getFS() {
+    return face_searcher;
+  }
+  
   // Constructor for 1 point
   public VoronoiDiagram(Point a) {
     edge = new ArrayList<HalfEdge>();
@@ -152,7 +352,8 @@ public class VoronoiDiagram implements VisualData{
     }
   }
   
-  // TODO: constructor for 3 points
+  // constructor for 3 points
+  // TODO: ADD TRANGLE CASE!!!!!
   public VoronoiDiagram(Point a, Point b, Point c) {
     edge = new ArrayList<HalfEdge>();
     vertex = new ArrayList<Vertex>();
@@ -188,9 +389,14 @@ public class VoronoiDiagram implements VisualData{
     Point BC_middle = Geometry.getMiddlePoint(BC);
     Point CA_middle = Geometry.getMiddlePoint(CA);
 
+    //!!!!!!!!!!!! TODO: ADD TRANGLE CASE!!!!!
     Ray AB_ray = new Ray(bisector_intersection, AB_middle);
     Ray BC_ray = new Ray(bisector_intersection, BC_middle);
     Ray CA_ray = new Ray(bisector_intersection, CA_middle);
+
+    //if (cross_product(AB.direction, new Vector(a, bisector_intersection)) > 0) {
+    //  AB_ray = new Ray(AB_middle, bisector_intersection);
+    //}
 
     // Intersect all rays with all bounding segments
     ArrayList<Point> AB_ray_intersection_points = new ArrayList<Point>();
@@ -260,7 +466,7 @@ public class VoronoiDiagram implements VisualData{
     // TODO:
     ArrayList<HalfEdgeBuilder> builder = new ArrayList<HalfEdgeBuilder>();
     for (int i = 0; i < 13; i++) {
-      Integer name = new Integer(i+1);
+      Integer name = new Integer(i);
       builder.add(new HalfEdgeBuilder(name.toString()));
     }
     try {
@@ -298,8 +504,8 @@ public class VoronoiDiagram implements VisualData{
         .setLeftIncidentFace(f3);
       builder.get(6)
         .setOrigin(center)
-        .setNextEdge(builder.get(2).getHalfEdgeReference())
-        .setPreviousEdge(builder.get(9).getHalfEdgeReference())
+        .setNextEdge(builder.get(9).getHalfEdgeReference())
+        .setPreviousEdge(builder.get(2).getHalfEdgeReference())
         .setTwinEdge(builder.get(5).getHalfEdgeReference())
         .setLeftIncidentFace(f2);
       
@@ -352,12 +558,18 @@ public class VoronoiDiagram implements VisualData{
     }
   }
  
+  // TODO: refactor this method
   public Face getFaceAroundPoint(Point point) throws NoDataException {
-    if (!face_searcher.containsKey(point)) {
-      throw new NoDataException();
-    } else {
-      return face_searcher.get(point);
+    //Debug.log("Search for " + point.toString() + "in " + face_searcher.toString());
+    for (Point p : face_searcher.keySet()) {
+      if (p.getX() == point.getX() && p.getY() == point.getY()) {
+        Face f = face_searcher.get(p); 
+        //Debug.log("face found" + f.toString());
+        return f;
+      }
     }
+    
+    throw new NoDataException();
   }
 
   // TODO: add render
@@ -379,8 +591,16 @@ public class VoronoiDiagram implements VisualData{
 
   @Override
   public String toString() {
-    String s = "";
-    // TODO: add code here
+    String s = "{ Points = [";
+    for (Point v : face_searcher.keySet()) {
+      s += "(" + v.getX() + ", " + v.getY() + "), ";
+    }
+    s += "] Vertexes = [";
+    for (Vertex v : vertex) {
+      s += "(" + v.getX() + ", " + v.getY() + "), ";
+    }
+    s += "], Edges = [" + edge.size() + "], Faces = [" + face.size() + "], Point-Face-pairs = ["+ face_searcher.toString() +"]";
+    s += "}";
     return s;
   }
 

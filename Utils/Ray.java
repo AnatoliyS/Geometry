@@ -8,5 +8,10 @@ public class Ray {
     start = a;
     direction = new Vector(a, b);
   }
+  
+  public Ray(Point a, Vector dir) {
+    start = a;
+    direction = dir;
+  }
 
 }

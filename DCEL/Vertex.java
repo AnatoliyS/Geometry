@@ -38,6 +38,10 @@ public class Vertex {
   public void setIncidentEdge(HalfEdge _e) {
     incidentEdge = _e;
   }
+  
+  public HalfEdge getIncidentEdge() {
+    return incidentEdge;
+  }
 
   @Override
   public String toString() {
