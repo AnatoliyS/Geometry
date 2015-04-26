@@ -72,6 +72,7 @@ public class DACTree {
     }
 
     // Processing for algorithm
+    Debug.log("Processing algorithm " + algo + " itself...");
     int rootIndex = 1;
     int countPoints = points.size();
     try {

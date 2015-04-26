@@ -2,6 +2,8 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,15 +18,15 @@ public class VoronoiDiagram implements VisualData{
   private ArrayList<Face> face;
   private HashMap<Point, Face> face_searcher;
   
-  /*private static final double maxX = 100000.0;
-  private static final double minX = -100000.0;
-  private static final double maxY = 100000.0;
-  private static final double minY = -100000.0;*/
+  public static final double maxX = 10000.0;
+  public static final double minX = -10000.0;
+  public static final double maxY = 10000.0;
+  public static final double minY = -10000.0;
   
-  public static final double maxX = 600.0;
-  public static final double minX = 0.0;
-  public static final double maxY = 400.0;
-  public static final double minY = 0.0;
+/*  public static final double maxX = 700.0;
+  public static final double minX = -100.0;
+  public static final double maxY = 500.0;
+  public static final double minY = -200.0;*/
 
   public VoronoiDiagram(
     VoronoiDiagram other
@@ -233,6 +235,7 @@ public class VoronoiDiagram implements VisualData{
     face_searcher = new HashMap<Point, Face>();
     
     Face f = new Face();
+    f.setPoint(a);
     face_searcher.put(a, f);
     face.add(f);
     // TODO: check if this is enough for algortihm
@@ -279,6 +282,13 @@ public class VoronoiDiagram implements VisualData{
 
     Debug.log("intersection_point" + p1.toString());
     Debug.log("intersection_point" + p2.toString());
+
+    if (p1.getY() < p2.getY()) {
+      Point temp = new Point(p1.getX(), p1.getY());
+      p1.setX(p2.getX());
+      p1.setY(p2.getY());
+      p2 = temp;
+    }
     
     // 2 infinte vertexes of Voronoi diagram
     Vertex v1 = new Vertex(p1.getX(), p1.getY(), true);
@@ -294,6 +304,8 @@ public class VoronoiDiagram implements VisualData{
     face.add(f1);
     face.add(f2);
     face.add(f_inf);
+    f1.setPoint(a);
+    f2.setPoint(b);
     face_searcher.put(a, f1);
     face_searcher.put(b, f2);
 
@@ -303,34 +315,36 @@ public class VoronoiDiagram implements VisualData{
     HalfEdgeBuilder e_inf_twin_builder = new HalfEdgeBuilder("e_inf_twin");
     HalfEdgeBuilder e_twin_inf_builder = new HalfEdgeBuilder("e_twin_inf");
     HalfEdgeBuilder e_twin_inf_twin_builder = new HalfEdgeBuilder("e_twin_inf_twin");
+    //f1.setIncidentEdge(e_builder.getHalfEdgeReference());
+    //f2.setIncidentEdge(e_twin_builder.getHalfEdgeReference());
     try {
       e_builder
-        .setOrigin(v1)
+        .setOrigin(v2)
         .setNextEdge(e_inf_builder.getHalfEdgeReference())
         .setPreviousEdge(e_inf_builder.getHalfEdgeReference())
         .setTwinEdge(e_twin_builder.getHalfEdgeReference())
         .setLeftIncidentFace(f1);
       e_inf_builder
-        .setOrigin(v2)
+        .setOrigin(v1)
         .setTwinEdge(e_inf_twin_builder.getHalfEdgeReference())
         .setLeftIncidentFace(f1);
       e_inf_twin_builder
-        .setOrigin(v1)
+        .setOrigin(v2)
         .setLeftIncidentFace(f_inf)
         .setNextEdge(e_twin_inf_twin_builder.getHalfEdgeReference())
         .setPreviousEdge(e_twin_inf_twin_builder.getHalfEdgeReference());
 
       e_twin_builder
-        .setOrigin(v2)
+        .setOrigin(v1)
         .setNextEdge(e_twin_inf_builder.getHalfEdgeReference())
         .setPreviousEdge(e_twin_inf_builder.getHalfEdgeReference())
         .setLeftIncidentFace(f2);
       e_twin_inf_builder
-        .setOrigin(v1)
+        .setOrigin(v2)
         .setTwinEdge(e_twin_inf_twin_builder.getHalfEdgeReference())
         .setLeftIncidentFace(f2);
       e_twin_inf_twin_builder
-        .setOrigin(v2)
+        .setOrigin(v1)
         .setLeftIncidentFace(f_inf);
       
       HalfEdge e = e_builder.getHalfEdge();
@@ -389,14 +403,25 @@ public class VoronoiDiagram implements VisualData{
     Point BC_middle = Geometry.getMiddlePoint(BC);
     Point CA_middle = Geometry.getMiddlePoint(CA);
 
-    //!!!!!!!!!!!! TODO: ADD TRANGLE CASE!!!!!
     Ray AB_ray = new Ray(bisector_intersection, AB_middle);
     Ray BC_ray = new Ray(bisector_intersection, BC_middle);
     Ray CA_ray = new Ray(bisector_intersection, CA_middle);
 
-    //if (cross_product(AB.direction, new Vector(a, bisector_intersection)) > 0) {
-    //  AB_ray = new Ray(AB_middle, bisector_intersection);
-    //}
+    //!!!!!!!!!!!! TODO: ADD TRANGLE CASE!!!!!
+    double sign = 1.0;
+    Line l = new Line(a, c);
+    if (l.checkPointVerticalAlignment(b) == Line.POINT_BELOW_LINE) {
+     sign = -1.0;
+    }
+    if (sign*Geometry.crossProduct(AB.getDirection(), new Vector(a, bisector_intersection)) > 0) {
+      AB_ray = new Ray(AB_middle, bisector_intersection);
+    }
+    if (sign*Geometry.crossProduct(BC.getDirection(), new Vector(b, bisector_intersection)) > 0) {
+      BC_ray = new Ray(BC_middle, bisector_intersection);
+    }
+    if (sign*Geometry.crossProduct(CA.getDirection(), new Vector(c, bisector_intersection)) > 0) {
+      CA_ray = new Ray(CA_middle, bisector_intersection);
+    }
 
     // Intersect all rays with all bounding segments
     ArrayList<Point> AB_ray_intersection_points = new ArrayList<Point>();
@@ -455,6 +480,9 @@ public class VoronoiDiagram implements VisualData{
     Face f3 = new Face();
     Face f_inf = new Face();
     f_inf.setInfinite(true);
+    f1.setPoint(a);
+    f2.setPoint(b);
+    f3.setPoint(c);
     face.add(f1);
     face.add(f2);
     face.add(f3);
@@ -556,6 +584,7 @@ public class VoronoiDiagram implements VisualData{
     } catch (VoronoiHalfEdgeIsNotValidException e) {
       Debug.log(e.getMessage());
     }
+    check();
   }
  
   // TODO: refactor this method
@@ -572,20 +601,157 @@ public class VoronoiDiagram implements VisualData{
     throw new NoDataException();
   }
 
+  public boolean check() {
+    Debug.log("checking result...");
+    HashSet<Face> used_face = new HashSet<Face>();
+    HashSet<Vertex> used_vertex = new HashSet<Vertex>();
+    HashSet<HalfEdge> used_edge = new HashSet<HalfEdge>();
+
+    String s = "";
+    for (Point p : face_searcher.keySet()) {
+      Debug.log("---------------------------------------");
+      s += "For point " + p + "\n\n";
+
+      Face f = face_searcher.get(p);
+      used_face.add(f);
+      s += "Found face: \n";
+      HalfEdge start = f.getIncidentEdge();
+      HalfEdge temp = start;
+      int iteration = 0;
+      do {
+        iteration++;
+        if (iteration > 10) {
+          s += "INFINITE CYCLE!\n\n";
+          Debug.log(s);
+          return false;
+        }
+        used_edge.add(temp);
+        Vertex v = temp.getOrigin();
+        used_vertex.add(v);
+        s += "face edge = "+ temp + "\n\n";
+        
+        if (temp.isInfinite()) {
+          s += "this is infinite edge. Start to show inf. face edges\n";
+          HalfEdge twin = temp.getTwinEdge();
+          HalfEdge e = twin;
+          int it = 0;
+          do {
+            it++;
+            if (it > 6) {
+              s += "INFINITE CYCLE!\n";
+              Debug.log(s);
+              return false;
+            }
+            used_edge.add(e);
+
+            s += "  face edge = "+ e + "\n";
+            e = e.getNextEdge();
+          } while (e != twin);
+          used_face.add(twin.getLeftIncidentFace());
+          s += "end of showing inf. face edges\n";
+        }
+        if (temp.getLeftIncidentFace() != f) {
+          s += "Incorrect face!! "+ temp.getLeftIncidentFace()+ "\n";
+              Debug.log(s);
+          return false;
+        }
+        temp = temp.getNextEdge();
+      } while(start != temp);
+
+    }
+    
+    Iterator<Vertex> it = vertex.iterator();
+    while(it.hasNext()) {
+      Vertex v = it.next();
+      if (!used_vertex.contains(v)) {
+        s+="Removing vertex" + v + "\n";
+        it.remove();       
+        v = null;
+      } else {
+        if (!used_edge.contains(v.getIncidentEdge())) {
+          s += "Wrong link from vertex " + v + "to edge " + v.getIncidentEdge() + "\n";
+              Debug.log(s);
+          return false;
+        }
+      }
+    }
+
+    Iterator<Face> fit = face.iterator();
+    while(fit.hasNext()) {
+      Face f = fit.next();
+      s += "Considering Face = " + f + "\n";
+      if (!used_face.contains(f)) {
+        s += "Removing face" + f;
+        fit.remove();       
+        f = null;
+      } else {
+        if (!used_edge.contains(f.getIncidentEdge())) {
+              Debug.log(s);
+          Debug.log("Wrong link from face " + f + "to edge " + f.getIncidentEdge());
+          return false;
+        }
+      }
+    }
+
+    Iterator<HalfEdge> hit = edge.iterator();
+    while(hit.hasNext()) {
+      HalfEdge e = hit.next();
+      if (!used_edge.contains(e)) {
+        s += "Removing edge" + e;
+        hit.remove();       
+        e = null;
+      } else {
+        if (!used_edge.contains(e.getNextEdge())) {
+          Debug.log(s);
+          Debug.log("Wrong link from edge.next " + e + "to edge " + e.getNextEdge());
+          return false;
+        }
+        if (!used_edge.contains(e.getPreviousEdge())) {
+          Debug.log(s);
+          Debug.log("Wrong link from edge.prev " + e + "to edge " + e.getPreviousEdge());
+          return false;
+        }
+        if (!used_edge.contains(e.getTwinEdge())) {
+          Debug.log(s);
+          Debug.log("Wrong link from edge.twin " + e + "to edge " + e.getTwinEdge());
+          return false;
+        }
+      }
+    }
+    
+    
+    Debug.log("checking was succesful");
+    Debug.log("Edges: " + edge.size());
+    Debug.log("Vertex: " + vertex.size());
+    Debug.log("Face: " + face.size());
+
+
+    Debug.log("---------------------------------------");
+    return true;
+  }
+
   // TODO: add render
   public void render(Graphics2D g) {
-    g.setColor(Color.red);
     Debug.log("rendering voronoi...");
     for (HalfEdge e : edge) {
       if (!e.isInfinite()) {
+        g.setColor(Color.red);
+      } else {
+        g.setColor(Color.blue);
+      }
         Vertex v1 = e.getOrigin();
         Vertex v2 = e.getNextEdge().getOrigin();
         g.draw(new Line2D.Double(v1.getX(), v1.getY(), v2.getX(), v2.getY()));
-      }
     }
     
     for (Point v : face_searcher.keySet()) {
       g.fill(new Ellipse2D.Double(v.getX()-4.0, v.getY()-4.0, 8.0, 8.0));
+      Face f = face_searcher.get(v);
+      /*ArrayList<HalfEdge> edges = new ArrayList<HalfEdges>();
+      HalfEdge start = f.getIncidentEdge();
+      do {
+        
+      }*/
     }
   }
 

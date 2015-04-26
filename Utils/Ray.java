@@ -14,4 +14,8 @@ public class Ray {
     direction = dir;
   }
 
+  public Point getStartPoint() {
+    return start;
+  }
+
 }

@@ -3,6 +3,7 @@ import java.lang.Object;
 import java.lang.Override;
 import java.lang.String;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +64,17 @@ public class VoronoiDiagramAlgo extends Algorithm {
     ArrayList<Point> lpoints = left_hull.getPoints();
     ArrayList<Point> rpoints = right_hull.getPoints();
 
+    boolean CASE = false;
+    if (left.getFS().entrySet().size() == 4 && right.getFS().entrySet().size() == 3){
+      CASE = true;
+      left.check();
+      right.check();
+      Debug.log("Ok, MERGEEEEEEEE");
+      //VoronoiDiagram result  = new VoronoiDiagram(allEdges, allVertexes, allFaces, allFS);
+      //result.check();
+      //return result;
+    }
+    
     // Step 1. Get support lines from convex hulls
     Pair<Integer, Integer> lcs = ConvexHullAlgo.lowestCommonSupport(
       lpoints,
@@ -121,7 +133,7 @@ public class VoronoiDiagramAlgo extends Algorithm {
     
     Point p = (p1.getY() > p2.getY()) ? p1 : p2;
 
-    //Debug.log("INF intersection_point" + p.toString());
+    Debug.log("INF intersection_point" + p.toString());
 
     Vertex current_vertex = new Vertex(p.getX(), p.getY(), true);
     allVertexes.add(current_vertex);
@@ -132,11 +144,10 @@ public class VoronoiDiagramAlgo extends Algorithm {
     Ray current_ray = new Ray(ray_point, ray_direction);
     Debug.log("FIRST RAY = {" + ray_point.toString() + ", " + ray_direction.toString() + "}");
 
-    Face faceA = new Face(left.getFaceAroundPoint(A));
-    Face faceB = new Face(right.getFaceAroundPoint(B));
+    Face faceA = left.getFaceAroundPoint(A);
+    Face faceB = right.getFaceAroundPoint(B);
     
     ArrayList<HalfEdge> edgesA = getAllEdgesAroundFace(faceA);
-    Debug.log("faceA = " + faceA.toString());
     ArrayList<HalfEdge> edgesB = getAllEdgesAroundFace(faceB);
 
     ArrayList<HalfEdge> inf_edgesA = getAllInfiniteEdges(edgesA);
@@ -147,12 +158,14 @@ public class VoronoiDiagramAlgo extends Algorithm {
 
     HalfEdgeBuilder current_edge_builder = new HalfEdgeBuilder("frist_edge");
     HalfEdgeBuilder current_edge_twin_builder = new HalfEdgeBuilder("first_edge_twin");
+    
     current_edge_builder
       .setTwinEdge(current_edge_twin_builder.getHalfEdgeReference())
       .setLeftIncidentFace(faceA);
     current_edge_twin_builder
       .setOrigin(current_vertex)
       .setLeftIncidentFace(faceB);
+    
     
     // Step 4. Prepare new inf edges
     HalfEdge left_inf_edge = inf_edgesA.get(0);
@@ -162,6 +175,8 @@ public class VoronoiDiagramAlgo extends Algorithm {
     HalfEdgeBuilder left_new_inf_edge_twin_builder = new HalfEdgeBuilder("Le_inf_1(twin)");
     HalfEdgeBuilder right_new_inf_edge_twin_builder = new HalfEdgeBuilder("Re_inf_1(twin)");
 
+    Face infinity_face = left_inf_edge.getTwinEdge().getLeftIncidentFace();
+
     left_new_inf_edge_builder
       .setOrigin(current_vertex)
       .setNextEdge(left_inf_edge.getNextEdge())
@@ -170,9 +185,8 @@ public class VoronoiDiagramAlgo extends Algorithm {
       .setLeftIncidentFace(faceA);
     left_new_inf_edge_twin_builder
       .setOrigin(left_inf_edge.getNextEdge().getOrigin()) 
-      .setPreviousEdge(left_inf_edge.getTwinEdge().getPreviousEdge())
+      .setPreviousEdge(left_inf_edge.getTwinEdge().getPreviousEdge()) // link to  e_inf_twin
       .setLeftIncidentFace(left_inf_edge.getTwinEdge().getLeftIncidentFace());
-
 
     right_new_inf_edge_builder
       .setOrigin(right_inf_edge.getOrigin())
@@ -192,37 +206,37 @@ public class VoronoiDiagramAlgo extends Algorithm {
       HalfEdge right_new_inf_edge = right_new_inf_edge_builder.getHalfEdge();
       HalfEdge right_new_inf_edge_twin = right_new_inf_edge_twin_builder.getHalfEdge();
       HalfEdge left_new_inf_edge_twin = left_new_inf_edge_twin_builder.getHalfEdge();
-  //    Collections.addAll(allEdges, 
-   //       left_new_inf_edge, right_new_inf_edge, right_new_inf_edge_twin, left_new_inf_edge_twin);
+      Collections.addAll(allEdges, 
+          left_new_inf_edge, right_new_inf_edge, right_new_inf_edge_twin, left_new_inf_edge_twin);
     } catch (Exception e) {
       Debug.log("Something was not initialized in DCEL");
     }
    
     // Remove old inf edges from new Voronoi diagram and from edges lists 
-    //edgesA.remove(left_inf_edge);
-    //edgesB.remove(right_inf_edge);
-    /*edgesA.remove(left_inf_edge.getTwinEdge());
-    edgesA.remove(left_inf_edge.getTwinEdge());
-
-    allEdges.remove(left_inf_edge);
+    /*allEdges.remove(left_inf_edge);
     allEdges.remove(right_inf_edge);
     allEdges.remove(left_inf_edge.getTwinEdge());
-    allEdges.remove(left_inf_edge.getTwinEdge());
-*/
+    allEdges.remove(right_inf_edge.getTwinEdge());*/
+
     int current_left_edge_index = 0; 
     int current_right_edge_index = 0;
     HalfEdgeBuilder next_edge_builder;
     HalfEdgeBuilder next_edge_twin_builder;
-    int edge_number = 2;
+    int edge_number = 1;
     int step = 1;
+    Point lcsA = lpoints.get(lcs.first);
+    Point lcsB = rpoints.get(lcs.second);
     // Invariant:
     // Right now we consider point A and B. And we are in FaceA, FaceB and
     // all edges from FaceA are in PolyA and all edges from FaceB are in PolyB
     // Right now we are in current_vertex vertex and want to build chain_edge inside
     // FaceA or FaceB.
     // So we find intersection of current_ray with segments in PolyA and PolyB 
-    while(current_A_index != lcs.first || current_B_index != lcs.second) {
-      if(step == 3) break;
+    while(A != lcsA || B != lcsB) {
+      if(CASE && step == 3) {
+        VoronoiDiagram result  = new VoronoiDiagram(allEdges, allVertexes, allFaces, allFS);
+        return result;
+      }
       Debug.log("----------------");
       Debug.log("Step" + step + " of building chain");
       Debug.log("EdgesA = {");
@@ -236,61 +250,95 @@ public class VoronoiDiagramAlgo extends Algorithm {
       }
       Debug.log("}");
 
-      Debug.log("Cur A index" + current_A_index+ "/ " + lcs.first );
-      Debug.log("Cur B index" + current_B_index+ "/ " + lcs.second );
-
       step++;
+      boolean found_left_intersection = false;
+      boolean found_right_intersection = false;
       // Find intersection between PolyA and ray. We traverse it clockwise only
-      Point intersection_with_left_polygon = new Point(maxX, maxY);
+      Point intersection_with_left_polygon = new Point(minX, minY);
       HalfEdge left_edge = new HalfEdge();
-      while(true) {
+      int iterations = 0;
+      while(iterations < edgesA.size()) {
+        iterations++;
         try {
           left_edge = edgesA.get(current_left_edge_index);
           if (left_edge.isInfinite()) {
             current_left_edge_index = (current_left_edge_index + 1) % edgesA.size();  
             continue;
           }
+          if (Geometry.equalZero(left_edge.getOrigin().getX() - current_ray.getStartPoint().getX()) && 
+            Geometry.equalZero(left_edge.getOrigin().getY() - current_ray.getStartPoint().getY()) ||
+            Geometry.equalZero(left_edge.getNextEdge().getOrigin().getX() - current_ray.getStartPoint().getX()) && 
+            Geometry.equalZero(left_edge.getNextEdge().getOrigin().getY() - current_ray.getStartPoint().getY())
+          ) {
+            current_left_edge_index = (current_left_edge_index + 1) % edgesA.size(); 
+            continue; 
+          }
           Point first = new Point(left_edge.getOrigin().getX(), left_edge.getOrigin().getY());
           Point second = new Point(left_edge.getNextEdge().getOrigin().getX(), left_edge.getNextEdge().getOrigin().getY());
           Segment current_edge_segment = new Segment(first, second);
           intersection_with_left_polygon = Geometry.intersect(current_ray, current_edge_segment);
+          found_left_intersection = true;
           break;
         } catch(NoIntersectionException e) {
           current_left_edge_index = (current_left_edge_index + 1) % edgesA.size();  
         } 
       }
-      if (intersection_with_left_polygon.getY() == current_vertex.getY() ) {
-        intersection_with_left_polygon.setY(-minY);
+      if (!found_left_intersection) {
+        intersection_with_left_polygon = new Point(minX, minY);
       }
+      // ???
+      /*if (intersection_with_left_polygon.getY() == current_vertex.getY() ) {
+        intersection_with_left_polygon.setY(-maxY);
+      }*/
       Debug.log("Intersection with LEFT POLY = {" + intersection_with_left_polygon.toString() + "}");
 
-      Point intersection_with_right_polygon = new Point(maxX, maxY);
+      iterations = 0;
+      Point intersection_with_right_polygon = new Point(minX, minY);
       HalfEdge right_edge = new HalfEdge();
-      while(true) {
+      while(iterations < edgesB.size()) {
+        iterations++;
         try {
           right_edge = edgesB.get(current_right_edge_index);
           if (right_edge.isInfinite()) {
             current_right_edge_index = (current_right_edge_index - 1 + edgesB.size()) % edgesB.size();  
             continue;
           }
+          if (Geometry.equalZero(right_edge.getOrigin().getX() - current_ray.getStartPoint().getX()) && 
+            Geometry.equalZero(right_edge.getOrigin().getY() - current_ray.getStartPoint().getY()) ||
+            Geometry.equalZero(right_edge.getNextEdge().getOrigin().getX() - current_ray.getStartPoint().getX()) && 
+            Geometry.equalZero(right_edge.getNextEdge().getOrigin().getY() - current_ray.getStartPoint().getY())
+          ) {
+            current_right_edge_index = (current_right_edge_index - 1 + edgesB.size()) % edgesB.size(); 
+            continue; 
+          }
           Point first = new Point(right_edge.getOrigin().getX(), right_edge.getOrigin().getY());
           Point second = new Point(right_edge.getNextEdge().getOrigin().getX(), right_edge.getNextEdge().getOrigin().getY());
           Segment current_edge_segment = new Segment(first, second);
           intersection_with_right_polygon = Geometry.intersect(current_ray, current_edge_segment);
+          found_right_intersection = true;
           break;
         } catch(NoIntersectionException e) {
           current_right_edge_index = (current_right_edge_index - 1 + edgesB.size()) % edgesB.size();  
         } 
       }
-      if (intersection_with_right_polygon.getY() == current_vertex.getY() ) {
-        intersection_with_right_polygon.setY(-minY);
+      if (!found_right_intersection) {
+        intersection_with_right_polygon = new Point(minX, minY);
       }
+      /*if (intersection_with_right_polygon.getY() == current_vertex.getY() ) {
+        intersection_with_right_polygon.setY(-maxY);
+      }*/
       Debug.log("Intersection with RIGHT POLY = {" + intersection_with_right_polygon.toString() + "}");
      
+      if (!found_left_intersection && !found_right_intersection){
+        Debug.log("Strange! No intersection for both");
+        break;
+      }
+
       Debug.log("ok.."); 
       Vertex next_vertex;
       next_edge_builder = new HalfEdgeBuilder("chain_edge_" + edge_number);
       next_edge_twin_builder = new HalfEdgeBuilder("chain_edge_" + edge_number + "_twin");
+      edge_number++;
       
 
       if (intersection_with_right_polygon.getY() > intersection_with_left_polygon.getY()) {
@@ -299,10 +347,13 @@ public class VoronoiDiagramAlgo extends Algorithm {
           intersection_with_right_polygon.getY()
         );
         // Exit from right polygon
+        //Debug.log("Old face = " + faceB);
         faceB = right_edge.getTwinEdge().getLeftIncidentFace();
-        edgesB = getAllEdgesAroundFace(faceB);
+        B = faceB.getPoint();
+        Debug.log("Cur B point = " + B );
         Debug.log("Edge which we intersected = " + right_edge);
-        Debug.log("New face = " + faceB);
+        edgesB = getAllEdgesAroundFace(faceB);
+        //Debug.log("New face = " + faceB);
         
         // Close right polygon
         current_edge_twin_builder
@@ -322,10 +373,7 @@ public class VoronoiDiagramAlgo extends Algorithm {
           .setTwinEdge(next_edge_twin_builder.getHalfEdgeReference())
           .setLeftIncidentFace(faceA);
         
-        current_B_index = (current_B_index - 1 + rpoints.size()) % rpoints.size();
-        B = rpoints.get(current_B_index);
-        Debug.log("Cur B point = " + B );
-        
+        // This is new faceB
         next_edge_twin_builder
           .setLeftIncidentFace(faceB);
 
@@ -333,7 +381,8 @@ public class VoronoiDiagramAlgo extends Algorithm {
         try {
           allEdges.add(current_edge_builder.getHalfEdge());
           allEdges.add(current_edge_twin_builder.getHalfEdge());
-          Debug.log("Added edge!");
+          Debug.log("Added edge! = " + current_edge_builder.getHalfEdge() + " and its twin = " + current_edge_twin_builder.getHalfEdge());
+          //Debug.log("And its face= " + current_edge_twin_builder.getHalfEdge().getLeftIncidentFace());
         } catch(VoronoiHalfEdgeIsNotValidException e) {
           Debug.log(e.getMessage());
         }
@@ -342,14 +391,21 @@ public class VoronoiDiagramAlgo extends Algorithm {
           intersection_with_left_polygon.getX(), 
           intersection_with_left_polygon.getY()
         );
+        /*current_edge_builder
+          .setLeftIncidentFace(faceA);
+        current_edge_twin_builder
+          .setLeftIncidentFace(faceB);*/
         // Exit from left polygon
         // Close left polygon
         faceA = left_edge.getTwinEdge().getLeftIncidentFace();
+        A = faceA.getPoint();
+        Debug.log("Cur A point = " + A.toString());
         edgesA = getAllEdgesAroundFace(faceA);
         Debug.log("Edge which we intersected = " + left_edge);
         Debug.log("New face = " + faceA);
-        //left_edge
-        //  .setNextEdge(current_edge_builder.getHalfEdgeReference());
+
+        HalfEdge new_left_edge = new HalfEdge(left_edge);
+        
         current_edge_builder
           .setPreviousEdge(left_edge)
           .setOrigin(next_vertex);
@@ -363,10 +419,6 @@ public class VoronoiDiagramAlgo extends Algorithm {
           .setOrigin(next_vertex)
           .setLeftIncidentFace(faceB);
        
-        current_A_index = (current_A_index + 1) % lpoints.size();
-        A = lpoints.get(current_A_index);
-        Debug.log("Cur A point = " + A.toString());
-        
         next_edge_builder
           .setNextEdge(left_edge.getTwinEdge())
           .setLeftIncidentFace(faceA)
@@ -377,7 +429,9 @@ public class VoronoiDiagramAlgo extends Algorithm {
         try {
           allEdges.add(current_edge_builder.getHalfEdge());
           allEdges.add(current_edge_twin_builder.getHalfEdge());
-          Debug.log("Added edge!");
+          //Debug.log("Added edge!");
+          Debug.log("Added edge! = " + current_edge_builder.getHalfEdge() + " and its twin = " + current_edge_twin_builder.getHalfEdge());
+          //Debug.log("And its face= " + current_edge_twin_builder.getHalfEdge().getLeftIncidentFace());
         } catch(VoronoiHalfEdgeIsNotValidException e) {
           Debug.log(e.getMessage());
         }
@@ -400,9 +454,83 @@ public class VoronoiDiagramAlgo extends Algorithm {
 
     } //while 
 
+    // now finishing ray
+    intersection_points = new ArrayList<Point>();
+    for (Segment s : bounds) {
+      try {
+        p = Geometry.intersect(current_ray, s);
+        intersection_points.add(p);
+      } catch (NoIntersectionException e) {
+        // Do nothing
+      }
+    }
+
+    intersection_points = Geometry.excludeSamePoints(intersection_points);
+
+    assert(intersection_points.size() == 1);
+
+    p = intersection_points.get(0);
+
+    Debug.log("INF intersection_point = " + p.toString());
+
+    Vertex next_vertex = new Vertex(p.getX(), p.getY(), true);
+    allVertexes.add(next_vertex);
+
+    inf_edgesA = getAllInfiniteEdges(edgesA);
+    inf_edgesB = getAllInfiniteEdges(edgesB);
+
+
+    assert(inf_edgesA.size() == 1);
+    assert(inf_edgesB.size() == 1);
+
+    // Step 4. Prepare new inf edges
+    left_inf_edge = inf_edgesA.get(0);
+    right_inf_edge = inf_edgesB.get(0);
+
+    Debug.log("!!Right inf edge" + right_inf_edge);
+
+    //allVertexes.remove(left_inf_edge.getOrigin());
+    //allVertexes.remove(right_inf_edge.getOrigin());
+
+    current_edge_builder
+      .setOrigin(next_vertex)
+      .setPreviousEdge(left_inf_edge);
+    current_edge_twin_builder
+      .setNextEdge(right_inf_edge);
+
+    left_inf_edge.getTwinEdge().setOrigin(next_vertex);
+    right_inf_edge.setOrigin(next_vertex);
+    right_inf_edge.getTwinEdge().setNextEdge(left_inf_edge.getTwinEdge());
+    left_inf_edge.getTwinEdge().setPreviousEdge(right_inf_edge.getTwinEdge());
+
+    try {
+      allEdges.add(current_edge_builder.getHalfEdge());
+      allEdges.add(current_edge_twin_builder.getHalfEdge());
+      Debug.log("Added edge!");
+    } catch(VoronoiHalfEdgeIsNotValidException e) {
+      Debug.log(e.getMessage());
+    }
+
+    HalfEdge temp_inf_edge = right_inf_edge.getTwinEdge();
+    do {
+      temp_inf_edge.setLeftIncidentFace(infinity_face);
+      temp_inf_edge = temp_inf_edge.getNextEdge();
+    } while(temp_inf_edge != right_inf_edge.getTwinEdge());
+
+    /*Iterator<HalfEdge> it = allEdges.iterator();
+    while(it.hasNext()) {
+      HalfEdge e = it.next();
+      if (e != e.getNextEdge().getPreviousEdge() || e != e.getPreviousEdge().getNextEdge()) {
+        it.remove();
+      }
+    }*/
 
     VoronoiDiagram result  = new VoronoiDiagram(allEdges, allVertexes, allFaces, allFS);
-    Debug.log("merge finised");
+    Debug.log("merge finised. Doing check! \n");
+    if (!result.check()) {
+      Debug.log("Voronoi incorrent!");
+      //return null;
+    }  
     return result;
   }
 
@@ -410,9 +538,17 @@ public class VoronoiDiagramAlgo extends Algorithm {
     ArrayList<HalfEdge> edges = new ArrayList<HalfEdge>();
     HalfEdge start = f.getIncidentEdge();
     HalfEdge temp = start;
+    String s = "Start from " + temp.toString();
+    int iteration = 0;
     do {
+      iteration++;
+      if (iteration > 5) {
+        Debug.log("!!Face is not closed!!" + s);
+        break;
+      }
       edges.add(temp);
       temp = temp.getNextEdge();
+      s += ", \n" + temp.toString();
       //Debug.log(temp.toString());
     } while(temp != start);
     return edges; 

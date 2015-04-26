@@ -17,6 +17,15 @@ public class HalfEdge {
     leftIncidentFace = null;
   }
   
+  public HalfEdge(HalfEdge other) {
+    id = "copy" + other.getName();
+    previousEdge = other.getPreviousEdge();
+    nextEdge = other.getNextEdge();
+    twinEdge = other.getTwinEdge();
+    origin = other.getOrigin();
+    leftIncidentFace = other.getLeftIncidentFace();
+  }
+  
   public HalfEdge(String _id) {
     id = _id;
     previousEdge = null;
@@ -68,11 +77,11 @@ public class HalfEdge {
 
   @Override
   public String toString() {
-    String s = "{ HalfEdge name = [" + id + "], ";
-    s += "Origin = (" + origin.getX() + ", " + origin.getY() +")";
-    s += "Next_edge_origin = (" + nextEdge.getOrigin().getX() + ", " + nextEdge.getOrigin().getY() +")";
-    s += "Next_edge_name = (" + nextEdge.getName() +")";
-    s += "prev_edge_name = (" + previousEdge.getName() +")";
+    String s = "{ HalfEdge name = \"" + id + "\", ";
+    s += "Origin = \"" + origin.getX() + ", " + origin.getY() +"\"";
+    s += " Next_edge_origin = \"" + nextEdge.getOrigin().getX() + ", " + nextEdge.getOrigin().getY() +"\"";
+    s += " Next_edge_name = \"" + nextEdge.getName() +"\"";
+    s += " prev_edge_name = \"" + previousEdge.getName() +"\"";
     s += "}";
     return s;
   }

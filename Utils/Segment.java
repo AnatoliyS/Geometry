@@ -11,6 +11,10 @@ public class Segment {
     direction = new Vector(a, b);
   }
 
+  public Vector getDirection() {
+    return direction;
+  }
+
   public Line getPerpendicularBisector() {
     double start_x = (first.getX() + second.getX()) / 2.0;
     double start_y = (first.getY() + second.getY()) / 2.0;

@@ -21,8 +21,8 @@ import Utils.Exceptions.*;
 public class Demo extends JPanel {
   private static DACTree tree;
   private static ArrayList<Point> points;
-  private static final int window_width = 700;
-  private static final int window_height = 500;
+  private static final int window_width = 1100;
+  private static final int window_height = 700;
   private static VoronoiDiagram v1;
   private static VoronoiDiagram v2;
   private static VoronoiDiagram v;
@@ -49,19 +49,22 @@ public class Demo extends JPanel {
     // Draw coordinate axes
     DrawHelper.drawCoordinateAxes(g2);
     
-    c1.render(g2);
-    c2.render(g2);
-    v.render(g2);
+    //c1.render(g2);
+    //c2.render(g2);
+    //v.render(g2);
     //v1.render(g2);
     //v2.render(g2);
+     // v.render(g2);
     
-    /*try {
+    try {
       // Draw convex hull
-    //  ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
-      //c.render(g2);
+      ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
+      c.render(g2);
+      VoronoiDiagram v = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
+      v.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
-    }*/
+    }
     
     // 2. Flip back to screen cords system to draw text 
     // Now we draw in Screen-coordinate system
@@ -105,30 +108,9 @@ public class Demo extends JPanel {
     // Dependecies for ConvexHullAlgo
     ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
 
-    ArrayList<String> algoDeps1 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo1 = new ConvexHullAlgo("Algo1", algoDeps1);
-    listAlgo.add(algo1);
-
-    ArrayList<String> algoDeps2 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo2 = new ConvexHullAlgo("Algo2", algoDeps2);
-    listAlgo.add(algo2);
-
-    ArrayList<String> algoDeps3 = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo algo3 = new ConvexHullAlgo("Algo3", algoDeps3);
-    listAlgo.add(algo3);
-
-    ArrayList<String> chDeps1 = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha1 = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, chDeps1);
-    listAlgo.add(cha1);
-
-
-    ArrayList<String> cha2Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha2 = new ConvexHullAlgo("222", cha2Deps);
-    listAlgo.add(cha2);
-
-    ArrayList<String> cha3Deps = new ArrayList<String>(Arrays.asList(new String[] {"Algo1", "Algo2", "Algo3"}));
-    ConvexHullAlgo cha3 = new ConvexHullAlgo("333", cha3Deps);
-    listAlgo.add(cha3);
+    ArrayList<String> ch_deps = new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo ch_algo = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, ch_deps);
+    listAlgo.add(ch_algo);
     
     ArrayList<String> voronoi_deps = new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL}));
     VoronoiDiagramAlgo voronoi_algo = new VoronoiDiagramAlgo(AlgorithmName.VORONOI_DIAGRAM, voronoi_deps);
@@ -139,9 +121,25 @@ public class Demo extends JPanel {
       Debug.log("Algo in list =" + algo.getName());
     }
 
-    ArrayList<Point> lpoints = new ArrayList<Point>();
-
+/*    ArrayList<Point> lpoints = new ArrayList<Point>();
     lpoints.add(new Point(0, 50));
+    lpoints.add(new Point(100, 300));
+    lpoints.add(new Point(190, 100));
+
+    ArrayList<Point> rpoints = new ArrayList<Point>();
+    rpoints.add(new Point(250, 0));
+    rpoints.add(new Point(300, 300));
+    rpoints.add(new Point(400, 30));*/
+    
+/*    ArrayList<Point> lpoints = new ArrayList<Point>();
+    lpoints.add(new Point(0, 50));
+    lpoints.add(new Point(100, 300));
+
+    ArrayList<Point> rpoints = new ArrayList<Point>();
+    rpoints.add(new Point(190, 100));
+    rpoints.add(new Point(300, 50));*/
+
+    ArrayList<Point> lpoints = new ArrayList<Point>();
     lpoints.add(new Point(100, 300));
     lpoints.add(new Point(190, 100));
 
@@ -150,16 +148,20 @@ public class Demo extends JPanel {
     rpoints.add(new Point(300, 300));
     rpoints.add(new Point(400, 30));
 
-    points.clear();
-    points.addAll(lpoints);
-    points.addAll(rpoints);
+    //points.clear();
+    //points.addAll(lpoints);
+    //points.addAll(rpoints);
 
     ConvexHull chLeft = new ConvexHull(lpoints);
     ConvexHull chRight = new ConvexHull(rpoints);
     c1 = chLeft;
     c2 = chRight;
 
-    VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1), lpoints.get(2));
+/*    VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1), lpoints.get(2));
+    VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1), rpoints.get(2));*/
+/*    VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1));
+    VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1));*/
+    /*VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1));
     VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1), rpoints.get(2));
     v1 = vLeft;
     v2 = vRight;
@@ -178,30 +180,19 @@ public class Demo extends JPanel {
     nodeRight.setDataResult(AlgorithmName.VORONOI_DIAGRAM, vRight);
     //nodeRight.outputDescription();
 
-    v = (VoronoiDiagram)voronoi_algo.merge(nodeLeft, nodeRight);
+    //v = (VoronoiDiagram)voronoi_algo.merge(nodeLeft, nodeRight);
+    /*if(!v.check()) {
+      Debug.log("Incorrect voronoi");
+    }*/
     //Debug.log(v.toString());
 
     //v = new VoronoiDiagram(new Point(50,50), new Point(100,100));
     //v = new VoronoiDiagram(new Point(50,50), new Point(100,100), new Point(150, 0));
-
-
-    AlgorithmsContainer algoContainer = new AlgorithmsContainer.AlgorithmsContainerBuilder()
-            .addAlgorithm(algo1)
-            .addAlgorithm(algo2)
-            .addAlgorithm(algo3)
-            .addAlgorithm(cha1)
-            .addAlgorithm(cha2)
-            .addAlgorithm(cha3)
-            .buildContainer();
-    Debug.log("AlgorithmsContainer=" + algoContainer);
-
-    Algorithm chAlgo = algoContainer.getAlgorithm(AlgorithmName.CONVEX_HULL);
-    Debug.log("Algorithm=" + chAlgo);
-
+    
     tree = new DACTree(points, listAlgo);
     //Debug.log(tree.toString());
 
-    //tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+    tree.processAlgorithm(AlgorithmName.VORONOI_DIAGRAM);
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }
