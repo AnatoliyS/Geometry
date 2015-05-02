@@ -23,12 +23,6 @@ public class Demo extends JPanel {
   private static ArrayList<Point> points;
   private static final int window_width = 1100;
   private static final int window_height = 700;
-  /*private static VoronoiDiagram v1;
-  private static VoronoiDiagram v2;
-  private static VoronoiDiagram v;
-  private static ConvexHull c1;
-  private static ConvexHull c2;
-  private static ConvexHull c;*/
 
   /**
    * Hardcode for building DACTree instance.
@@ -90,13 +84,6 @@ public class Demo extends JPanel {
 
     // Draw coordinate axes
     DrawHelper.drawCoordinateAxes(g2);
-    
-    //c1.render(g2);
-    //c2.render(g2);
-    //v.render(g2);
-    //v1.render(g2);
-    //v2.render(g2);
-    // v.render(g2);
 
     /**
      * Draw algorithms results according to checkbox values
@@ -112,7 +99,7 @@ public class Demo extends JPanel {
       // Draw MinimumAreaPolygon
       MinimumAreaPolygon polygon =
               (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
-      polygon.render(g2);
+      //polygon.render(g2);
      
       // Draw Voronoi Diagram 
       VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
