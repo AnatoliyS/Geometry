@@ -20,6 +20,8 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_DIR)Pair.java \
 						$(UTILS_DIR)Debug.java \
 						$(UTILS_DIR)Vector.java \
+						$(UTILS_DIR)IntersectionType.java \
+						$(UTILS_DIR)IntersectionResult.java \
 						$(UTILS_DIR)Geometry.java \
 						$(UTILS_DIR)Segment.java \
 						$(UTILS_DIR)DrawHelper.java \
@@ -38,12 +40,15 @@ UTILS: $(UTILS_CLASSES)
 # Compiling ConvexHull logic
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
+# Compiling MinimumAreaPolygon logic
+MIN_AREA_POL_SCR = MinimumAreaPolygon.java MinimumAreaPolygonAlgo.java
+
 # Compiling Voronoi logic
 VORONOI_SRC = VoronoiDiagram.java
 
 # Compiling algorithms
 ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java VisualData.java \
-	$(CONHULL_SRC) $(VORONOI_SRC)
+	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC)
 
 # Compiling Divide and Conquer tree
 DAC_SRC = $(ALGS_SRC) DACNode.java DACTree.java

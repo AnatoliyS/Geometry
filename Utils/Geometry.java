@@ -54,7 +54,7 @@ public class Geometry {
       return new Point(x, y);
     }
   }
-  
+
   /**
    * Get Point of intersection of Line and Segment.
    * @param Line
@@ -118,6 +118,184 @@ public class Geometry {
     }
   }
   
+  /* 
+   * Get IntersectionResult instance of intersection of two Lines
+   * @param Line
+   * @param Line
+   * @return IntersectionResult
+   */
+  public static IntersectionResult getIntersection(Line a, Line b) {
+    double dir_product = crossProduct(b.direction, a.direction);
+    double product = crossProduct(a.direction, new Vector(a.first, b.first));
+
+    // Variables for return result
+    IntersectionType type;
+    Pair<Point, Point> result;
+
+    // If lines are parallel
+    if (equalZero(dir_product)) {
+      // If lines are equal
+      if (equalZero(product)) {
+        // INFINITY
+        type = IntersectionType.INFINITY;
+        double diffX = a.first.getX() - b.first.getX();
+        if (equalZero(diffX)) {
+          result = new Pair<Point, Point>(a.first, b.second);
+        } else {
+          result = new Pair<Point, Point>(a.first, b.first);
+        }
+      } else {
+        // NO_INTERSECTION
+        type = IntersectionType.NO_INTERSECTION;
+        result = new Pair<Point, Point>(null, null);
+      }
+    } else {
+      // POINT
+      double t = product / dir_product;
+      double x = b.first.getX() + t * b.direction.getX();
+      double y = b.first.getY() + t * b.direction.getY();
+
+      type = IntersectionType.POINT;
+      Point p = new Point(x, y);
+      result = new Pair<Point, Point>(p, null);
+    }
+
+    IntersectionResult interResult = new IntersectionResult(type, result);
+    return interResult;
+  }
+
+  /**
+   * Get IntersectionResult of intersection of Segment and Segment
+   * @param Segment
+   * @param Segment
+   * @return IntersectionResult
+   */
+  public static IntersectionResult getIntersection(Segment a, Segment b) {
+    Line lineA = new Line(a.getFirst(), a.getSecond());
+    Line lineB = new Line(b.getFirst(), b.getSecond());
+
+    // Intersection for according lines
+    IntersectionResult lineIntersectionResult = getIntersection(lineA, lineB);
+    IntersectionType lineIntersectionType = lineIntersectionResult.getType();
+
+    // Variables for answer for segments' intersection
+    IntersectionType type;
+    Pair<Point, Point> result;
+
+    // NO_INTERSECTION for lines
+    if (lineIntersectionType == IntersectionType.NO_INTERSECTION) {
+      type = IntersectionType.NO_INTERSECTION;
+      result = new Pair<Point, Point>(null, null);
+    } else {
+      Pair<Point, Point> lineResult = lineIntersectionResult.getResult();
+
+      // POINT for lines
+      if (lineIntersectionType == IntersectionType.POINT) {
+        Point p = lineResult.first;
+        // Each segment contain point p
+        if (a.onSegment(p) && b.onSegment(p)) {
+          type = IntersectionType.POINT;
+          result = new Pair<Point, Point>(p, null);
+        } else {
+          type = IntersectionType.NO_INTERSECTION;
+          result = new Pair<Point, Point>(null, null);
+        }
+      } else {
+        // INFINITY for lines
+
+        // Get intersection of segments on line
+        IntersectionResult interSegmentOnLine = getSegmentIntersectionOnLine(a, b);
+        type = interSegmentOnLine.getType();
+        result = interSegmentOnLine.getResult();
+      }
+    }
+
+    IntersectionResult interResult = new IntersectionResult(type, result);
+    return interResult;
+  }
+
+  /**
+   * Helper function for getting intersection of two segments
+   * which laying on the same line!!!
+   * @param Segment a           = first segment
+   * @param Segment b           = second segment
+   * @return IntersectionResult = Instance of IntersectionResult which contain
+   * intersection type and according to type result
+   */
+  private static IntersectionResult getSegmentIntersectionOnLine(Segment a, Segment b) {
+    Point A0 = a.first;
+    Point A1 = a.second;
+    Point B0 = b.first;
+    Point B1 = b.second;
+
+    // TODO: Rewrite this code using swap function for wraping objects
+
+    // Left point of segment a must have less x coordinate than right point
+    if (A0.getX() > A1.getX()) {
+      Point temp = A0;
+      A0 = A1;
+      A1 = temp;
+    }
+
+    // Left point of segment b must have less x coordinate than right point
+    if (B0.getX() > B1.getX()) {
+      Point temp = B0;
+      B0 = B1;
+      B1 = temp;
+    }
+
+    // Segment a must have less x coordinate than segment b
+    if (A0.getX() > B0.getX()) {
+      // swap A0 B0
+      Point temp = A0;
+      A0 = B0;
+      B0 = temp;
+      // swap A1 B1
+      temp = A1;
+      A1 = B1;
+      B1 = temp;
+    }
+
+    Point A;
+    Point B;
+    a = new Segment(A0, A1);
+    b = new Segment(B0, B1);
+
+    IntersectionType type;
+    Pair<Point, Point> result;
+
+    // Segments haven't intersection on line
+    if (!a.onSegment(B0)) {
+      // NO_INTERSECTION
+      type = IntersectionType.NO_INTERSECTION;
+      result = new Pair<Point, Point>(null, null);
+    } else {
+      // Left point of result will be left point of segment b
+      A = B0;
+
+      // Define right point of result
+      if (b.onSegment(A1)) {
+        B = A1;
+      } else {
+        B = B1;
+      }
+
+      double diffX = A.getX() - B.getX();
+      if (equalZero(diffX)) {
+        // POINT
+        type = IntersectionType.POINT;
+        result = new Pair<Point, Point>(A, null);
+      } else {
+        // INFINITY
+        type = IntersectionType.INFINITY;
+        result = new Pair<Point, Point>(A, B);
+      }
+    }
+
+    IntersectionResult interResult = new IntersectionResult(type, result);
+    return interResult;
+  }
+
   /**
    * Get left perpendicular vector of length 1 to given vector.
    * By left we mean that shortest rotataion from Vector d to

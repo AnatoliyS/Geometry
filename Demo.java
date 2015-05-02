@@ -23,12 +23,54 @@ public class Demo extends JPanel {
   private static ArrayList<Point> points;
   private static final int window_width = 1100;
   private static final int window_height = 700;
-  private static VoronoiDiagram v1;
+  /*private static VoronoiDiagram v1;
   private static VoronoiDiagram v2;
   private static VoronoiDiagram v;
   private static ConvexHull c1;
   private static ConvexHull c2;
-  private static ConvexHull c;
+  private static ConvexHull c;*/
+
+  /**
+   * Hardcode for building DACTree instance.
+   * In future tree will be construct according to checkbox values.
+   * ArrayList of points must be not null!
+   */
+  private static void hardcodeForConstructionTree()
+          throws AlgorithmDependenciesException, UnknownAlgorithmException {
+    Debug.log("hardcodeForConstructionTree started.");
+    // DACTree
+    ArrayList<Algorithm> algorithms = new ArrayList<Algorithm>();
+
+    // Add ConvexHullAlgo
+    ArrayList<String> ch_dependencies =
+      new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo ch_algo = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, ch_dependencies);
+    algorithms.add(ch_algo);
+
+    // Add MinimumAreaPolygonAlgo
+    ArrayList<String> map_dependencies =
+      new ArrayList<String>(Arrays.asList(new String[] {}));
+    MinimumAreaPolygonAlgo map_algo =
+      new MinimumAreaPolygonAlgo(AlgorithmName.MINIMUM_AREA_POLYGON, map_dependencies);
+    algorithms.add(map_algo);
+
+    // Add VoronoiDigramAlgo 
+    ArrayList<String> voronoi_dependencies = 
+      new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL}));
+    VoronoiDiagramAlgo voronoi_algo = 
+      new VoronoiDiagramAlgo(AlgorithmName.VORONOI_DIAGRAM, voronoi_dependencies);
+    algorithms.add(voronoi_algo);
+    
+    // TODO: Add another algorithms here
+
+    // Create DAC tree instance
+    tree = new DACTree(points, algorithms);
+
+    // Out DAC tree
+    Debug.log(tree.toString());
+
+    Debug.log("hardcodeForConstructionTree finished.");
+  }
 
   @Override  
   public void paintComponent(Graphics g){
@@ -54,14 +96,27 @@ public class Demo extends JPanel {
     //v.render(g2);
     //v1.render(g2);
     //v2.render(g2);
-     // v.render(g2);
-    
+    // v.render(g2);
+
+    /**
+     * Draw algorithms results according to checkbox values
+     */
     try {
+      // TODO: Draw VisualData according to checkbox values
+
       // Draw convex hull
-      ConvexHull c = (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
-      c.render(g2);
-      VoronoiDiagram v = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
-      v.render(g2);
+      ConvexHull convHull =
+              (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
+      convHull.render(g2);
+
+      // Draw MinimumAreaPolygon
+      MinimumAreaPolygon polygon =
+              (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
+      polygon.render(g2);
+     
+      // Draw Voronoi Diagram 
+      VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
+      voronoi.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
     }
@@ -79,7 +134,7 @@ public class Demo extends JPanel {
    * Loads points from file into points[]
    * And do some preprocessing
    */
-  private static void load_and_preprocess_data(String file_name) {
+  private static void loadAndPreprocessData(String file_name) {
     File points_file = new File(file_name);
     try {   
       Scanner sc = new Scanner(points_file);
@@ -91,12 +146,13 @@ public class Demo extends JPanel {
       for(int i = 0; i < n; i++) {
         double x = sc.nextDouble();
         double y = sc.nextDouble();
-        points.add(new Point(x,y));
+        points.add(new Point(x, y));
       }
  
       // Sort points with custom comparator
       Collections.sort(points, new PointComparator());
      
+      // TODO: MODIFY CONVEX HULL TO ACCEPT POINTS WITH SAME X
       // Modify points with same X 
       for(int i = 1; i < n; i++) {
         if (points.get(i).getX() == points.get(i-1).getX()) {
@@ -111,106 +167,31 @@ public class Demo extends JPanel {
     }
   }
 
-  public static void doSomething() throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
+  public static void doSomething()
+          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
     Debug.log("Something strange started.");
-    // Dependecies for ConvexHullAlgo
-    ArrayList<Algorithm> listAlgo = new ArrayList<Algorithm>();
 
-    ArrayList<String> ch_deps = new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo ch_algo = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, ch_deps);
-    listAlgo.add(ch_algo);
-    
-    ArrayList<String> voronoi_deps = new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL}));
-    VoronoiDiagramAlgo voronoi_algo = new VoronoiDiagramAlgo(AlgorithmName.VORONOI_DIAGRAM, voronoi_deps);
-    listAlgo.add(voronoi_algo);
+    // Process ConvexHullAlgo
+    tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
 
-    // Out list
-    for (Algorithm algo : listAlgo) {
-      Debug.log("Algo in list =" + algo.getName());
-    }
+    // Process MinimumAreaPolygon
+    tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
 
-/*    ArrayList<Point> lpoints = new ArrayList<Point>();
-    lpoints.add(new Point(0, 50));
-    lpoints.add(new Point(100, 300));
-    lpoints.add(new Point(190, 100));
-
-    ArrayList<Point> rpoints = new ArrayList<Point>();
-    rpoints.add(new Point(250, 0));
-    rpoints.add(new Point(300, 300));
-    rpoints.add(new Point(400, 30));*/
-    
-/*    ArrayList<Point> lpoints = new ArrayList<Point>();
-    lpoints.add(new Point(0, 50));
-    lpoints.add(new Point(100, 300));
-
-    ArrayList<Point> rpoints = new ArrayList<Point>();
-    rpoints.add(new Point(190, 100));
-    rpoints.add(new Point(300, 50));*/
-
-    ArrayList<Point> lpoints = new ArrayList<Point>();
-    lpoints.add(new Point(100, 300));
-    lpoints.add(new Point(190, 100));
-
-    ArrayList<Point> rpoints = new ArrayList<Point>();
-    rpoints.add(new Point(250, 0));
-    rpoints.add(new Point(300, 300));
-    rpoints.add(new Point(400, 30));
-
-    //points.clear();
-    //points.addAll(lpoints);
-    //points.addAll(rpoints);
-
-    ConvexHull chLeft = new ConvexHull(lpoints);
-    ConvexHull chRight = new ConvexHull(rpoints);
-    c1 = chLeft;
-    c2 = chRight;
-
-/*    VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1), lpoints.get(2));
-    VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1), rpoints.get(2));*/
-/*    VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1));
-    VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1));*/
-    /*VoronoiDiagram vLeft = new VoronoiDiagram(lpoints.get(0), lpoints.get(1));
-    VoronoiDiagram vRight = new VoronoiDiagram(rpoints.get(0), rpoints.get(1), rpoints.get(2));
-    v1 = vLeft;
-    v2 = vRight;
-
-    // Creation DACTree
-    
-    // DACNode Left entry
-    DACNode nodeLeft = new DACNode();
-    nodeLeft.setDataResult(AlgorithmName.CONVEX_HULL, chLeft);
-    nodeLeft.setDataResult(AlgorithmName.VORONOI_DIAGRAM, vLeft);
-    //nodeLeft.outputDescription();
-    
-    // DACNode Right entry
-    DACNode nodeRight = new DACNode();
-    nodeRight.setDataResult(AlgorithmName.CONVEX_HULL, chRight);
-    nodeRight.setDataResult(AlgorithmName.VORONOI_DIAGRAM, vRight);
-    //nodeRight.outputDescription();
-
-    //v = (VoronoiDiagram)voronoi_algo.merge(nodeLeft, nodeRight);
-    /*if(!v.check()) {
-      Debug.log("Incorrect voronoi");
-    }*/
-    //Debug.log(v.toString());
-
-    //v = new VoronoiDiagram(new Point(50,50), new Point(100,100));
-    //v = new VoronoiDiagram(new Point(50,50), new Point(100,100), new Point(150, 0));
-    
-    tree = new DACTree(points, listAlgo);
-    //Debug.log(tree.toString());
-
+    // Process VoronoiDiagram 
     tree.processAlgorithm(AlgorithmName.VORONOI_DIAGRAM);
-    //tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+    
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }
 
   public static void main(String []args) {
     try {
-      load_and_preprocess_data(args[0]);
+      loadAndPreprocessData(args[0]);
 
-      // Some function for adding DAC tree
+      // Construct DAC tree
+      hardcodeForConstructionTree();
+
+      // Some function for checking algorithms
       doSomething();
 
       // Display graphics
@@ -220,7 +201,6 @@ public class Demo extends JPanel {
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
     } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
-      //Debug.log(ex.getMessage() + ": " + ex.getMessage());
       ex.printStackTrace();
     }
 

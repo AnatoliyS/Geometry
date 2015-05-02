@@ -1,5 +1,7 @@
 package Utils;
 
+import java.lang.Override;
+
 public class Line {
   protected Point first;
   protected Point second;
@@ -47,4 +49,9 @@ public class Line {
     }
   }
 
+  @Override
+  public String toString() {
+    String s = "{" + first + ", " + second + "}";
+    return s;
+  }
 }
