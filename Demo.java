@@ -138,15 +138,6 @@ public class Demo extends JPanel {
  
       // Sort points with custom comparator
       Collections.sort(points, new PointComparator());
-     
-      // TODO: MODIFY CONVEX HULL TO ACCEPT POINTS WITH SAME X
-      // Modify points with same X 
-      for(int i = 1; i < n; i++) {
-        if (points.get(i).getX() == points.get(i-1).getX()) {
-          points.get(i-1).setX(points.get(i-1).getX() - 5*Constants.EPS);
-        }
-      }
-      Collections.sort(points, new PointComparator());
 
       sc.close();
     } catch(Exception e) {
@@ -189,8 +180,8 @@ public class Demo extends JPanel {
       frame.setVisible(true);
     } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
       ex.printStackTrace();
+      System.exit(1);
     }
-
   }
 
 }

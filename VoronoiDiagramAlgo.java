@@ -248,14 +248,14 @@ public class VoronoiDiagramAlgo extends Algorithm {
             current_left_edge_index = (current_left_edge_index + 1) % edgesA.size();  
             continue;
           }
-          if (Geometry.equalZero(left_edge.getOrigin().getX() - current_ray.getStartPoint().getX()) && 
+          /*if (Geometry.equalZero(left_edge.getOrigin().getX() - current_ray.getStartPoint().getX()) && 
             Geometry.equalZero(left_edge.getOrigin().getY() - current_ray.getStartPoint().getY()) ||
             Geometry.equalZero(left_edge.getNextEdge().getOrigin().getX() - current_ray.getStartPoint().getX()) && 
             Geometry.equalZero(left_edge.getNextEdge().getOrigin().getY() - current_ray.getStartPoint().getY())
           ) {
             current_left_edge_index = (current_left_edge_index + 1) % edgesA.size(); 
             continue; 
-          }
+          }*/
           Point first = new Point(left_edge.getOrigin().getX(), left_edge.getOrigin().getY());
           Point second = new Point(left_edge.getNextEdge().getOrigin().getX(), left_edge.getNextEdge().getOrigin().getY());
           Segment current_edge_segment = new Segment(first, second);
@@ -290,14 +290,14 @@ public class VoronoiDiagramAlgo extends Algorithm {
             current_right_edge_index = (current_right_edge_index - 1 + edgesB.size()) % edgesB.size();  
             continue;
           }
-          if (Geometry.equalZero(right_edge.getOrigin().getX() - current_ray.getStartPoint().getX()) && 
+          /*if (Geometry.equalZero(right_edge.getOrigin().getX() - current_ray.getStartPoint().getX()) && 
             Geometry.equalZero(right_edge.getOrigin().getY() - current_ray.getStartPoint().getY()) ||
             Geometry.equalZero(right_edge.getNextEdge().getOrigin().getX() - current_ray.getStartPoint().getX()) && 
             Geometry.equalZero(right_edge.getNextEdge().getOrigin().getY() - current_ray.getStartPoint().getY())
           ) {
             current_right_edge_index = (current_right_edge_index - 1 + edgesB.size()) % edgesB.size(); 
             continue; 
-          }
+          }*/
           Point first = new Point(right_edge.getOrigin().getX(), right_edge.getOrigin().getY());
           Point second = new Point(right_edge.getNextEdge().getOrigin().getX(), right_edge.getNextEdge().getOrigin().getY());
           Segment current_edge_segment = new Segment(first, second);

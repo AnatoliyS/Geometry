@@ -429,7 +429,8 @@ public class VoronoiDiagram extends DCEL implements VisualData{
     } catch (VoronoiHalfEdgeIsNotValidException e) {
       Debug.log(e.getMessage());
     }
-    
+
+    // CAN BE REMOVED 
     // Check we have correct DCEL structure
     // and delete unused elements (all to right from L diagram
     // and all to left from R)
