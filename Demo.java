@@ -71,7 +71,7 @@ public class Demo extends JPanel {
     g2.setTransform(oldAT);
 
     // Draw input points and labels 
-    DrawHelper.drawPoints(g2, points, Color.black, true);
+    DrawHelper.drawPoints(g2, points, Color.black, false);
     g2.dispose();
   }
 
@@ -95,6 +95,14 @@ public class Demo extends JPanel {
       }
  
       // Sort points with custom comparator
+      Collections.sort(points, new PointComparator());
+     
+      // Modify points with same X 
+      for(int i = 1; i < n; i++) {
+        if (points.get(i).getX() == points.get(i-1).getX()) {
+          points.get(i-1).setX(points.get(i-1).getX() - 5*Constants.EPS);
+        }
+      }
       Collections.sort(points, new PointComparator());
 
       sc.close();
@@ -193,6 +201,7 @@ public class Demo extends JPanel {
     //Debug.log(tree.toString());
 
     tree.processAlgorithm(AlgorithmName.VORONOI_DIAGRAM);
+    //tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }

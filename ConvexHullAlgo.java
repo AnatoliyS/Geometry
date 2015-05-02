@@ -105,13 +105,13 @@ public class ConvexHullAlgo extends Algorithm {
     Debug.log("Start with lcs = " + left + ", "+right);
     Line lcs_line = new Line(A.get(left), B.get(right));
     while (true) {
-      if (lcs_line.checkPointVerticalAlignment(A.get((left + 1) % A_size))
+      if (A_size > 1 && lcs_line.checkPointVerticalAlignment(A.get((left + 1) % A_size))
         == Line.POINT_BELOW_LINE) {
         left = (left + 1) % A_size;
         lcs_line = new Line(A.get(left), B.get(right));
         continue;
       }
-      if (lcs_line.checkPointVerticalAlignment(B.get((right - 1 + B_size) % B_size))
+      if (B_size > 1 && lcs_line.checkPointVerticalAlignment(B.get((right - 1 + B_size) % B_size))
         == Line.POINT_BELOW_LINE) {
         right = (right - 1 + B_size) % B_size;
         lcs_line = new Line(A.get(left), B.get(right));
@@ -119,7 +119,6 @@ public class ConvexHullAlgo extends Algorithm {
       }
       break;
     }
-
     return new Pair<Integer,Integer>(left, right);
   }
 
@@ -140,13 +139,13 @@ public class ConvexHullAlgo extends Algorithm {
     }
     Line ucs_line = new Line(A.get(left), B.get(right));
     while (true) {
-      if (ucs_line.checkPointVerticalAlignment(A.get((left - 1 + A_size) % A_size))
+      if (A_size > 1 && ucs_line.checkPointVerticalAlignment(A.get((left - 1 + A_size) % A_size))
         == Line.POINT_ABOVE_LINE) {
         left = (left-1 + A_size) % A_size;
         ucs_line = new Line(A.get(left), B.get(right));
         continue;
       }
-      if (ucs_line.checkPointVerticalAlignment(B.get((right + 1 + B_size) % B_size))
+      if (B_size > 1 && ucs_line.checkPointVerticalAlignment(B.get((right + 1 + B_size) % B_size))
         == Line.POINT_ABOVE_LINE) {
         right = (right + 1 + B_size) % B_size;
         ucs_line = new Line(A.get(left), B.get(right));

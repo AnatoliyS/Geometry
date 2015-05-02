@@ -18,16 +18,19 @@ public class VoronoiDiagram implements VisualData{
   private ArrayList<Face> face;
   private HashMap<Point, Face> face_searcher;
   
-  public static final double maxX = 10000.0;
-  public static final double minX = -10000.0;
-  public static final double maxY = 10000.0;
-  public static final double minY = -10000.0;
+  public static final double maxX = 1000000.0;
+  public static final double minX = -1000000.0;
+  public static final double maxY = 1000000.0;
+  public static final double minY = -1000000.0;
   
 /*  public static final double maxX = 700.0;
   public static final double minX = -100.0;
   public static final double maxY = 500.0;
   public static final double minY = -200.0;*/
 
+  // Copy constructor
+  // @param VoronoiDigram Base Voronoi diagram
+  // @return VoronoiDiagram Copy of base diagram
   public VoronoiDiagram(
     VoronoiDiagram other
   ) {
@@ -36,7 +39,9 @@ public class VoronoiDiagram implements VisualData{
     face = new ArrayList<Face>();
     face_searcher = new HashMap<Point, Face>();
     
-    // Deep copy:
+    // Hash map from others' diagram elements to new one
+    // If we already copied some element, we store this connection
+    // in these maps
     HashMap<HalfEdge, HalfEdge> edges_map = new HashMap<HalfEdge, HalfEdge>();
     HashMap<Vertex, Vertex> vertex_map = new HashMap<Vertex, Vertex>();
     HashMap<Face, Face> faces_map = new HashMap<Face, Face>();
@@ -467,9 +472,23 @@ public class VoronoiDiagram implements VisualData{
     Debug.log("intersection_point" + p3.toString());
     
     Vertex center = new Vertex(bisector_intersection.getX(), bisector_intersection.getY(), false);
-    Vertex v1 = new Vertex(p1.getX(), p1.getY(), true);
+    Vertex v1;
     Vertex v2 = new Vertex(p2.getX(), p2.getY(), true);
-    Vertex v3 = new Vertex(p3.getX(), p3.getY(), true);
+    Vertex v3;
+    if (sign  < 0)
+      Debug.log("Invert points!");
+    if (sign < 0) {
+      v1 = new Vertex(p3.getX(), p3.getY(), true);
+      v3 = new Vertex(p1.getX(), p1.getY(), true);
+    } else {
+      v1 = new Vertex(p1.getX(), p1.getY(), true);
+      v3 = new Vertex(p3.getX(), p3.getY(), true);
+    }
+
+    Debug.log("v1 = " + v1);
+    Debug.log("v2 = " + v2);
+    Debug.log("v3 = " + v3);
+    
     vertex.add(center);
     vertex.add(v1);
     vertex.add(v2);
@@ -480,17 +499,26 @@ public class VoronoiDiagram implements VisualData{
     Face f3 = new Face();
     Face f_inf = new Face();
     f_inf.setInfinite(true);
+    
     f1.setPoint(a);
-    f2.setPoint(b);
-    f3.setPoint(c);
+    face_searcher.put(a, f1);
+    if (sign < 0) {
+      f2.setPoint(c);
+      f3.setPoint(b);
+      face_searcher.put(c, f2);
+      face_searcher.put(b, f3);
+    } else {
+      f2.setPoint(b);
+      f3.setPoint(c);
+      face_searcher.put(b, f2);
+      face_searcher.put(c, f3);
+    }
+
     face.add(f1);
     face.add(f2);
     face.add(f3);
     face.add(f_inf);
-    face_searcher.put(a, f1);
-    face_searcher.put(b, f2);
-    face_searcher.put(c, f3);
-
+    
     // TODO:
     ArrayList<HalfEdgeBuilder> builder = new ArrayList<HalfEdgeBuilder>();
     for (int i = 0; i < 13; i++) {
@@ -620,7 +648,7 @@ public class VoronoiDiagram implements VisualData{
       int iteration = 0;
       do {
         iteration++;
-        if (iteration > 10) {
+        if (iteration > 100) {
           s += "INFINITE CYCLE!\n\n";
           Debug.log(s);
           return false;
@@ -637,7 +665,7 @@ public class VoronoiDiagram implements VisualData{
           int it = 0;
           do {
             it++;
-            if (it > 6) {
+            if (it > 100) {
               s += "INFINITE CYCLE!\n";
               Debug.log(s);
               return false;
@@ -730,7 +758,6 @@ public class VoronoiDiagram implements VisualData{
     return true;
   }
 
-  // TODO: add render
   public void render(Graphics2D g) {
     Debug.log("rendering voronoi...");
     for (HalfEdge e : edge) {
@@ -739,25 +766,23 @@ public class VoronoiDiagram implements VisualData{
       } else {
         g.setColor(Color.blue);
       }
-        Vertex v1 = e.getOrigin();
-        Vertex v2 = e.getNextEdge().getOrigin();
-        g.draw(new Line2D.Double(v1.getX(), v1.getY(), v2.getX(), v2.getY()));
+      Vertex v1 = e.getOrigin();
+      Vertex v2 = e.getNextEdge().getOrigin();
+      double x1 = v1.getX();
+      double y1 = v1.getY();
+      double x2 = v2.getX();
+      double y2 = v2.getY();
+      g.draw(new Line2D.Double(x1, y1, x2, y2));
     }
     
     for (Point v : face_searcher.keySet()) {
       g.fill(new Ellipse2D.Double(v.getX()-4.0, v.getY()-4.0, 8.0, 8.0));
-      Face f = face_searcher.get(v);
-      /*ArrayList<HalfEdge> edges = new ArrayList<HalfEdges>();
-      HalfEdge start = f.getIncidentEdge();
-      do {
-        
-      }*/
     }
   }
 
   @Override
   public String toString() {
-    String s = "{ Points = [";
+    String s = "{ Voronoi Diagram Structure \nPoints = [";
     for (Point v : face_searcher.keySet()) {
       s += "(" + v.getX() + ", " + v.getY() + "), ";
     }
@@ -765,7 +790,8 @@ public class VoronoiDiagram implements VisualData{
     for (Vertex v : vertex) {
       s += "(" + v.getX() + ", " + v.getY() + "), ";
     }
-    s += "], Edges = [" + edge.size() + "], Faces = [" + face.size() + "], Point-Face-pairs = ["+ face_searcher.toString() +"]";
+    s += "], Edges = [" + edge.size() + "], Faces = [" + face.size();
+    s += "], Point-Face-pairs = ["+ face_searcher.toString() +"]";
     s += "}";
     return s;
   }

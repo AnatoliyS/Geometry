@@ -4,5 +4,5 @@
 *.xml
 .idea/*
 graph.txt
-graph1.txt
+graph_*.txt
 Test/*
