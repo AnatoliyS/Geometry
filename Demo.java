@@ -146,7 +146,7 @@ public class Demo extends JPanel {
   }
 
   public static void doSomething()
-          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
+          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException, AlgorithmRuntimeException {
     Debug.log("Something strange started.");
 
     // Process ConvexHullAlgo
@@ -178,7 +178,7 @@ public class Demo extends JPanel {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
-    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
+    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException | AlgorithmRuntimeException ex) {
       ex.printStackTrace();
       System.exit(1);
     }

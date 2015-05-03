@@ -14,14 +14,10 @@ import DCEL.*;
 
 public class VoronoiDiagram extends DCEL implements VisualData{
   // Max coordinates of diagram
-  public static final double maxX = 1000000.0;
-  public static final double minX = -1000000.0;
-  public static final double maxY = 1000000.0;
-  public static final double minY = -1000000.0;
-/*public static final double maxX = 700.0;
-  public static final double minX = -100.0;
-  public static final double maxY = 500.0;
-  public static final double minY = -200.0;*/
+  public static final double maxX = 10000000.0;
+  public static final double minX = -10000000.0;
+  public static final double maxY = 10000000.0;
+  public static final double minY = -10000000.0;
 
   private static final Point top_right = new Point(maxX, maxY);
   private static final Point top_left = new Point(minX, maxY);

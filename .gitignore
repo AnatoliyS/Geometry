@@ -7,3 +7,4 @@ graph.txt
 Test/*
 *Test.*
 testbuild.sh
+checker.sh

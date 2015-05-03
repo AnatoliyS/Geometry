@@ -29,8 +29,11 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_EXCEPTIONS_DIR)NoIntersectionException.java \
 						$(UTILS_EXCEPTIONS_DIR)NoDataException.java \
 						$(UTILS_EXCEPTIONS_DIR)AlgorithmDependenciesException.java \
+						$(UTILS_EXCEPTIONS_DIR)AlgorithmRuntimeException.java \
 						$(UTILS_EXCEPTIONS_DIR)UnknownAlgorithmException.java \
-						$(UTILS_EXCEPTIONS_DIR)VoronoiHalfEdgeIsNotValidException.java \
+						$(UTILS_EXCEPTIONS_DIR)HalfEdgeIsNotValidException.java \
+						$(UTILS_EXCEPTIONS_DIR)FaceTraversingException.java \
+						$(UTILS_EXCEPTIONS_DIR)VoronoiBuildingException.java \
 
 
 UTILS_CLASSES = $(UTILS_SRC:.java=.class)

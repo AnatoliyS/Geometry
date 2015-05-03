@@ -12,21 +12,21 @@ public class HalfEdgeBuilder {
     edge = new HalfEdge(_id);
   }
 
-  public HalfEdge getHalfEdge() throws VoronoiHalfEdgeIsNotValidException {
+  public HalfEdge getHalfEdge() throws HalfEdgeIsNotValidException {
     if (edge.getPreviousEdge() == null) {
-      throw new VoronoiHalfEdgeIsNotValidException("prev of " + edge.getName());
+      throw new HalfEdgeIsNotValidException("prev of " + edge.getName());
     } 
     if (edge.getNextEdge() == null) {
-      throw new VoronoiHalfEdgeIsNotValidException("next of" + edge.getName());
+      throw new HalfEdgeIsNotValidException("next of" + edge.getName());
     }
     if (edge.getTwinEdge() == null) {
-      throw new VoronoiHalfEdgeIsNotValidException("twin of" + edge.getName());
+      throw new HalfEdgeIsNotValidException("twin of" + edge.getName());
     }
     if (edge.getOrigin() == null) {
-      throw new VoronoiHalfEdgeIsNotValidException("origin of" + edge.getName());
+      throw new HalfEdgeIsNotValidException("origin of" + edge.getName());
     }
     if (edge.getLeftIncidentFace() == null) {
-      throw new VoronoiHalfEdgeIsNotValidException("face of" + edge.getName());
+      throw new HalfEdgeIsNotValidException("face of" + edge.getName());
     }
     
     return edge;    

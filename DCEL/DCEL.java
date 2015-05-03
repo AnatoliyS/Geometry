@@ -254,7 +254,48 @@ public class DCEL {
     }
     throw new NoDataException();
   }
-  
+ 
+  /**
+   * Get all edges around Face
+   * @param Face
+   * @return ArrayList<HalfEdge>
+   */
+  public static ArrayList<HalfEdge> getAllEdgesAroundFace(
+    Face f
+  ) throws FaceTraversingException {
+    ArrayList<HalfEdge> edges = new ArrayList<HalfEdge>();
+    HalfEdge start_edge = f.getIncidentEdge();
+    HalfEdge current_edge = start_edge;
+    int iteration = 0;
+    
+    String debug_str = "Start from " + current_edge.toString();
+    do {
+      iteration++;
+      if (iteration > maxIterations) {
+        throw new FaceTraversingException(debug_str);
+      }
+      edges.add(current_edge);
+      current_edge = current_edge.getNextEdge();
+      debug_str += ", \n" + current_edge.toString();
+    } while(current_edge != start_edge);
+    return edges;
+  }
+
+  /**
+   * Get all infinite HalfEdges from list of HalfEdges
+   * @param ArrayList<HalfEdge>
+   * @return ArrayList<HalfEdge>
+   */
+  public static ArrayList<HalfEdge> getAllInfiniteEdges(ArrayList<HalfEdge> list) {
+    ArrayList<HalfEdge> edges = new ArrayList<HalfEdge>();
+    for (HalfEdge e : list) {
+      if (e.isInfinite()) {
+        edges.add(e);
+      }
+    }
+    return edges;
+  }
+
   /**
    * Checks that DCEL is correct and deletes unused elements
    * * Check that structure is not contraversial (no links conflicts,
