@@ -1,5 +1,5 @@
 package Utils;
-
+import java.util.ArrayList;
 import Utils.Exceptions.*;
 
 public class Geometry {
@@ -83,6 +83,42 @@ public class Geometry {
   }
 
   /**
+   * Get Point of intersection of Ray and Segment.
+   * @param Ray
+   * @param Segment
+   * @throws NoIntersectionException if they do not cross
+   * @return Point Point of intersection
+   */
+  public static Point intersect(Ray a, Segment b) throws NoIntersectionException {
+    double dir_product = crossProduct(b.direction, a.direction);
+    // If line and segment are parallel
+    if (equalZero(dir_product)) {
+      throw new NoIntersectionException();
+    } else {
+      double product = crossProduct(a.direction, new Vector(a.start, b.first));
+      double t = product / dir_product;
+
+      // Check that point lies on segment
+      if (t < 0 || t > 1) {
+        throw new NoIntersectionException();
+      } else {
+        double x = b.first.getX() + t * b.direction.getX();
+        double y = b.first.getY() + t * b.direction.getY();
+        Point p = new Point(x, y);
+        
+        // Check that point lies on ray
+        // This is same check that parameter t for ray > 0
+        if ((p.getX() - a.start.getX()) * a.direction.getX() < 0 ||
+            (p.getY() - a.start.getY()) * a.direction.getY() < 0) {
+          throw new NoIntersectionException();
+        }
+        
+        return p;
+      }
+    }
+  }
+  
+  /* 
    * Get IntersectionResult instance of intersection of two Lines
    * @param Line
    * @param Line
@@ -278,6 +314,43 @@ public class Geometry {
       double y = - x * d.getX() / d.getY();
       return new Vector(x, y);
     }
+  }
+
+  /**
+   * Exclude same (with EPS error) points from ArrayList.
+   * @param ArrayList<Point> ArrayList which can store same (with EPS error)
+   * points.
+   * @return ArrayList<Point> ArralyList of unique points
+   */
+  public static ArrayList<Point> excludeSamePoints(ArrayList<Point> points) {
+    ArrayList<Point> unique_points = new ArrayList<Point>();
+    
+    for (Point test_point : points) {
+      boolean test_point_is_unique = true;
+      
+      for (Point unique_point : unique_points) {
+        // Find difference in Points' coordinates
+        double dx = test_point.getX() - unique_point.getX();
+        double dy = test_point.getY() - unique_point.getY();
+
+        if (equalZero(dx) && equalZero(dy)) {
+          test_point_is_unique = false;
+          break;
+        }
+      }
+
+      if (test_point_is_unique) {
+        unique_points.add(test_point);
+      }
+    }
+
+    return unique_points;
+  }
+
+  public static Point getMiddlePoint(Segment s) {
+    double x = (s.first.getX() + s.second.getX()) / 2.0;
+    double y = (s.first.getY() + s.second.getY()) / 2.0;
+    return new Point(x, y);
   }
 
 }

@@ -18,8 +18,8 @@ public class DrawHelper {
   public static final int scene_inf_x = 1000;
   public static final int scene_inf_y = 1000;
   // The offset of (0,0) point of cartesian coord system
-  public static final int scene_offset_x = 60;
-  public static final int scene_offset_y = 400;
+  public static final int scene_offset_x = 100;
+  public static final int scene_offset_y = 500;
   // Diameter of point (for render)
   public static final double point_diameter = 2.5;
 

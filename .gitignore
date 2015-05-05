@@ -4,5 +4,7 @@
 *.xml
 .idea/*
 graph.txt
-graph1.txt
 Test/*
+*Test.*
+testbuild.sh
+checker.sh

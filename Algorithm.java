@@ -26,7 +26,8 @@ public abstract class Algorithm {
   }
 
   // We need exactly DACNode nodes for getting result using nodes' data
-  public abstract Object merge(DACNode left, DACNode right) throws NoDataException;
+  public abstract Object merge(DACNode left, DACNode right) 
+    throws NoDataException, AlgorithmRuntimeException;
   public abstract boolean isTrivialCase(int count);
   public abstract Object doTrivialCase(ArrayList<Point> points);
 

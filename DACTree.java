@@ -54,7 +54,7 @@ public class DACTree {
   }
 
   public void processAlgorithm(String name) 
-      throws UnknownAlgorithmException, NoDataException {
+      throws UnknownAlgorithmException, NoDataException, AlgorithmRuntimeException {
     // Checking status
     AlgorithmProcessStatus currentStatus = statusMap.get(name);
     if (currentStatus == AlgorithmProcessStatus.PROCESSED) {
@@ -72,10 +72,13 @@ public class DACTree {
     }
 
     // Processing for algorithm
+    Debug.log("Processing algorithm " + algo + " itself...");
     int rootIndex = 1;
     int countPoints = points.size();
     try {
       processAlgorithmHelper(algo, rootIndex, 0, countPoints - 1);
+    } catch (AlgorithmRuntimeException e) {
+      throw e;
     } catch (Exception e) {
       Debug.log(e.getMessage());
       return;

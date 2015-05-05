@@ -14,6 +14,10 @@ public class Segment {
     direction = new Vector(a, b);
   }
 
+  public Vector getDirection() {
+    return direction;
+  }
+  
   public Point getFirst() {
     return first;
   }

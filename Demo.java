@@ -21,8 +21,8 @@ import Utils.Exceptions.*;
 public class Demo extends JPanel {
   private static DACTree tree;
   private static ArrayList<Point> points;
-  private static final int window_width = 700;
-  private static final int window_height = 500;
+  private static final int window_width = 1100;
+  private static final int window_height = 700;
 
   /**
    * Hardcode for building DACTree instance.
@@ -30,24 +30,31 @@ public class Demo extends JPanel {
    * ArrayList of points must be not null!
    */
   private static void hardcodeForConstructionTree()
-          throws AlgorithmDependenciesException, UnknownAlgorithmException{
+          throws AlgorithmDependenciesException, UnknownAlgorithmException {
     Debug.log("hardcodeForConstructionTree started.");
     // DACTree
     ArrayList<Algorithm> algorithms = new ArrayList<Algorithm>();
 
     // Add ConvexHullAlgo
-    ArrayList<String> chDependencies =
-            new ArrayList<String>(Arrays.asList(new String[] {}));
-    ConvexHullAlgo chAlgo = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, chDependencies);
-    algorithms.add(chAlgo);
+    ArrayList<String> ch_dependencies =
+      new ArrayList<String>(Arrays.asList(new String[] {}));
+    ConvexHullAlgo ch_algo = new ConvexHullAlgo(AlgorithmName.CONVEX_HULL, ch_dependencies);
+    algorithms.add(ch_algo);
 
     // Add MinimumAreaPolygonAlgo
-    ArrayList<String> mapDependencies =
-            new ArrayList<String>(Arrays.asList(new String[] {}));
-    MinimumAreaPolygonAlgo mapAlgo =
-            new MinimumAreaPolygonAlgo(AlgorithmName.MINIMUM_AREA_POLYGON, mapDependencies);
-    algorithms.add(mapAlgo);
+    ArrayList<String> map_dependencies =
+      new ArrayList<String>(Arrays.asList(new String[] {}));
+    MinimumAreaPolygonAlgo map_algo =
+      new MinimumAreaPolygonAlgo(AlgorithmName.MINIMUM_AREA_POLYGON, map_dependencies);
+    algorithms.add(map_algo);
 
+    // Add VoronoiDigramAlgo 
+    ArrayList<String> voronoi_dependencies = 
+      new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL}));
+    VoronoiDiagramAlgo voronoi_algo = 
+      new VoronoiDiagramAlgo(AlgorithmName.VORONOI_DIAGRAM, voronoi_dependencies);
+    algorithms.add(voronoi_algo);
+    
     // TODO: Add another algorithms here
 
     // Create DAC tree instance
@@ -92,7 +99,11 @@ public class Demo extends JPanel {
       // Draw MinimumAreaPolygon
       MinimumAreaPolygon polygon =
               (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
-      polygon.render(g2);
+      //polygon.render(g2);
+     
+      // Draw Voronoi Diagram 
+      VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
+      voronoi.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
     }
@@ -102,7 +113,7 @@ public class Demo extends JPanel {
     g2.setTransform(oldAT);
 
     // Draw input points and labels 
-    DrawHelper.drawPoints(g2, points, Color.black, true);
+    DrawHelper.drawPoints(g2, points, Color.black, false);
     g2.dispose();
   }
 
@@ -135,9 +146,8 @@ public class Demo extends JPanel {
   }
 
   public static void doSomething()
-          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException {
+          throws NoDataException, AlgorithmDependenciesException, UnknownAlgorithmException, AlgorithmRuntimeException {
     Debug.log("Something strange started.");
-    hardcodeForConstructionTree();
 
     // Process ConvexHullAlgo
     tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
@@ -145,7 +155,10 @@ public class Demo extends JPanel {
     // Process MinimumAreaPolygon
     tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
 
-    Debug.log(tree.toString());
+    // Process VoronoiDiagram 
+    tree.processAlgorithm(AlgorithmName.VORONOI_DIAGRAM);
+    
+    //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }
 
@@ -165,10 +178,10 @@ public class Demo extends JPanel {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
-    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException ex) {
+    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException | AlgorithmRuntimeException ex) {
       ex.printStackTrace();
+      System.exit(1);
     }
-
   }
 
 }
