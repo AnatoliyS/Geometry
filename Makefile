@@ -23,6 +23,7 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_DIR)Vector.java \
 						$(UTILS_DIR)Permutation.java \
 						$(UTILS_DIR)ByPassType.java \
+						$(UTILS_DIR)Polygon.java \
 						$(UTILS_DIR)IntersectionType.java \
 						$(UTILS_DIR)IntersectionResult.java \
 						$(UTILS_DIR)Geometry.java \
