@@ -48,7 +48,8 @@ UTILS: $(UTILS_CLASSES)
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
 # Compiling MinimumAreaPolygon logic
-MIN_AREA_POL_SCR = MinimumAreaPolygon.java MinimumAreaPolygonAlgo.java
+MIN_AREA_POL_SCR = MinimumAreaPolygon.java MinimumAreaPolygonAlgo.java \
+ 									 MinimumAreaPolygonSimpleAlgo.java
 
 # Compiling Voronoi logic
 VORONOI_SRC = VoronoiDiagram.java
