@@ -1,36 +1,49 @@
-import java.io.*;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.*;
-import Utils.*;
+
+import Utils.Polygon;
+import Utils.Point;
+import Utils.ByPassType;
+import Utils.Debug;
+import Utils.DrawHelper;
 
 public class MinimumAreaPolygon implements VisualData {
-    
-  private ArrayList<Point> points;
+  private Polygon polygon;
 
-  public MinimumAreaPolygon(ArrayList<Point> pts) {
-    points = new ArrayList<Point>(pts);  
+  public MinimumAreaPolygon(Polygon polygon) {
+    this.polygon = polygon;
+  }
+
+  public MinimumAreaPolygon(ArrayList<Point> points) {
+    this.polygon = new Polygon(points);
+  }
+
+  public MinimumAreaPolygon(ArrayList<Point> points, ByPassType byPassType) {
+    this.polygon = new Polygon(points, byPassType);
+  }
+
+  public Polygon getPolygon() {
+    return polygon;
   }
 
   public ArrayList<Point> getPoints() {
-    return points;
+    return polygon.getPoints();
+  }
+
+  public boolean isEmpty() {
+    return polygon.isEmpty();
   }
 
   // TODO: Add realisation
   public void render(Graphics2D g) {
     Debug.log("Rendering MinimumAreaPolygon...");
+    ArrayList<Point> points = polygon.getPoints();
     DrawHelper.drawFilledPolygon(g, points, Color.RED);
   }
 
   @Override
   public String toString() {
-    String s = "";
-    for(Point p : points)
-      s += p.toString() + ", ";
-    s = "Polygon={" + s + "}";
-    return s;  
+    return polygon.toString();
   }
-
 }
