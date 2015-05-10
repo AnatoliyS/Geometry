@@ -1,13 +1,6 @@
-import java.io.*;
 import java.lang.Object;
-import java.lang.Override;
 import java.lang.String;
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.*;
-import java.awt.Color;
 import Utils.*;
 import Utils.Exceptions.*;
 
@@ -44,7 +37,7 @@ public class ConvexHullAlgo extends Algorithm {
       lcs,
       ucs
     );
-    
+
     ConvexHull result = new ConvexHull(points);
     return result;
   }

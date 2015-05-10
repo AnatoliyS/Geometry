@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.io.File;
 import java.awt.Color;
 import java.awt.RenderingHints;
-import java.awt.FontMetrics;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -14,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.util.Locale;
 
-import DCEL.*;
 import Utils.*;
 import Utils.Exceptions.*;
 
@@ -54,7 +51,14 @@ public class Demo extends JPanel {
     VoronoiDiagramAlgo voronoi_algo = 
       new VoronoiDiagramAlgo(AlgorithmName.VORONOI_DIAGRAM, voronoi_dependencies);
     algorithms.add(voronoi_algo);
-    
+
+    // Add AllNearestNeighboursAlgo
+    ArrayList<String> ann_dependencies =
+      new ArrayList<String>(Arrays.asList(new String[] {AlgorithmName.CONVEX_HULL, AlgorithmName.VORONOI_DIAGRAM}));
+    AllNearestNeighboursAlgo ann_algo =
+      new AllNearestNeighboursAlgo(AlgorithmName.ALL_NEAREST_NEIGHBOURS, ann_dependencies);
+    algorithms.add(ann_algo);
+
     // TODO: Add another algorithms here
 
     // Create DAC tree instance
@@ -93,17 +97,21 @@ public class Demo extends JPanel {
 
       // Draw convex hull
       ConvexHull convHull =
-              (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
+        (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
       convHull.render(g2);
 
       // Draw MinimumAreaPolygon
       MinimumAreaPolygon polygon =
-              (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
+        (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
       polygon.render(g2);
      
       // Draw Voronoi Diagram 
       VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
-      //voronoi.render(g2);
+      voronoi.render(g2);
+
+      // Draw AllNearestNeighbours
+      AllNearestNeighbours allNN = (AllNearestNeighbours)tree.getAlgorithmResult(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
+      allNN.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
     }
@@ -218,7 +226,10 @@ public class Demo extends JPanel {
 
     // Process VoronoiDiagram 
     tree.processAlgorithm(AlgorithmName.VORONOI_DIAGRAM);
-    
+
+    // Process AllNearestNeighbours
+    tree.processAlgorithm(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
+
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
   }

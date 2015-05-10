@@ -1110,4 +1110,8 @@ public class Geometry {
     }
     return type;
   }
+
+  public static double getDistance(Point a, Point b) {
+    return Math.sqrt(Math.pow(a.getX() - b.getX(), 2.0) + Math.pow(a.getY() - b.getY(), 2.0));
+  }
 }

@@ -1,9 +1,6 @@
-import java.io.*;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.*;
 import Utils.*;
 
 public class ConvexHull implements VisualData {

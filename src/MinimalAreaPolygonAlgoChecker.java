@@ -1,10 +1,5 @@
-import Utils.Point;
-import Utils.PointComparator;
-
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 import java.util.Scanner;
 

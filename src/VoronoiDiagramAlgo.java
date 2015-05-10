@@ -1,17 +1,9 @@
-import java.io.*;
 import java.lang.Object;
-import java.lang.Override;
 import java.lang.String;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ArrayList;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.*;
-import java.awt.Color;
 import Utils.*;
 import DCEL.*;
 import Utils.Exceptions.*;
@@ -150,7 +142,7 @@ public class VoronoiDiagramAlgo extends Algorithm {
     assert(inf_edgesA.size() == 1);
     assert(inf_edgesB.size() == 1);
 
-    HalfEdgeBuilder current_edge_builder = new HalfEdgeBuilder("frist_edge");
+    HalfEdgeBuilder current_edge_builder = new HalfEdgeBuilder("first_edge");
     HalfEdgeBuilder current_edge_twin_builder = new HalfEdgeBuilder("first_edge_twin");
     
     current_edge_builder

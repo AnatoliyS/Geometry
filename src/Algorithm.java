@@ -1,9 +1,5 @@
-import java.io.*;
 import java.lang.String;
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import Utils.*;
 import Utils.Exceptions.*;
 
@@ -33,7 +29,6 @@ public abstract class Algorithm {
 
   @Override
   public String toString() {
-    String s = name;
-    return s;
+    return name;
   }
 }

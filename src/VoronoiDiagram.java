@@ -1,9 +1,4 @@
-import java.util.Arrays;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.HashSet;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -436,11 +431,8 @@ public class VoronoiDiagram extends DCEL implements VisualData{
   public void render(Graphics2D g) {
     Debug.log("Rendering voronoi...");
     for (HalfEdge e : edge) {
-      if (!e.isInfinite()) {
-        g.setColor(Color.red);
-      } else {
-        g.setColor(Color.blue);
-      }
+      g.setColor(Color.blue);
+
       Vertex v1 = e.getOrigin();
       Vertex v2 = e.getNextEdge().getOrigin();
       double x1 = v1.getX();

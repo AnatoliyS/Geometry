@@ -1,11 +1,9 @@
 import Utils.*;
-import Utils.Exceptions.NoDataException;
 import Utils.Point;
 import Utils.Polygon;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MinimumAreaPolygonSimpleAlgo {
 

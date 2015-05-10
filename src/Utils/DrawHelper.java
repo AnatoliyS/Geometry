@@ -1,18 +1,10 @@
 package Utils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.FontMetrics;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
-
-import DCEL.*;
-import Utils.*;
-import Utils.Exceptions.*;
 
 public class DrawHelper {
   public static final int scene_inf_x = 1000;

@@ -54,11 +54,14 @@ MIN_AREA_POL_SCR = MinimumAreaPolygon.java \
  						MinimalAreaPolygonAlgoChecker.java
 
 # Compiling Voronoi logic
-VORONOI_SRC = VoronoiDiagram.java
+VORONOI_SRC = VoronoiDiagram.java VoronoiDiagramAlgo.java
+
+# Compiling AllNearestNeighbours logic
+ALL_NEAR_NEIGH_SRC = AllNearestNeighbours.java AllNearestNeighboursAlgo.java
 
 # Compiling algorithms
 ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java VisualData.java \
-	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC)
+	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC) $(ALL_NEAR_NEIGH_SRC)
 
 # Compiling Divide and Conquer tree
 DAC_SRC = $(ALGS_SRC) DACNode.java DACTree.java

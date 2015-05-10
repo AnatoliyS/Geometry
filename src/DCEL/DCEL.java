@@ -1,18 +1,12 @@
 package DCEL;
 
-import java.util.Arrays;
-import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.HashSet;
 import java.util.ArrayList;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.*;
 import Utils.*;
 import Utils.Exceptions.*;
-import DCEL.*;
 
 /**
  * Doubly connected edge list
