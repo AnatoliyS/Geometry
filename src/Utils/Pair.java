@@ -13,6 +13,21 @@ public class Pair<L, R>{
   }
 
   @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if (obj == null || (obj.getClass() != this.getClass())) {
+      return false;
+    }
+
+    Pair<L, R> p = (Pair<L, R>)obj;
+    return ((first == null && p.first == null) || (first != null && first.equals(p.first)))
+            && ((second == null && p.second == null) || (second != null && second.equals(p.second)));
+  }
+
+  @Override
   public String toString() {
     String s = new String();
     s += (first == null) ? "null" : first.toString();

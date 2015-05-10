@@ -177,7 +177,7 @@ public class VoronoiDiagram extends DCEL implements VisualData{
       edge.add(e_twin_inf);  
       edge.add(e_twin_inf_twin);  
 
-    } catch (VoronoiHalfEdgeIsNotValidException e) {
+    } catch (HalfEdgeIsNotValidException e) {
       Debug.log(e.getMessage());
     }
   }
@@ -422,7 +422,7 @@ public class VoronoiDiagram extends DCEL implements VisualData{
         HalfEdge e = builder.get(i).getHalfEdge();
         edge.add(e); 
       }
-    } catch (VoronoiHalfEdgeIsNotValidException e) {
+    } catch (HalfEdgeIsNotValidException e) {
       Debug.log(e.getMessage());
     }
 

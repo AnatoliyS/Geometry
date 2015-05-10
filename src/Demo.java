@@ -9,7 +9,7 @@ import java.awt.FontMetrics;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.util.Locale;
@@ -99,11 +99,11 @@ public class Demo extends JPanel {
       // Draw MinimumAreaPolygon
       MinimumAreaPolygon polygon =
               (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
-      //polygon.render(g2);
+      polygon.render(g2);
      
       // Draw Voronoi Diagram 
       VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
-      voronoi.render(g2);
+      //voronoi.render(g2);
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
     }
@@ -112,8 +112,10 @@ public class Demo extends JPanel {
     // Now we draw in Screen-coordinate system
     g2.setTransform(oldAT);
 
-    // Draw input points and labels 
-    DrawHelper.drawPoints(g2, points, Color.black, false);
+    // Draw input points and labels
+    boolean labels = false;
+    //boolean labels = true;
+    DrawHelper.drawPoints(g2, points, Color.black, labels);
     g2.dispose();
   }
 
@@ -121,7 +123,7 @@ public class Demo extends JPanel {
    * Loads points from file into points[]
    * And do some preprocessing
    */
-  private static void loadAndPreprocessData(String file_name) {
+  public static void loadAndPreprocessData(String file_name) {
     File points_file = new File(file_name);
     try {   
       Scanner sc = new Scanner(points_file);
@@ -143,6 +145,65 @@ public class Demo extends JPanel {
     } catch(Exception e) {
       System.out.println("IO error:" + e.toString());    
     }
+  }
+
+  public static void doMinimalAreaPolygonAlgo()
+          throws NoDataException, AlgorithmDependenciesException,
+          UnknownAlgorithmException, AlgorithmRuntimeException {
+    Debug.log("Demo::doMinimalAreaPolygonAlgo started.");
+    hardcodeForConstructionTree();
+
+    // Process ConvexHullAlgo
+    tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+
+    // Process MinimumAreaPolygonAlgo
+    tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
+    Debug.log(tree.toString());
+
+    Debug.log("Demo::doMinimalAreaPolygonAlgo finished.");
+  }
+
+  public static double getMinimumAreaPolygonAlgoMistakeCoefficient()
+          throws NoDataException, AlgorithmDependenciesException,
+          UnknownAlgorithmException, AlgorithmRuntimeException {
+    Debug.log("\nDemo::getMinimumAreaPolygonAlgoMistakeCoefficient started");
+    hardcodeForConstructionTree();
+
+    // Process ConvexHullAlgo
+    //tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+
+    // Process MinimumAreaPolygonAlgo
+    tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
+
+    //Debug.log(tree.toString());
+
+    Debug.log("\nCheck polygon");
+    Polygon polygonSimple = calcPermutationPolygon();
+    double areaSimple = Geometry.polygonArea(polygonSimple);
+    Debug.log("areaSimple=" + areaSimple + "\nSimple=" + polygonSimple);
+
+    MinimumAreaPolygon polygonAlgo =
+            (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
+    double areaAlgo = Geometry.polygonArea(polygonAlgo.getPolygon());
+    Debug.log("\nareaAlgo=" + areaAlgo + "\nAlgo=" + polygonAlgo);
+
+    if (Math.abs(areaAlgo - areaSimple) > Constants.EPS) {
+      Debug.log("DIFFERENT POLYGONS FOUND");
+    }
+
+    double mistakeCoef = areaAlgo / areaSimple;
+    Debug.log("MISTAKE COEFFICIENT=" + mistakeCoef);
+
+    //System.out.println("MISTAKE COEFFICIENT=" + mistakeCoef);
+
+    Debug.log("\nDemo::getMinimumAreaPolygonAlgoMistakeCoefficient finished");
+    return mistakeCoef;
+  }
+
+  public static Polygon calcPermutationPolygon() throws NoDataException{
+    MinimumAreaPolygonSimpleAlgo algo = new MinimumAreaPolygonSimpleAlgo();
+    Polygon polygon = algo.getMinimumAreaPolygon(points);
+    return polygon;
   }
 
   public static void doSomething()
@@ -178,7 +239,8 @@ public class Demo extends JPanel {
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
-    } catch (NoDataException | AlgorithmDependenciesException | UnknownAlgorithmException | AlgorithmRuntimeException ex) {
+    } catch (NoDataException | AlgorithmDependenciesException |
+            UnknownAlgorithmException | AlgorithmRuntimeException ex) {
       ex.printStackTrace();
       System.exit(1);
     }

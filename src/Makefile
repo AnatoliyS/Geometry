@@ -21,6 +21,9 @@ UTILS_SRC = $(UTILS_DIR)Point.java \
 						$(UTILS_DIR)Pair.java \
 						$(UTILS_DIR)Debug.java \
 						$(UTILS_DIR)Vector.java \
+						$(UTILS_DIR)Permutation.java \
+						$(UTILS_DIR)ByPassType.java \
+						$(UTILS_DIR)Polygon.java \
 						$(UTILS_DIR)IntersectionType.java \
 						$(UTILS_DIR)IntersectionResult.java \
 						$(UTILS_DIR)Geometry.java \
@@ -45,7 +48,10 @@ UTILS: $(UTILS_CLASSES)
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
 # Compiling MinimumAreaPolygon logic
-MIN_AREA_POL_SCR = MinimumAreaPolygon.java MinimumAreaPolygonAlgo.java
+MIN_AREA_POL_SCR = MinimumAreaPolygon.java \
+						MinimumAreaPolygonAlgo.java \
+ 						MinimumAreaPolygonSimpleAlgo.java \
+ 						MinimalAreaPolygonAlgoChecker.java
 
 # Compiling Voronoi logic
 VORONOI_SRC = VoronoiDiagram.java

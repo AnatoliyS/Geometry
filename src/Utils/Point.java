@@ -8,6 +8,12 @@ public class Point {
     x = _x;
     y = _y; 
   }
+
+  public Point(Point p) {
+    this.x = p.x;
+    this.y = p.y;
+  }
+
   public double getX() {
     return x;
   }
@@ -19,6 +25,20 @@ public class Point {
   }
   public void setY(double _y) {
     y = _y;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+
+    if ((obj == null) || (obj.getClass() != this.getClass())) {
+      return false;
+    }
+
+    Point p = (Point)obj;
+    return Geometry.equalZero(p.x - this.x) && Geometry.equalZero(p.y - this.y);
   }
 
   @Override

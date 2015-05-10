@@ -2,8 +2,11 @@
 *.class~
 *.java~
 *.xml
-.idea/*
-graph.txt
+out/*
+mistake/*
+src/graph.txt
+graph_point_inside_result.txt
+graph_test.txt
 Test/*
 *Test.*
 testbuild.sh
