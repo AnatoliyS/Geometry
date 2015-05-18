@@ -19,7 +19,7 @@ public class Demo extends JPanel {
   private static DACTree tree;
   private static ArrayList<Point> points;
   private static final int window_width = 1100;
-  private static final int window_height = 700;
+  private static final int window_height = 600;
 
   /**
    * Hardcode for building DACTree instance.
