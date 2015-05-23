@@ -57,7 +57,13 @@ public class DACTree {
     }
   }
 
-  public void processAlgorithm(String name) 
+  public void addAlgorithmResultToRoot(Object algorithmResult, String name) {
+    statusMap.put(name, AlgorithmProcessStatus.PROCESSED);
+    DACNode node = nodes.get(1);
+    node.setDataResult(name, algorithmResult);
+  }
+
+  public void processAlgorithm(String name)
       throws UnknownAlgorithmException, NoDataException, AlgorithmRuntimeException {
     // Checking status
     AlgorithmProcessStatus currentStatus = statusMap.get(name);

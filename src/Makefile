@@ -62,9 +62,13 @@ ALL_NEAR_NEIGH_SRC = AllNearestNeighbours.java AllNearestNeighboursAlgo.java
 # Compiling Delaunay Triangulation logic
 DELAUNAY_SRC = DelaunayTriangulation.java DelaunayTriangulationAlgo.java 
 
+# Compiling Spanning Tree logic
+SPANING_TREE = DisjointSetUnion.java \
+                SpanningTreeKruskal.java
+
 # Compiling algorithms
 ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java VisualData.java \
-	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC) $(ALL_NEAR_NEIGH_SRC)   $(DELAUNAY_SRC)
+	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC) $(ALL_NEAR_NEIGH_SRC) $(DELAUNAY_SRC) $(SPANNING_TREE)
 
 # Compiling Divide and Conquer tree
 DAC_SRC = $(ALGS_SRC) DACNode.java DACTree.java

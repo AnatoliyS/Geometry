@@ -120,8 +120,15 @@ public class Demo extends JPanel {
       AllNearestNeighbours allNN = (AllNearestNeighbours)tree.getAlgorithmResult(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
       allNN.render(g2);
 
-      DelaunayTriangulation delaunay = (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
+      //Draw Delaunay Triangulation
+      DelaunayTriangulation delaunay =
+          (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
       delaunay.render(g2);
+
+      //Draw Spanning Tree
+      SpanningTreeKruskal spanningTree =
+          (SpanningTreeKruskal)tree.getAlgorithmResult(AlgorithmName.SPANNING_TREE);
+      spanningTree.render(g2);
 
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
@@ -243,6 +250,13 @@ public class Demo extends JPanel {
 
     // Process DelaunayTriangulation
     tree.processAlgorithm(AlgorithmName.DELAUNAY_TRIANGULATION);
+
+    // Create Minimum Spanning tree based on delaunay triangulation and cache it in the tree
+    DelaunayTriangulation delaunayTriangulation =
+        (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
+    SpanningTreeKruskal spanningTree = new SpanningTreeKruskal();
+    spanningTree.calculate(delaunayTriangulation);
+    tree.addAlgorithmResultToRoot(spanningTree, AlgorithmName.SPANNING_TREE);
 
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
