@@ -18,8 +18,8 @@ import Utils.Exceptions.*;
 public class Demo extends JPanel {
   private static DACTree tree;
   private static ArrayList<Point> points;
-  private static final int window_width = 1300;
-  private static final int window_height = 600;
+  private static final int window_width = 1200;
+  private static final int window_height = 700;
 
   /**
    * Hardcode for building DACTree instance.
@@ -58,6 +58,13 @@ public class Demo extends JPanel {
     AllNearestNeighboursAlgo ann_algo =
       new AllNearestNeighboursAlgo(AlgorithmName.ALL_NEAREST_NEIGHBOURS, ann_dependencies);
     algorithms.add(ann_algo);
+
+    // Add DelaunayTriangulationAlgo
+    ArrayList<String> delaunayDependencies =
+        new ArrayList<>(Arrays.asList(new String[] {AlgorithmName.VORONOI_DIAGRAM}));
+    DelaunayTriangulationAlgo delaunayTriangulationAlgo =
+        new DelaunayTriangulationAlgo(AlgorithmName.DELAUNAY_TRIANGULATION, delaunayDependencies);
+    algorithms.add(delaunayTriangulationAlgo);
 
     // TODO: Add another algorithms here
 
@@ -112,6 +119,10 @@ public class Demo extends JPanel {
       // Draw AllNearestNeighbours
       AllNearestNeighbours allNN = (AllNearestNeighbours)tree.getAlgorithmResult(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
       allNN.render(g2);
+
+      DelaunayTriangulation delaunay = (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
+      delaunay.render(g2);
+
     } catch(NoDataException e) {
       Debug.log(e.getMessage());
     }
@@ -229,6 +240,9 @@ public class Demo extends JPanel {
 
     // Process AllNearestNeighbours
     tree.processAlgorithm(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
+
+    // Process DelaunayTriangulation
+    tree.processAlgorithm(AlgorithmName.DELAUNAY_TRIANGULATION);
 
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");

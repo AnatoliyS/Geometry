@@ -59,9 +59,6 @@ VORONOI_SRC = VoronoiDiagram.java VoronoiDiagramAlgo.java
 # Compiling AllNearestNeighbours logic
 ALL_NEAR_NEIGH_SRC = AllNearestNeighbours.java AllNearestNeighboursAlgo.java
 
-# Compiling Delaunay Triangulation logic
-DELAUNAY_SRC = DelaunayTriangulation.java DelaunayTriangulationAlgo.java 
-
 # Compiling algorithms
 ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java VisualData.java \
 	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC) $(ALL_NEAR_NEIGH_SRC)

@@ -1114,4 +1114,23 @@ public class Geometry {
   public static double getDistance(Point a, Point b) {
     return Math.sqrt(Math.pow(a.getX() - b.getX(), 2.0) + Math.pow(a.getY() - b.getY(), 2.0));
   }
+
+  /**
+   * check if points are collinear. If determinant :
+   * | a.x a.y 1 |
+   * | b.x b.y 1 | = 0
+   * | c.x c.y 1 |
+   * equals 0 than points are collinear
+   *
+   * @param a
+   * @param b
+   * @param c
+   * @return true if points are collinear, otherwise - false
+   */
+  public static boolean arePointsCollinear (Point a, Point b, Point c) {
+    double determinant = a.getX() * b.getY() + b.getX() * c.getY() + a.getY() * c.getX()
+        - b.getY() * c.getX() - a.getX() * c.getY() - a.getY() * b.getX();
+    return equalZero(determinant) ? true : false;
+  }
+
 }

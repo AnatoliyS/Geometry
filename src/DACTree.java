@@ -48,7 +48,12 @@ public class DACTree {
     int countPoints = _points.size();
     this.nodes = new ArrayList<DACNode>(countPoints * 4);
     for (int i = 0, countNodes = countPoints * 4; i < countNodes; ++i) {
-        this.nodes.add(new DACNode());
+      // assuming, that in future we will assign i*2 and i*2+1 indexes for sons of this node
+      if (i > 1) {
+        this.nodes.add(new DACNode(nodes.get(i/2)));
+      } else {
+        this.nodes.add(new DACNode(null));
+      }
     }
   }
 
