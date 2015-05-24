@@ -1,25 +1,21 @@
-import java.util.Scanner;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
 import java.io.File;
-import java.awt.Color;
-import java.awt.RenderingHints;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.util.Locale;
+import javax.swing.*;
 
 import Utils.*;
 import Utils.Exceptions.*;
+import Utils.Point;
+import Utils.Polygon;
 
-public class Demo extends JPanel {
+public class Demo implements MenuHandler{
   private static DACTree tree;
   private static ArrayList<Point> points;
   private static final int window_width = 1200;
   private static final int window_height = 700;
+  private static Menu menu = new Menu();
+  private static AlgorithmPanel algorithmPanel = new AlgorithmPanel();
+  private static JFrame frame = new JFrame();
 
   /**
    * Hardcode for building DACTree instance.
@@ -66,6 +62,13 @@ public class Demo extends JPanel {
         new DelaunayTriangulationAlgo(AlgorithmName.DELAUNAY_TRIANGULATION, delaunayDependencies);
     algorithms.add(delaunayTriangulationAlgo);
 
+    // Add SpanningTree
+    ArrayList<String> spanningDependencies =
+        new ArrayList<>(Arrays.asList(new String[] {AlgorithmName.DELAUNAY_TRIANGULATION}));
+    SpanningTreeKruskalAlgo spanningTreeKruskal =
+        new SpanningTreeKruskalAlgo(AlgorithmName.SPANNING_TREE, spanningDependencies);
+    algorithms.add(spanningTreeKruskal);
+
     // TODO: Add another algorithms here
 
     // Create DAC tree instance
@@ -75,74 +78,6 @@ public class Demo extends JPanel {
     Debug.log(tree.toString());
 
     Debug.log("hardcodeForConstructionTree finished.");
-  }
-
-  @Override  
-  public void paintComponent(Graphics g){
-    super.paintComponent(g);
-    
-    Graphics2D g2 = (Graphics2D) g;
-    g2.setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING, 
-      RenderingHints.VALUE_ANTIALIAS_ON
-    );
-    AffineTransform oldAT = g2.getTransform();
-
-    // 1. Flip Y axis and translate coords to go from
-    // screen coords system to cartesian.
-    // Now we draw in cartesian system
-    g2.setTransform(DrawHelper.invertYAxisAffineTransform());
-
-    // Draw coordinate axes
-    DrawHelper.drawCoordinateAxes(g2);
-
-    /**
-     * Draw algorithms results according to checkbox values
-     */
-    try {
-      // TODO: Draw VisualData according to checkbox values
-
-      // Draw convex hull
-      ConvexHull convHull =
-        (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
-      convHull.render(g2);
-
-      // Draw MinimumAreaPolygon
-      MinimumAreaPolygon polygon =
-        (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
-      polygon.render(g2);
-     
-      // Draw Voronoi Diagram 
-      VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
-      voronoi.render(g2);
-
-      // Draw AllNearestNeighbours
-      AllNearestNeighbours allNN = (AllNearestNeighbours)tree.getAlgorithmResult(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
-      allNN.render(g2);
-
-      //Draw Delaunay Triangulation
-      DelaunayTriangulation delaunay =
-          (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
-      delaunay.render(g2);
-
-      //Draw Spanning Tree
-      SpanningTreeKruskal spanningTree =
-          (SpanningTreeKruskal)tree.getAlgorithmResult(AlgorithmName.SPANNING_TREE);
-      spanningTree.render(g2);
-
-    } catch(NoDataException e) {
-      Debug.log(e.getMessage());
-    }
-    
-    // 2. Flip back to screen cords system to draw text 
-    // Now we draw in Screen-coordinate system
-    g2.setTransform(oldAT);
-
-    // Draw input points and labels
-    boolean labels = false;
-    //boolean labels = true;
-    DrawHelper.drawPoints(g2, points, Color.black, labels);
-    g2.dispose();
   }
 
   /**
@@ -251,15 +186,115 @@ public class Demo extends JPanel {
     // Process DelaunayTriangulation
     tree.processAlgorithm(AlgorithmName.DELAUNAY_TRIANGULATION);
 
-    // Create Minimum Spanning tree based on delaunay triangulation and cache it in the tree
-    DelaunayTriangulation delaunayTriangulation =
-        (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
-    SpanningTreeKruskal spanningTree = new SpanningTreeKruskal();
-    spanningTree.calculate(delaunayTriangulation);
-    tree.addAlgorithmResultToRoot(spanningTree, AlgorithmName.SPANNING_TREE);
+    // Process MinimumSpanningTree
+    tree.processAlgorithm(AlgorithmName.SPANNING_TREE);
 
     //Debug.log(tree.toString());
     Debug.log("Something strange finished.");
+  }
+
+  private void validateInput(MenuConfiguration menuConfiguration) {
+    if (!menuConfiguration.isCorrectInputDisplayed) {
+      try {
+        if (menuConfiguration.isInputStringAFile) {
+          points = FileReader.loadData(menuConfiguration.inputFile);
+        } else {
+          if (menuConfiguration.inputString.isEmpty()) {
+            menuConfiguration.inputString = "25"; // if nothing is set, just draw something
+          }
+          points = GraphGenerator.generateData(new Integer(menuConfiguration.inputString));
+        }
+
+        // Sort points with custom comparator
+        Collections.sort(points, new PointComparator());
+
+        // Construct DAC tree
+        hardcodeForConstructionTree();
+      } catch (AlgorithmDependenciesException |
+          UnknownAlgorithmException ex) {
+        ex.printStackTrace();
+        System.exit(1);
+      }
+    }
+  }
+
+  private void savePointsIfNeeded(boolean shouldSavePoints, String file) {
+    if (shouldSavePoints) {
+      if (file.isEmpty()) {
+        file = "graph_default.txt";
+      }
+      FileWriter.savePoints(file, points);
+    }
+  }
+
+  @Override
+  public void onMenuChange() {
+    validateInput(menu.getMenuConfiguration());
+    savePointsIfNeeded(menu.getMenuConfiguration().shouldSavePoints, menu.getMenuConfiguration().inputFile);
+    ArrayList<String> algorithmsNames = menu.getAlgorithmsToBeDrawn();
+    ArrayList<VisualData> algorithms = new ArrayList<>();
+    try {
+      for(String algorithmName :  algorithmsNames) {
+        switch (algorithmName) {
+          // Convex Hull
+          case AlgorithmName.CONVEX_HULL : {
+            tree.processAlgorithm(AlgorithmName.CONVEX_HULL);
+            ConvexHull convHull =
+                (ConvexHull)tree.getAlgorithmResult(AlgorithmName.CONVEX_HULL);
+            algorithms.add(convHull);
+            break;
+          }
+          // MinimumAreaPolygon
+          case AlgorithmName.MINIMUM_AREA_POLYGON : {
+            tree.processAlgorithm(AlgorithmName.MINIMUM_AREA_POLYGON);
+            MinimumAreaPolygon polygon =
+                (MinimumAreaPolygon)tree.getAlgorithmResult(AlgorithmName.MINIMUM_AREA_POLYGON);
+            algorithms.add(polygon);
+            break;
+          }
+          // Voronoi Diagram
+          case AlgorithmName.VORONOI_DIAGRAM : {
+            tree.processAlgorithm(AlgorithmName.VORONOI_DIAGRAM);
+            VoronoiDiagram voronoi = (VoronoiDiagram)tree.getAlgorithmResult(AlgorithmName.VORONOI_DIAGRAM);
+            algorithms.add(voronoi);
+            break;
+          }
+          //All Nearest Neighbours
+          case AlgorithmName.ALL_NEAREST_NEIGHBOURS : {
+            tree.processAlgorithm(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
+            AllNearestNeighbours allNearestNeighbours =
+                (AllNearestNeighbours)tree.getAlgorithmResult(AlgorithmName.ALL_NEAREST_NEIGHBOURS);
+            algorithms.add(allNearestNeighbours);
+            break;
+          }
+          //Draw Delaunay Triangulation
+          case AlgorithmName.DELAUNAY_TRIANGULATION : {
+            tree.processAlgorithm(AlgorithmName.DELAUNAY_TRIANGULATION);
+            DelaunayTriangulation delaunayTriangulation =
+                (DelaunayTriangulation)tree.getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
+            algorithms.add(delaunayTriangulation);
+            break;
+          }
+          //Draw Spanning Tree
+          case AlgorithmName.SPANNING_TREE : {
+            tree.processAlgorithm(AlgorithmName.SPANNING_TREE);
+            SpanningTreeKruskal spanningTreeKruskal =
+                (SpanningTreeKruskal)tree.getAlgorithmResult(AlgorithmName.SPANNING_TREE);
+            algorithms.add(spanningTreeKruskal);
+            break;
+          }
+          default :
+            break;
+        }
+      }
+    } catch (NoDataException |
+        UnknownAlgorithmException | AlgorithmRuntimeException ex) {
+      ex.printStackTrace();
+      System.exit(1);
+    }
+    algorithmPanel.setPointsToBeDrawn(points);
+    algorithmPanel.setObjectsToBeDrawn(algorithms);
+    frame.repaint();
   }
 
   public static void main(String []args) {
@@ -273,16 +308,18 @@ public class Demo extends JPanel {
       doSomething();
 
       // Display graphics
-      JFrame frame = new JFrame();
-      frame.getContentPane().add(new Demo());
+      menu.attachToHandler(new Demo());
+      //frame.getContentPane().add(menu);
+      frame.getContentPane().add(menu.menuPanel, BorderLayout.EAST);
+      frame.getContentPane().add(menu.menuPanel_1, BorderLayout.SOUTH);
+      frame.getContentPane().add(algorithmPanel);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
       frame.setVisible(true);
     } catch (NoDataException | AlgorithmDependenciesException |
-            UnknownAlgorithmException | AlgorithmRuntimeException ex) {
+        UnknownAlgorithmException | AlgorithmRuntimeException ex) {
       ex.printStackTrace();
       System.exit(1);
     }
   }
-
 }

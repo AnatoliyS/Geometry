@@ -1,4 +1,6 @@
 import Utils.Debug;
+import Utils.Exceptions.AlgorithmRuntimeException;
+import Utils.Exceptions.NoDataException;
 import Utils.Geometry;
 import Utils.Pair;
 import Utils.Point;
@@ -10,7 +12,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Hashtable;
 
-public class SpanningTreeKruskal implements VisualData {
+public class SpanningTreeKruskal implements VisualData{
   private Hashtable<Point, ArrayList<Point>> spanningTree;
   private Double weight;
 
@@ -19,57 +21,13 @@ public class SpanningTreeKruskal implements VisualData {
     weight = 0.0;
   }
 
+  public SpanningTreeKruskal(Hashtable<Point, ArrayList<Point>> spanningTree, Double weight) {
+    this.spanningTree = spanningTree;
+    this.weight = weight;
+  }
+
   Double getWeight() {
     return weight;
-  }
-
-  class EdgeComparator
-      implements Comparator<Object> {
-    @Override
-    public int compare(Object _first, Object _second) {
-      Pair<Double, Pair<Point, Point>> first = (Pair<Double, Pair<Point, Point>>)_first;
-      Pair<Double, Pair<Point, Point>> second = (Pair<Double, Pair<Point, Point>>)_second;
-      if (first.first > second.first) {
-        return 1;
-      } else if (first.first < second.first) {
-        return -1;
-      } else {
-        return 0;
-      }
-    }
-  }
-
-  public Object calculate(DelaunayTriangulation delaunayTriangulation) {
-    Hashtable<Point, ArrayList<Point>> graph = delaunayTriangulation.getGraph();
-    ArrayList<Pair<Double, Pair<Point, Point>>> edges = new ArrayList<>();
-    for(Point point: graph.keySet()) {
-      for(Point incidentPoint : graph.get(point)) {
-        edges.add(new Pair(Geometry.getDistance(point, incidentPoint),
-            new Pair(point, incidentPoint)));
-      }
-    }
-    Object[] weightedEdges = edges.toArray();
-    Arrays.sort(weightedEdges, new EdgeComparator());
-
-    DisjointSetUnion dsu = new DisjointSetUnion();
-    for (Pair<Double, Pair<Point, Point>> edge : edges) {
-      dsu.makeSet(edge.second.first);
-      dsu.makeSet(edge.second.second);
-    }
-    for (Object _edge : weightedEdges) {
-      Pair<Double, Pair<Point, Point>> edge = (Pair<Double, Pair<Point, Point>>) _edge;
-      Point a = edge.second.first;
-      Point b = edge.second.second;
-      if (!dsu.find(a).equals(dsu.find(b))) {
-        dsu.union(a, b);
-        if (!spanningTree.containsKey(a)) {
-          spanningTree.put(a, new ArrayList<Point>());
-        }
-        spanningTree.get(a).add(b);
-        weight += edge.first;
-      }
-    }
-    return spanningTree;
   }
 
   @Override

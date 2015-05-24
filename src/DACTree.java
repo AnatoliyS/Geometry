@@ -13,7 +13,7 @@ import Utils.Exceptions.*;
  * Divide and Conquer Tree
  */
 public class DACTree {
-
+  public static final int ROOT_INDEX = 1;
   // Algorithm process status
   private enum AlgorithmProcessStatus {
     NOT_PROCESSED,
@@ -49,18 +49,12 @@ public class DACTree {
     this.nodes = new ArrayList<DACNode>(countPoints * 4);
     for (int i = 0, countNodes = countPoints * 4; i < countNodes; ++i) {
       // assuming, that in future we will assign i*2 and i*2+1 indexes for sons of this node
-      if (i > 1) {
+      if (i > ROOT_INDEX) {
         this.nodes.add(new DACNode(nodes.get(i/2)));
       } else {
         this.nodes.add(new DACNode(null));
       }
     }
-  }
-
-  public void addAlgorithmResultToRoot(Object algorithmResult, String name) {
-    statusMap.put(name, AlgorithmProcessStatus.PROCESSED);
-    DACNode node = nodes.get(1);
-    node.setDataResult(name, algorithmResult);
   }
 
   public void processAlgorithm(String name)
@@ -83,15 +77,22 @@ public class DACTree {
 
     // Processing for algorithm
     Debug.log("Processing algorithm " + algo + " itself...");
-    int rootIndex = 1;
-    int countPoints = points.size();
-    try {
-      processAlgorithmHelper(algo, rootIndex, 0, countPoints - 1);
-    } catch (AlgorithmRuntimeException e) {
-      throw e;
-    } catch (Exception e) {
-      Debug.log(e.getMessage());
-      return;
+    if (algo.getName() == AlgorithmName.SPANNING_TREE) {
+      DACNode node = nodes.get(1);
+      DelaunayTriangulation delaunayTriangulation =
+          (DelaunayTriangulation)getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
+      SpanningTreeKruskal spanningTreeKruskal = ((SpanningTreeKruskalAlgo)algo).calculate(delaunayTriangulation);
+      node.setDataResult(algo.getName(), spanningTreeKruskal);
+    } else {
+      int countPoints = points.size();
+      try {
+        processAlgorithmHelper(algo, ROOT_INDEX, 0, countPoints - 1);
+      } catch (AlgorithmRuntimeException e) {
+        throw e;
+      } catch (Exception e) {
+        Debug.log(e.getMessage());
+        return;
+      }
     }
     // Set status PROCESSED
     statusMap.put(name, AlgorithmProcessStatus.PROCESSED);
@@ -134,7 +135,7 @@ public class DACTree {
   }
 
   public Object getAlgorithmResult(String name) throws NoDataException {
-    return nodes.get(1).getDataResult(name);
+    return nodes.get(ROOT_INDEX).getDataResult(name);
   }
 
   @Override

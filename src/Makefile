@@ -84,7 +84,7 @@ $(DAC_CLASSES): $(DAC_SRC)
 DAC: $(DAC_CLASSES)
 
 # Compiling Demonstarion
-Demo.class: DCEL UTILS DAC Demo.java   
+Demo.class: DCEL UTILS DAC Demo.java
 	javac -g Demo.java
 Demo: Demo.class
 

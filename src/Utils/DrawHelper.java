@@ -13,7 +13,7 @@ public class DrawHelper {
   public static final int scene_offset_x = 100;
   public static final int scene_offset_y = 500;
   // Diameter of point (for render)
-  public static final double point_diameter = 2.5;
+  public static final double point_diameter = 6.5;
 
   /**
    * Trasform to flip Y axis and translate coords from
