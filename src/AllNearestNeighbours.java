@@ -91,7 +91,7 @@ public class AllNearestNeighbours implements VisualData{
       double x2 = p1.getX();
       double y2 = p1.getY();
 
-      g.setColor(Color.darkGray);
+      g.setColor(AlgorithmColor.ALL_NEAREST_NEIGHBOURS.getColor());
       g.draw(new Line2D.Double(x1, y1, x2, y2));
 
       g.setColor(Color.black);

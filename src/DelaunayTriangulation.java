@@ -89,7 +89,7 @@ public class DelaunayTriangulation implements VisualData {
   @Override
   public void render(Graphics2D g) {
     Debug.log("Rendering Delaunay triangulation...");
-    g.setColor(Color.ORANGE);
+    g.setColor(AlgorithmColor.DELAUNAY_TRIANGULATION.getColor());
     for (Point point : connectedPoints.keySet()) {
       for (Point incidentPoint : connectedPoints.get(point) ) {
         g.draw(new Line2D.Double(point.getX(),

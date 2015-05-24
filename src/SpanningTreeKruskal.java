@@ -75,7 +75,7 @@ public class SpanningTreeKruskal implements VisualData {
   @Override
   public void render(Graphics2D g) {
     Debug.log("Rendering Delaunay triangulation...");
-    g.setColor(Color.CYAN);
+    g.setColor(AlgorithmColor.MINIMUM_SPANNING_TREE.getColor());
     for (Point point : spanningTree.keySet()) {
       for (Point incidentPoint : spanningTree.get(point) ) {
         g.draw(new Line2D.Double(point.getX(),

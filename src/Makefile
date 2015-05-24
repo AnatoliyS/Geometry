@@ -44,6 +44,11 @@ $(UTILS_CLASSES): $(UTILS_SRC)
 	javac -g $(UTILS_SRC) 
 UTILS: $(UTILS_CLASSES)
 
+# Compiling Algorithm Name and Color
+ALGO_PROPS_SRC = AlgorithmName.java \ AlgorithmColor.java
+ALGO_PROPS_CLASSES: $(ALGO_PROPS_SRC:.java=.class)
+$(ALGO_PROPS_CLASSES): $(ALGO_PROPS_SRC) ; javac -g $(ALGO_PROPS_SRC)
+
 # Compiling ConvexHull logic
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
