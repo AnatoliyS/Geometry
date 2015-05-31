@@ -1,9 +1,8 @@
+import Utils.Constants;
 import Utils.Point;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Loads points from file into points[]
@@ -19,9 +18,14 @@ public class FileReader {
       // Read points
       int n = sc.nextInt();
       points = new ArrayList<Point>();
+      HashSet<Double> x_coordinates = new HashSet<>();
       for(int i = 0; i < n; i++) {
         double x = sc.nextDouble();
         double y = sc.nextDouble();
+        while (x_coordinates.contains(x)) {
+          x = x + Constants.EPS;
+        }
+        x_coordinates.add(x);
         points.add(new Point(x, y));
       }
       sc.close();
