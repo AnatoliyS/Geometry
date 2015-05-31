@@ -8,7 +8,7 @@ import Utils.Exceptions.*;
 import Utils.Point;
 import Utils.Polygon;
 
-public class Demo implements MenuHandler{
+public class Demo implements MenuHandler {
   private static DACTree tree;
   private static ArrayList<Point> points;
   private static final int window_width = 1200;
@@ -16,7 +16,7 @@ public class Demo implements MenuHandler{
   private static Menu menu = new Menu();
   private static AlgorithmPanel algorithmPanel = new AlgorithmPanel();
   private static JFrame frame = new JFrame();
-
+  private final Integer DEFAULT_NUMBER_OF_POINTS = 25;
   /**
    * Hardcode for building DACTree instance.
    * In future tree will be construct according to checkbox values.
@@ -85,27 +85,10 @@ public class Demo implements MenuHandler{
    * And do some preprocessing
    */
   public static void loadAndPreprocessData(String file_name) {
-    File points_file = new File(file_name);
-    try {   
-      Scanner sc = new Scanner(points_file);
-      sc.useLocale(Locale.ENGLISH);
+    points = FileReader.loadData(file_name);
 
-      // Read points
-      int n = sc.nextInt();
-      points = new ArrayList<Point>();
-      for(int i = 0; i < n; i++) {
-        double x = sc.nextDouble();
-        double y = sc.nextDouble();
-        points.add(new Point(x, y));
-      }
- 
-      // Sort points with custom comparator
-      Collections.sort(points, new PointComparator());
-
-      sc.close();
-    } catch(Exception e) {
-      System.out.println("IO error:" + e.toString());    
-    }
+    // Sort points with custom comparator
+    Collections.sort(points, new PointComparator());
   }
 
   public static void doMinimalAreaPolygonAlgo()
@@ -200,7 +183,8 @@ public class Demo implements MenuHandler{
           points = FileReader.loadData(menuConfiguration.inputFile);
         } else {
           if (menuConfiguration.inputString.isEmpty()) {
-            menuConfiguration.inputString = "25"; // if nothing is set, just draw something
+            // if nothing is set, just draw something
+            menuConfiguration.inputString = DEFAULT_NUMBER_OF_POINTS.toString();
           }
           points = GraphGenerator.generateData(new Integer(menuConfiguration.inputString));
         }
@@ -220,10 +204,9 @@ public class Demo implements MenuHandler{
 
   private void savePointsIfNeeded(boolean shouldSavePoints, String file) {
     if (shouldSavePoints) {
-      if (file.isEmpty()) {
-        file = "graph_default.txt";
-      }
       FileWriter.savePoints(file, points);
+      JOptionPane.showMessageDialog(null, "graph saved to file: " +
+          (file.isEmpty() ? FileWriter.DEFAULT_FILE_NAME : file) );
     }
   }
 
@@ -231,6 +214,8 @@ public class Demo implements MenuHandler{
   public void onMenuChange() {
     validateInput(menu.getMenuConfiguration());
     savePointsIfNeeded(menu.getMenuConfiguration().shouldSavePoints, menu.getMenuConfiguration().inputFile);
+    menu.getMenuConfiguration().shouldSavePoints = false;
+
     ArrayList<String> algorithmsNames = menu.getAlgorithmsToBeDrawn();
     ArrayList<VisualData> algorithms = new ArrayList<>();
     try {
@@ -292,6 +277,7 @@ public class Demo implements MenuHandler{
       ex.printStackTrace();
       System.exit(1);
     }
+
     algorithmPanel.setPointsToBeDrawn(points);
     algorithmPanel.setObjectsToBeDrawn(algorithms);
     frame.repaint();
@@ -310,8 +296,8 @@ public class Demo implements MenuHandler{
       // Display graphics
       menu.attachToHandler(new Demo());
       //frame.getContentPane().add(menu);
-      frame.getContentPane().add(menu.menuPanel, BorderLayout.EAST);
-      frame.getContentPane().add(menu.menuPanel_1, BorderLayout.SOUTH);
+      frame.getContentPane().add(menu.chooseAlgorithmPanel, BorderLayout.EAST);
+      frame.getContentPane().add(menu.utilityPanel, BorderLayout.SOUTH);
       frame.getContentPane().add(algorithmPanel);
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setSize(window_width, window_height);
@@ -321,5 +307,6 @@ public class Demo implements MenuHandler{
       ex.printStackTrace();
       System.exit(1);
     }
+    Color cl = Color.RED;
   }
 }

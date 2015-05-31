@@ -13,8 +13,8 @@ public class Menu extends JComponent {
 
   private MenuConfiguration menuConfiguration = new MenuConfiguration();
 
-  public JPanel menuPanel;
-  public JPanel menuPanel_1;
+  public JPanel chooseAlgorithmPanel;
+  public JPanel utilityPanel;
 
   public ArrayList<String> getAlgorithmsToBeDrawn() {
     ArrayList<String> result = new ArrayList<>();
@@ -134,42 +134,40 @@ public class Menu extends JComponent {
 
     JButton saveButton = new JButton("Save Points");
     saveButton.addActionListener(new SavePointsActionListener(menuHandler));
-    JPanel panel = new JPanel(new GridLayout(0, 1, 50, 50));
-    panel.setPreferredSize(new Dimension(200, window_height));
-    panel.add(button);
-    panel.add(convexHullCheckbox);
-    panel.add(delaunayCheckbox);
-    panel.add(voronoiCheckbox);
-    panel.add(MAPCheckbox);
-    panel.add(closestPairCheckbox);
-    panel.add(minimumSpanningTreeCheckbox);
-    panel.add(saveButton);
+
+    chooseAlgorithmPanel = new JPanel(new GridLayout(0, 1, 50, 50));
+    chooseAlgorithmPanel.setPreferredSize(new Dimension(200, window_height));
+    chooseAlgorithmPanel.add(button);
+    chooseAlgorithmPanel.add(convexHullCheckbox);
+    chooseAlgorithmPanel.add(delaunayCheckbox);
+    chooseAlgorithmPanel.add(voronoiCheckbox);
+    chooseAlgorithmPanel.add(MAPCheckbox);
+    chooseAlgorithmPanel.add(closestPairCheckbox);
+    chooseAlgorithmPanel.add(minimumSpanningTreeCheckbox);
+    chooseAlgorithmPanel.add(saveButton);
     //paint all menu components except buttons to menu color
-    panel.setBackground(menuColor);
-    for(Component component : panel.getComponents()) {
+    chooseAlgorithmPanel.setBackground(menuColor);
+    for(Component component : chooseAlgorithmPanel.getComponents()) {
       if (!component.getClass().equals(new JButton().getClass())) {
         component.setBackground(menuColor);
       }
     }
 
-    JPanel panel1 = new JPanel(new GridLayout(2, 0));
+    utilityPanel = new JPanel(new GridLayout(2, 0));
     JTextField inputPathTextBox = new JTextField("");
     inputPathTextBox.addActionListener(new InputFileTextFieldActionListener(inputPathTextBox));
     JTextField numberOfRandomPoints = new JTextField("");
     numberOfRandomPoints.addActionListener(
         new GenerateRandomTextFieldActionListener(numberOfRandomPoints));
-    panel1.setPreferredSize(new Dimension(window_width, 50));
-    panel1.add(new JLabel(""));
-    panel1.add(new JLabel(""));
-    panel1.add(new JLabel("Path to an input file"));
-    panel1.add(inputPathTextBox);
-    panel1.add(new JLabel(""));
-    panel1.add(new JLabel(""));
-    panel1.add(new JLabel("number of randomly generated points"));
-    panel1.add(numberOfRandomPoints);
-    panel1.setBackground(menuColor);
-
-    menuPanel = panel;
-    menuPanel_1 = panel1;
+    utilityPanel.setPreferredSize(new Dimension(window_width, 50));
+    utilityPanel.add(new JLabel(""));
+    utilityPanel.add(new JLabel(""));
+    utilityPanel.add(new JLabel("Path to an input file"));
+    utilityPanel.add(inputPathTextBox);
+    utilityPanel.add(new JLabel(""));
+    utilityPanel.add(new JLabel(""));
+    utilityPanel.add(new JLabel("number of randomly generated points"));
+    utilityPanel.add(numberOfRandomPoints);
+    utilityPanel.setBackground(menuColor);
   }
 }

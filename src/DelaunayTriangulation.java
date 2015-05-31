@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /*
-Delaunay Triangulation is dual to Voronoi Diagram
+* Delaunay Triangulation is dual to Voronoi Diagram
 */
 public class DelaunayTriangulation implements VisualData {
 
@@ -66,7 +66,7 @@ public class DelaunayTriangulation implements VisualData {
   public DelaunayTriangulation(ArrayList<Point> points) {
     //we build triangulation for few points in trivial case;
     assert (points.size() <= 3);
-//    if points are collinear, there are no triangles and triangulation is not valid
+    //if points are collinear, there are no triangles and triangulation is not valid
     if (points.size() < 3 || Geometry.arePointsCollinear(points.get(0), points.get(1), points.get(2))) {
       isValid = false;
     } else {
@@ -98,7 +98,6 @@ public class DelaunayTriangulation implements VisualData {
             incidentPoint.getY()));
       }
     }
-
   }
 
   @Override

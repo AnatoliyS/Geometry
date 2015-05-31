@@ -5,14 +5,13 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class FileWriter {
+  public static final String DEFAULT_FILE_NAME = "graph_dump.txt";
+
   public static void savePoints(String filename, ArrayList<Point> points) {
-    String file_name;
     if (filename.isEmpty()) {
-      file_name = "graph_dump.txt"; //default dump file
-    } else {
-      file_name = filename;
+      filename = DEFAULT_FILE_NAME; //default dump file
     }
-    File graph_file = new File(file_name);
+    File graph_file = new File(filename);
     try {
       PrintWriter writer = new PrintWriter(graph_file, "UTF-8");
       writer.println(points.size());
@@ -24,5 +23,4 @@ public class FileWriter {
       System.out.println("FileWriter :: IO error");
     }
   }
-
 }

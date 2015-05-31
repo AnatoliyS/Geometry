@@ -8,12 +8,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Hashtable;
 
-public class SpanningTreeKruskalAlgo extends Algorithm  {
+public class SpanningTreeKruskalAlgo extends Algorithm {
 
   public SpanningTreeKruskalAlgo(String _name, ArrayList<String> _deps) {
     super(_name, _deps);
   }
-    @Override
+
+  @Override
   public Object merge(DACNode left, DACNode right) {
     Debug.log("got to merge() in Spanning tree. wrong logic");
     return null;
@@ -70,7 +71,7 @@ public class SpanningTreeKruskalAlgo extends Algorithm  {
       Pair<Double, Pair<Point, Point>> edge = (Pair<Double, Pair<Point, Point>>) _edge;
       Point a = edge.second.first;
       Point b = edge.second.second;
-      if (!dsu.find(a).equals(dsu.find(b))) {
+      if (!dsu.findLeader(a).equals(dsu.findLeader(b))) {
         dsu.union(a, b);
         if (!spanningTree.containsKey(a)) {
           spanningTree.put(a, new ArrayList<Point>());

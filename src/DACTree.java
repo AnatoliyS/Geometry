@@ -78,7 +78,7 @@ public class DACTree {
     // Processing for algorithm
     Debug.log("Processing algorithm " + algo + " itself...");
     if (algo.getName() == AlgorithmName.SPANNING_TREE) {
-      DACNode node = nodes.get(1);
+      DACNode node = nodes.get(ROOT_INDEX);
       DelaunayTriangulation delaunayTriangulation =
           (DelaunayTriangulation)getAlgorithmResult(AlgorithmName.DELAUNAY_TRIANGULATION);
       SpanningTreeKruskal spanningTreeKruskal = ((SpanningTreeKruskalAlgo)algo).calculate(delaunayTriangulation);

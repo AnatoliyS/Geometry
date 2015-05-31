@@ -15,7 +15,7 @@ public class DACNode {
   private Map<String, Object> data;
   private DACNode parent;
 
-  public DACNode () {
+  public DACNode() {
     data = new HashMap<String, Object>();
     parent = null;
   }

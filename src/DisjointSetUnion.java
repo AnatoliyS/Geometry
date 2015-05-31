@@ -1,42 +1,44 @@
 import java.util.Hashtable;
 
-public class DisjointSetUnion {
+class DisjointSetUnion {
   Hashtable<Object, Object> parentTable;
   Hashtable<Object, Integer> rank;
-  DisjointSetUnion() {
+  public DisjointSetUnion() {
     parentTable = new Hashtable<>();
     rank = new Hashtable<>();
   }
 
-  DisjointSetUnion(Iterable array) {
+  public DisjointSetUnion(Iterable array) {
     for (Object element : array) {
       makeSet(element);
     }
   }
 
-  void makeSet (Object element) {
+  public void makeSet (Object element) {
     parentTable.put(element, element);
     rank.put(element, 0);
   }
 
-  Object find(Object element) {
+  public Object findLeader(Object element) {
     if (parentTable.containsKey(element)) {
       Object parent = parentTable.get(element);
       if (parent.equals(element)) {
         return element;
       } else {
-        return find(parent);
+        return findLeader(parent);
       }
     } else {
       return null;
     }
   }
-  boolean union(Object first, Object second) {
-    Object firstParent = find(first);
-    Object secondParent = find(second);
+
+  public boolean union(Object first, Object second) {
+    Object firstParent = findLeader(first);
+    Object secondParent = findLeader(second);
     if (null == firstParent && null == secondParent) {
       return false;
     }
+
     if (!firstParent.equals(secondParent)) {
       Object leader;
       Object looser;
@@ -47,7 +49,9 @@ public class DisjointSetUnion {
         leader = secondParent;
         looser = firstParent;
       }
+
       parentTable.put(looser, leader);
+
       if (rank.get(firstParent) == rank.get(secondParent)) {
         rank.put(leader, rank.get(firstParent) + 1);
       }
