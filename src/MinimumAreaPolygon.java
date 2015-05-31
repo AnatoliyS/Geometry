@@ -39,7 +39,7 @@ public class MinimumAreaPolygon implements VisualData {
   public void render(Graphics2D g) {
     Debug.log("Rendering MinimumAreaPolygon...");
     ArrayList<Point> points = polygon.getPoints();
-    DrawHelper.drawFilledPolygon(g, points, Color.RED);
+    DrawHelper.drawFilledPolygon(g, points, AlgorithmColor.MINIMUM_AREA_POLYGON.getColor());
   }
 
   @Override

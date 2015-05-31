@@ -17,7 +17,8 @@ public class ConvexHull implements VisualData {
 
   public void render(Graphics2D g) {
     Debug.log("rendering convex hull...");
-    DrawHelper.drawFilledPolygon(g, points, Color.green);
+
+    DrawHelper.drawFilledPolygon(g, points, AlgorithmColor.CONVEX_HULL.getColor());
   }
 
   @Override

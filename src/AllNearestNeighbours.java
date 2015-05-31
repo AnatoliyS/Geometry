@@ -91,10 +91,10 @@ public class AllNearestNeighbours implements VisualData{
       double x2 = p1.getX();
       double y2 = p1.getY();
 
-      g.setColor(Color.darkGray);
+      g.setColor(AlgorithmColor.ALL_NEAREST_NEIGHBOURS.getColor());
       g.draw(new Line2D.Double(x1, y1, x2, y2));
 
-      g.setColor(Color.black);
+      g.setColor(AlgorithmColor.ALL_NEAREST_NEIGHBOURS.getColor());
       g.fill(new Ellipse2D.Double(x1 - 4.0, y1 - 4.0, 8.0, 8.0));
       g.fill(new Ellipse2D.Double(x2 - 4.0, y2 - 4.0, 8.0, 8.0));
     }

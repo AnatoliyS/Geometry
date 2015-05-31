@@ -44,6 +44,11 @@ $(UTILS_CLASSES): $(UTILS_SRC)
 	javac -g $(UTILS_SRC) 
 UTILS: $(UTILS_CLASSES)
 
+# Compiling Algorithm Name and Color
+ALGO_PROPS_SRC = AlgorithmName.java \ AlgorithmColor.java
+ALGO_PROPS_CLASSES: $(ALGO_PROPS_SRC:.java=.class)
+$(ALGO_PROPS_CLASSES): $(ALGO_PROPS_SRC) ; javac -g $(ALGO_PROPS_SRC)
+
 # Compiling ConvexHull logic
 CONHULL_SRC = ConvexHull.java ConvexHullAlgo.java
 
@@ -59,9 +64,16 @@ VORONOI_SRC = VoronoiDiagram.java VoronoiDiagramAlgo.java
 # Compiling AllNearestNeighbours logic
 ALL_NEAR_NEIGH_SRC = AllNearestNeighbours.java AllNearestNeighboursAlgo.java
 
+# Compiling Delaunay Triangulation logic
+DELAUNAY_SRC = DelaunayTriangulation.java DelaunayTriangulationAlgo.java 
+
+# Compiling Spanning Tree logic
+SPANING_TREE = DisjointSetUnion.java \
+                SpanningTreeKruskal.java
+
 # Compiling algorithms
 ALGS_SRC = AlgorithmName.java Algorithm.java AlgorithmsContainer.java VisualData.java \
-	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC) $(ALL_NEAR_NEIGH_SRC)
+	$(CONHULL_SRC) $(MIN_AREA_POL_SCR) $(VORONOI_SRC) $(ALL_NEAR_NEIGH_SRC) $(DELAUNAY_SRC) $(SPANNING_TREE)
 
 # Compiling Divide and Conquer tree
 DAC_SRC = $(ALGS_SRC) DACNode.java DACTree.java
@@ -72,7 +84,7 @@ $(DAC_CLASSES): $(DAC_SRC)
 DAC: $(DAC_CLASSES)
 
 # Compiling Demonstarion
-Demo.class: DCEL UTILS DAC Demo.java   
+Demo.class: DCEL UTILS DAC Demo.java
 	javac -g Demo.java
 Demo: Demo.class
 

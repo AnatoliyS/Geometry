@@ -431,7 +431,7 @@ public class VoronoiDiagram extends DCEL implements VisualData{
   public void render(Graphics2D g) {
     Debug.log("Rendering voronoi...");
     for (HalfEdge e : edge) {
-      g.setColor(Color.blue);
+      g.setColor(AlgorithmColor.VORONOI_DIAGRAM.getColor());
 
       Vertex v1 = e.getOrigin();
       Vertex v2 = e.getNextEdge().getOrigin();

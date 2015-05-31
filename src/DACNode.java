@@ -13,9 +13,20 @@ public class DACNode {
    * of current node.
    */
   private Map<String, Object> data;
+  private DACNode parent;
 
   public DACNode() {
     data = new HashMap<String, Object>();
+    parent = null;
+  }
+
+  public DACNode(DACNode _parent) {
+    data = new HashMap<String, Object>();
+    parent = _parent;
+  }
+
+  public DACNode getParent() {
+    return parent;
   }
 
   public Object getDataResult(String name) throws NoDataException {
